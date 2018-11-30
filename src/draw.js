@@ -1,57 +1,86 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Canvas = /** @class */ (function () {
-    function Canvas(canvasID) {
+var SVGDraw = /** @class */ (function () {
+    function SVGDraw(svgID) {
         var _this = this;
-        this.drawLog = [];
-        this.canvas = document.getElementById(canvasID);
-        this.context = this.canvas.getContext('2d');
-        this.canvas.addEventListener('mousedown', function (e) { return _this.mouseDownDraw(e); });
-        this.canvas.addEventListener('mousemove', function (e) { return _this.mouseMoveDraw(e); });
-        this.canvas.addEventListener('mouseup', function () { return _this.mouseUpDraw(); });
-        this.canvas.addEventListener('mouseleave', function () { return _this.mouseLeaveDraw(); });
+        this.strokeWidth = '2';
+        this.bufferSize = document.getElementById('cmbBufferSize').value;
+        this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        this.path.setAttribute('fill', 'none');
+        this.path.setAttribute('stroke', '#000');
+        this.path.setAttribute('stroke-width', this.strokeWidth);
+        this.buffer = [];
+        this.rect = this.svg.getBoundingClientRect();
+        this.svg.addEventListener('mousedown', function (e) { return _this.mouseDownDraw(e); });
+        this.svg.addEventListener('mousemove', function (e) { return _this.mouseMoveDraw(e); });
+        this.svg.addEventListener('mouseup', function () { return _this.mouseUpDraw(); });
     }
-    Canvas.prototype.clear = function () {
-        this.context.setTransform(1, 0, 0, 1, 0, 0);
-        this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
+    SVGDraw.prototype.mouseDownDraw = function (e) {
+        var pt = this.getMousePosition(e);
+        this.appendToBuffer(pt);
+        this.strPath = 'M' + pt.x + ' ' + pt.y;
+        this.path.setAttribute('d', this.strPath);
+        this.svg.appendChild(this.path);
     };
-    Canvas.prototype.test = function () {
-        console.log('Test!');
+    SVGDraw.prototype.getMousePosition = function (e) {
+        return {
+            x: e.pageX - this.rect.left,
+            y: e.pageY - this.rect.top,
+        };
     };
-    Canvas.prototype.mouseDownDraw = function (e) {
-        this.mousePressed = true;
-        var offsetX = e.pageX - this.canvas.offsetLeft;
-        var offsetY = e.pageY - this.canvas.offsetTop;
-        this.draw(offsetX, offsetY, false);
-    };
-    Canvas.prototype.mouseMoveDraw = function (e) {
-        if (this.mousePressed) {
-            var offsetX = e.pageX - this.canvas.offsetLeft;
-            var offsetY = e.pageY - this.canvas.offsetTop;
-            this.draw(offsetX, offsetY, true);
+    SVGDraw.prototype.appendToBuffer = function (pt) {
+        this.buffer.push(pt);
+        while (this.buffer.length > Number(this.bufferSize)) {
+            this.buffer.shift();
         }
     };
-    Canvas.prototype.mouseUpDraw = function () {
-        this.mousePressed = false;
-    };
-    Canvas.prototype.mouseLeaveDraw = function () {
-        this.mousePressed = false;
-    };
-    Canvas.prototype.draw = function (x, y, isDown) {
-        if (isDown) {
-            this.context.beginPath();
-            this.context.strokeStyle = 'black';
-            this.context.lineWidth = 2;
-            this.context.lineJoin = 'round';
-            this.context.moveTo(this.lastX, this.lastY);
-            this.context.lineTo(x, y);
-            this.context.closePath();
-            this.context.stroke();
+    SVGDraw.prototype.mouseMoveDraw = function (e) {
+        if (this.path) {
+            this.appendToBuffer(this.getMousePosition(e));
+            this.updateSVGPath();
         }
-        this.lastX = x;
-        this.lastY = y;
     };
-    return Canvas;
+    SVGDraw.prototype.getAveragePoint = function (offset) {
+        var len = this.buffer.length;
+        if (len % 2 === 1 || len >= Number(this.bufferSize)) {
+            var totalX = 0;
+            var totalY = 0;
+            var pt = {
+                x: 0,
+                y: 0,
+            };
+            var count = 0;
+            for (var i = offset; i < len; i++) {
+                count++;
+                pt = this.buffer[i];
+                totalX += pt.x;
+                totalY += pt.y;
+            }
+            return {
+                x: totalX / count,
+                y: totalY / count,
+            };
+        }
+        return null;
+    };
+    SVGDraw.prototype.updateSVGPath = function () {
+        var pt = this.getAveragePoint(0);
+        if (pt) {
+            this.strPath += ' L' + pt.x + ' ' + pt.y;
+            var tempPath = '';
+            for (var offset = 2; offset < this.buffer.length; offset += 2) {
+                pt = this.getAveragePoint(offset);
+                tempPath += ' L' + pt.x + ' ' + pt.y;
+            }
+            this.path.setAttribute('d', this.strPath + tempPath);
+        }
+    };
+    SVGDraw.prototype.mouseUpDraw = function () {
+        if (this.path) {
+            this.path = null;
+        }
+    };
+    return SVGDraw;
 }());
-exports.Canvas = Canvas;
+exports.SVGDraw = SVGDraw;
 //# sourceMappingURL=draw.js.map

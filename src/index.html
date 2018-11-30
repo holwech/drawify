@@ -3,10 +3,34 @@
     <head>
         <title>TypeScript Greeter</title>
         <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="draw.js"></script>
         <meta charset="utf-8"/>
     </head>
     <body>
-        <canvas id="canvas" width="490" height="220"></canvas>
-        <script src="draw.js"></script>
+        <div id="divSmoothingFactor">
+            <label for="cmbBufferSize">Buffer size:</label>
+            <select id="cmbBufferSize">
+                <option value="1">1 - No smoothing</option>
+                <option value="4">4 - Sharp curves</option>
+                <option value="8" selected="selected">8 - Smooth curves</option>
+                <option value="12">12 - Very smooth curves</option>
+                <option value="16">16 - Super smooth curves</option>
+                <option value="20">20 - Hyper smooth curves</option>
+            </select>
+        </div>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            version="1.1"
+            id="svgElement"
+            x="0px"
+            y="0px"
+            width="600px"
+            height="400px"
+            viewBox="0 0 600 400"
+            enable-background="new 0 0 600 400"
+            xml:space="preserve"
+        >
     </body>
 </html>

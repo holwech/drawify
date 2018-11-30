@@ -25,3 +25,4 @@ export class Logger {
     this.context.setTransform(1, 0, 0, 1, 0, 0);
     this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
   }
+}

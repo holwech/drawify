@@ -1,20 +1,12 @@
 export class Canvas {
-  private strokeWidth: number;
-  private bufferSize: string;
-  private svg: SVGElement;
-  private rect: ?;
-  private path: SVGPathElement;
-  private strPath: string;
-  private buffer: number[];
+  private canvas: HTMLCanvasElement;
+  private context: CanvasRenderingContext2D;
+  private mousePressed!: boolean;
+  private lastX!: number;
+  private lastY!: number;
+  private drawLog!: number[][][];
 
-  constructor(svgID: string) {
-    this.strokeWidth = 2;
-    this.bufferSize = (document.getElementById('cmbBufferSize') as HTMLInputElement).value;
-    this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    this.path.setAttribute('fill', 'none');
-    this.path.setAttribute('stroke', '#000');
-
-
+  constructor(canvasID: string) {
     this.drawLog = [];
     this.canvas = document.getElementById(canvasID) as HTMLCanvasElement;
     this.context = this.canvas.getContext('2d') as CanvasRenderingContext2D;
