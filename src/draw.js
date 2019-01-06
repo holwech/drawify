@@ -4,11 +4,13 @@ var SVGDraw = /** @class */ (function () {
     function SVGDraw(svgID) {
         var _this = this;
         this.strokeWidth = '2';
+        this.svg.getElementsByTagName(svgID);
         this.bufferSize = document.getElementById('cmbBufferSize').value;
         this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         this.path.setAttribute('fill', 'none');
         this.path.setAttribute('stroke', '#000');
         this.path.setAttribute('stroke-width', this.strokeWidth);
+        this.pathStarted = false;
         this.buffer = [];
         this.rect = this.svg.getBoundingClientRect();
         this.svg.addEventListener('mousedown', function (e) { return _this.mouseDownDraw(e); });
@@ -16,6 +18,12 @@ var SVGDraw = /** @class */ (function () {
         this.svg.addEventListener('mouseup', function () { return _this.mouseUpDraw(); });
     }
     SVGDraw.prototype.mouseDownDraw = function (e) {
+        this.pathStarted = true;
+        this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        this.path.setAttribute('fill', 'none');
+        this.path.setAttribute('stroke', '#000');
+        this.path.setAttribute('stroke-width', this.strokeWidth);
+        this.buffer = [];
         var pt = this.getMousePosition(e);
         this.appendToBuffer(pt);
         this.strPath = 'M' + pt.x + ' ' + pt.y;
@@ -35,7 +43,7 @@ var SVGDraw = /** @class */ (function () {
         }
     };
     SVGDraw.prototype.mouseMoveDraw = function (e) {
-        if (this.path) {
+        if (this.pathStarted) {
             this.appendToBuffer(this.getMousePosition(e));
             this.updateSVGPath();
         }
@@ -76,8 +84,8 @@ var SVGDraw = /** @class */ (function () {
         }
     };
     SVGDraw.prototype.mouseUpDraw = function () {
-        if (this.path) {
-            this.path = null;
+        if (this.pathStarted) {
+            this.pathStarted = false;
         }
     };
     return SVGDraw;

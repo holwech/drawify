@@ -6,19 +6,22 @@ interface Point {
 export class SVGDraw {
   private strokeWidth: string;
   private bufferSize: string;
-  private svg: SVGElement;
+  private svg!: HTMLElement;
   private rect: ClientRect;
   private path: SVGPathElement;
-  private strPath: string;
+  private pathStarted: boolean;
+  private strPath!: string;
   private buffer: Point[];
 
   constructor(svgID: string) {
     this.strokeWidth = '2';
+    this.svg.getElementsByTagName(svgID);
     this.bufferSize = (document.getElementById('cmbBufferSize') as HTMLInputElement).value;
     this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     this.path.setAttribute('fill', 'none');
     this.path.setAttribute('stroke', '#000');
     this.path.setAttribute('stroke-width', this.strokeWidth);
+    this.pathStarted = false;
     this.buffer = [];
     this.rect = this.svg.getBoundingClientRect();
 
@@ -28,6 +31,12 @@ export class SVGDraw {
   }
 
   private mouseDownDraw(e: MouseEvent) {
+    this.pathStarted = true;
+    this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    this.path.setAttribute('fill', 'none');
+    this.path.setAttribute('stroke', '#000');
+    this.path.setAttribute('stroke-width', this.strokeWidth);
+    this.buffer = [];
     const pt: Point = this.getMousePosition(e);
     this.appendToBuffer(pt);
     this.strPath = 'M' + pt.x + ' ' + pt.y;
@@ -35,7 +44,7 @@ export class SVGDraw {
     this.svg.appendChild(this.path);
   }
 
-  private getMousePosition(e) {
+  private getMousePosition(e: MouseEvent) {
     return {
       x: e.pageX - this.rect.left,
       y: e.pageY - this.rect.top,
@@ -50,7 +59,7 @@ export class SVGDraw {
   }
 
   private mouseMoveDraw(e: MouseEvent) {
-    if (this.path) {
+    if (this.pathStarted) {
       this.appendToBuffer(this.getMousePosition(e));
       this.updateSVGPath();
     }
@@ -81,21 +90,21 @@ export class SVGDraw {
   }
 
   private updateSVGPath() {
-    let pt: Point = this.getAveragePoint(0);
+    let pt: Point | null = this.getAveragePoint(0);
     if (pt) {
-      this.strPath += ' L' + pt.x + ' ' + pt.y;
+      this.strPath += ' L' + pt!.x + ' ' + pt!.y;
       let tempPath = '';
       for (let offset = 2; offset < this.buffer.length; offset += 2) {
         pt = this.getAveragePoint(offset);
-        tempPath += ' L' + pt.x + ' ' + pt.y;
+        tempPath += ' L' + pt!.x + ' ' + pt!.y;
       }
       this.path.setAttribute('d', this.strPath + tempPath);
     }
   }
 
   private mouseUpDraw() {
-    if (this.path) {
-      this.path = null;
+    if (this.pathStarted) {
+      this.pathStarted = false;
     }
   }
 }
