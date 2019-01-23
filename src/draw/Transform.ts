@@ -1,6 +1,7 @@
 export class Transform {
-  constructor(svg: ) {
-
+  svg: HTMLElement;
+  constructor(svg: HTMLElement) {
+    this.svg = svg;
   }
 
 
