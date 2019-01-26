@@ -1,11 +1,14 @@
 import { SVGDraw } from './SVGDraw';
+import { Transform } from './Transform';
 
 export class Controller {
   private svg: HTMLElement;
   private draw: SVGDraw;
+  private transform: Transform;
 
   constructor(svgID: string) {
     this.draw = new SVGDraw(svgID);
+    this.transform = new Transform(svgID);
     this.svg = document.getElementById(svgID) as HTMLElement;
     this.draw.toggleDrawEventListners(true);
   }
@@ -13,8 +16,10 @@ export class Controller {
   public togglePanMode(toggle: boolean) {
     if (toggle) {
       this.draw.toggleDrawEventListners(false);
+      this.transform.togglePanEventListeners(true);
     } else {
       this.draw.toggleDrawEventListners(true);
+      this.transform.togglePanEventListeners(false);
     }
   }
 
@@ -25,19 +30,4 @@ export class Controller {
   public setStrokeProperties(color: string, smoothness: string, width: string) {
     this.draw.setStrokeProperties(color, smoothness, width);
   }
-
-  private togglePanEventListeners(toggle: boolean) {
-    if (toggle) {
-      // svg.addEventListener('mousedown', onPointerDown); // Pressing the mouse
-      // svg.addEventListener('mouseup', onPointerUp); // Releasing the mouse
-      // svg.addEventListener('mouseleave', onPointerUp); // Mouse gets out of the SVG area
-      // svg.addEventListener('mousemove', onPointerMove); // Mouse is moving
-
-      // // Add all touch events listeners fallback
-      // svg.addEventListener('touchstart', onPointerDown); // Finger is touching the screen
-      // svg.addEventListener('touchend', onPointerUp); // Finger is no longer touching the screen
-      // svg.addEventListener('touchmove', onPointerMove); // Finger is moving
-    }
-  }
-
 }
