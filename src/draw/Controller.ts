@@ -13,6 +13,10 @@ export class Controller {
     this.draw.toggleDrawEventListners(true);
   }
 
+  public zoom(scale: number) {
+    this.transform.zoom(scale);
+  }
+
   public togglePanMode(toggle: boolean) {
     if (toggle) {
       this.draw.toggleDrawEventListners(false);

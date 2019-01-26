@@ -47,6 +47,8 @@
     </svg>
     <button @click="clear">Clear</button>
     <button @click="pan">Pan {{ panModeText }}</button>
+    <button @click="zoomIn">Zoom in</button>
+    <button @click="zoomOut">Zoom out</button>
   </div>
 </template>
 
@@ -78,6 +80,14 @@ export default class DrawingBoard extends Vue {
   private pan() {
     this.panMode = !this.panMode;
     this.controller.togglePanMode(this.panMode);
+  }
+
+  private zoomIn() {
+    this.controller.zoom(0.75);
+  }
+
+  private zoomOut() {
+    this.controller.zoom(1.25);
   }
 
   private setStrokeProperties() {

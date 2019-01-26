@@ -13,9 +13,6 @@ export class SVGDraw {
   private pathStarted = false;
   private strPath!: string;
   private buffer: Point[] = [];
-  private centerX: number;
-  private centerY: number;
-  private transformMatrix = [1, 0, 0, 1, 0, 0];
   private fnMouseDownDraw: (e: MouseEvent) => void;
   private fnMouseMoveDraw: (e: MouseEvent) => void;
   private fnMouseUpDraw: () => void;
@@ -33,8 +30,6 @@ export class SVGDraw {
     } else {
       throw new Error('The SVG element requires the view box attribute to be set.');
     }
-    this.centerX = parseFloat(viewbox[2]) / 2;
-    this.centerY = parseFloat(viewbox[3]) / 2;
     this.toggleDrawEventListners(true);
   }
 
@@ -54,13 +49,6 @@ export class SVGDraw {
     }
   }
 
-  public pan(dx: number, dy: number) {
-      this.transformMatrix[4] += dx;
-      this.transformMatrix[5] += dy;
-      const newMatrix = 'matrix(' +  this.transformMatrix.join(' ') + ')';
-      this.svg.setAttributeNS(null, 'transform', newMatrix);
-  }
-
   public setStrokeProperties(color: string, smoothness: string, width: string) {
     this.bufferSize = smoothness;
     this.strokeColor = color;
@@ -78,7 +66,6 @@ export class SVGDraw {
       this.svg.removeEventListener('mousemove', this.fnMouseMoveDraw);
       this.svg.removeEventListener('mouseup', this.fnMouseUpDraw);
     }
-
   }
 
   private mouseDownDraw(e: MouseEvent) {
