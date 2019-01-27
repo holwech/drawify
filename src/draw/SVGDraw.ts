@@ -7,7 +7,7 @@ export class SVGDraw {
   private strokeColor = 'black';
   private strokeWidth = '2';
   private bufferSize = '8';
-  private svg: HTMLElement;
+  private svg: HTMLElement & SVGElement & SVGSVGElement;
   private rect: ClientRect;
   private path: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   private pathStarted = false;
@@ -21,15 +21,8 @@ export class SVGDraw {
     this.fnMouseDownDraw = this.mouseDownDraw.bind(this);
     this.fnMouseMoveDraw = this.mouseMoveDraw.bind(this);
     this.fnMouseUpDraw = this.mouseUpDraw.bind(this);
-    this.svg = document.getElementById(svgID) as HTMLElement;
+    this.svg = document.getElementById(svgID) as any as HTMLElement & SVGElement & SVGSVGElement;
     this.rect = this.svg.getBoundingClientRect();
-    let viewbox: string[];
-    const viewboxElem = this.svg.getAttributeNS(null, 'viewBox');
-    if (viewboxElem !== null) {
-      viewbox = viewboxElem.split(' ');
-    } else {
-      throw new Error('The SVG element requires the view box attribute to be set.');
-    }
     this.toggleDrawEventListners(true);
   }
 
@@ -83,10 +76,16 @@ export class SVGDraw {
   }
 
   private getMousePosition(e: MouseEvent) {
-    return {
-      x: e.pageX - this.rect.left,
-      y: e.pageY - this.rect.top,
-    };
+    const m = this.svg.getScreenCTM();
+    const point = this.svg.createSVGPoint();
+
+    point.x = e.clientX;
+    point.y = e.clientY;
+    if (m) {
+      return point.matrixTransform(m.inverse());
+    } else {
+      throw new Error('m variable is not defined in getPointFromViewBox in Transform');
+    }
   }
 
   private appendToBuffer(pt: Point) {

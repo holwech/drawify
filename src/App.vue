@@ -1,28 +1,38 @@
 <template>
-  <div id="app">
-    <DrawingBoard/>
-  </div>
+  <v-app>
+    <v-toolbar app>
+      <v-toolbar-title class="headline text-uppercase">
+        <span>Vuetify</span>
+        <span class="font-weight-light">MATERIAL DESIGN</span>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn
+        flat
+        href="https://github.com/vuetifyjs/vuetify/releases/latest"
+        target="_blank"
+      >
+        <span class="mr-2">Latest Release</span>
+      </v-btn>
+    </v-toolbar>
+
+    <v-content>
+      <HelloWorld/>
+    </v-content>
+  </v-app>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import DrawingBoard from './components/DrawingBoard.vue';
+<script>
+import HelloWorld from './components/HelloWorld'
 
-@Component({
+export default {
+  name: 'App',
   components: {
-    DrawingBoard,
+    HelloWorld
   },
-})
-export default class App extends Vue {}
-</script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  data () {
+    return {
+      //
+    }
+  }
 }
-</style>
+</script>
