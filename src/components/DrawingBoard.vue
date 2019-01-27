@@ -31,20 +31,6 @@
             <option value="green">Green</option>
         </select>
     </div>
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        version="1.1"
-        id="svgElement"
-        x="0px"
-        y="0px"
-        width="1200px"
-        height="800px"
-        viewBox="0 0 1200 800"
-        enable-background="new 0 0 1200 800"
-        xml:space="preserve"
-    >
-    </svg>
     <button @click="clear">Clear</button>
     <button @click="pan">Pan {{ panModeText }}</button>
   </div>

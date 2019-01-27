@@ -4,6 +4,8 @@ interface Point {
 }
 
 export class Transform {
+  public scale = 1;
+  public scaleSpeed = 1;
   private svg: SVGElement & SVGElement & SVGSVGElement;
   private isPointerDown = false;
   private pointerOrigin: Point = { x: 0, y: 0 };
@@ -13,15 +15,12 @@ export class Transform {
   private fnOnPointerDown: (e: MouseEvent | TouchEvent) => void;
   private fnOnPointerUp: (e: MouseEvent | TouchEvent) => void;
   private fnOnPointerMove: (e: MouseEvent | TouchEvent) => void;
-  private fnWheel: (e: WheelEvent) => void;
   private fnSetRatio: () => void;
-  private scale = 1;
   constructor(svgID: string) {
     this.fnOnPointerDown = this.onPointerDown.bind(this);
     this.fnOnPointerUp = this.onPointerUp.bind(this);
     this.fnOnPointerMove = this.onPointerMove.bind(this);
     this.fnSetRatio = this.setRatio.bind(this);
-    this.fnWheel = this.setZoom.bind(this);
     this.svg = document.getElementById(svgID) as any as SVGElement & SVGSVGElement & HTMLElement;
     const viewboxElem = this.svg.getAttributeNS(null, 'viewBox');
     if (viewboxElem !== null) {
@@ -37,7 +36,6 @@ export class Transform {
   public togglePanEventListeners(toggle: boolean) {
     if (toggle) {
       this.svg.addEventListener('resize', this.fnSetRatio);
-      this.svg.addEventListener('wheel', this.fnWheel);
 
       this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
       this.svg.addEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
@@ -49,7 +47,6 @@ export class Transform {
       this.svg.addEventListener('touchmove', this.fnOnPointerMove); // Finger is moving
     } else {
       this.svg.removeEventListener('resize', this.fnSetRatio);
-      this.svg.removeEventListener('wheel', this.fnWheel);
 
       this.svg.removeEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
       this.svg.removeEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
@@ -64,15 +61,13 @@ export class Transform {
   }
 
   public setZoom(e: WheelEvent) {
-    e.preventDefault();
-    const scale = e.deltaY > 0 ? 1.1 : 0.9;
     const mousePosition = this.getPointFromViewBox(e);
-    this.viewBox.x = mousePosition.x + (this.viewBox.x - mousePosition.x) * scale;
-    this.viewBox.y = mousePosition.y + (this.viewBox.y - mousePosition.y) * scale;
-    this.viewBox.width = this.viewBox.width * scale;
-    this.viewBox.height = this.viewBox.height * scale;
-    this.scale *= scale;
+    this.viewBox.x = mousePosition.x + (this.viewBox.x - mousePosition.x) * this.scale;
+    this.viewBox.y = mousePosition.y + (this.viewBox.y - mousePosition.y) * this.scale;
+    this.viewBox.width = this.viewBox.width * this.scale;
+    this.viewBox.height = this.viewBox.height * this.scale;
     const viewBoxString = `${this.viewBox.x} ${this.viewBox.y} ${this.viewBox.width} ${this.viewBox.height}`;
+    this.scale *= this.scale;
     this.svg.setAttribute('viewBox', viewBoxString);
   }
 

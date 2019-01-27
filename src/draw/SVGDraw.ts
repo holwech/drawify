@@ -4,6 +4,7 @@ interface Point {
 }
 
 export class SVGDraw {
+  public scale = 1;
   private strokeColor = 'black';
   private strokeWidth = '2';
   private bufferSize = '8';
@@ -42,10 +43,11 @@ export class SVGDraw {
     }
   }
 
-  public setStrokeProperties(color: string, smoothness: string, width: string) {
+  public setStrokeProperties(color: string, smoothness: string, width: string, scale: number) {
     this.bufferSize = smoothness;
     this.strokeColor = color;
-    this.strokeWidth = width;
+    console.log(String(Number(width) * scale));
+    this.strokeWidth = String(Number(width) * scale);
   }
 
   public toggleDrawEventListners(toggle: boolean) {
