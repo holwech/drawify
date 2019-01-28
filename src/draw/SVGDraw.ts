@@ -9,7 +9,6 @@ export class SVGDraw {
   private strokeWidth = '2';
   private bufferSize = '8';
   private svg: HTMLElement & SVGElement & SVGSVGElement;
-  private rect: ClientRect;
   private path: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   private pathStarted = false;
   private strPath!: string;
@@ -23,7 +22,6 @@ export class SVGDraw {
     this.fnMouseMoveDraw = this.mouseMoveDraw.bind(this);
     this.fnMouseUpDraw = this.mouseUpDraw.bind(this);
     this.svg = document.getElementById(svgID) as any as HTMLElement & SVGElement & SVGSVGElement;
-    this.rect = this.svg.getBoundingClientRect();
     this.toggleDrawEventListners(true);
   }
 
@@ -69,6 +67,7 @@ export class SVGDraw {
     this.path.setAttribute('fill', 'none');
     this.path.setAttribute('stroke', this.strokeColor);
     this.path.setAttribute('stroke-width', this.strokeWidth);
+    this.path.setAttribute('vector-effect', 'non-scaling-stroke');
     this.buffer = [];
     const pt: Point = this.getMousePosition(e);
     this.appendToBuffer(pt);

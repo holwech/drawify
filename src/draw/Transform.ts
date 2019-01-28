@@ -11,16 +11,13 @@ export class Transform {
   private pointerOrigin: Point = { x: 0, y: 0 };
   private viewBox = { x: 0, y: 0, width: 500, height: 500 };
   private newViewBox = { x: 0, y: 0 };
-  private ratio: number;
   private fnOnPointerDown: (e: MouseEvent | TouchEvent) => void;
   private fnOnPointerUp: (e: MouseEvent | TouchEvent) => void;
   private fnOnPointerMove: (e: MouseEvent | TouchEvent) => void;
-  private fnSetRatio: () => void;
   constructor(svgID: string) {
     this.fnOnPointerDown = this.onPointerDown.bind(this);
     this.fnOnPointerUp = this.onPointerUp.bind(this);
     this.fnOnPointerMove = this.onPointerMove.bind(this);
-    this.fnSetRatio = this.setRatio.bind(this);
     this.svg = document.getElementById(svgID) as any as SVGElement & SVGSVGElement & HTMLElement;
     const viewboxElem = this.svg.getAttributeNS(null, 'viewBox');
     if (viewboxElem !== null) {
@@ -29,13 +26,11 @@ export class Transform {
     } else {
       throw new Error('The SVG element requires the view box attribute to be set.');
     }
-    this.ratio = this.viewBox.width / this.svg.getBoundingClientRect().width;
     this.togglePanEventListeners(false);
   }
 
   public togglePanEventListeners(toggle: boolean) {
     if (toggle) {
-      this.svg.addEventListener('resize', this.fnSetRatio);
 
       this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
       this.svg.addEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
@@ -46,7 +41,6 @@ export class Transform {
       this.svg.addEventListener('touchend', this.fnOnPointerUp); // Finger is no longer touching the screen
       this.svg.addEventListener('touchmove', this.fnOnPointerMove); // Finger is moving
     } else {
-      this.svg.removeEventListener('resize', this.fnSetRatio);
 
       this.svg.removeEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
       this.svg.removeEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
@@ -71,50 +65,34 @@ export class Transform {
     this.svg.setAttribute('viewBox', viewBoxString);
   }
 
-  private setRatio() {
-    this.ratio = this.viewBox.width / this.svg.getBoundingClientRect().width;
-  }
-
   private onPointerDown(e: TouchEvent | MouseEvent) {
     this.isPointerDown = true;
-    this.pointerOrigin = this.getPointFromEvent(e);
+    this.pointerOrigin = this.getPointFromViewBox(e);
   }
 
   private onPointerUp() {
     this.isPointerDown = false;
-    this.viewBox.x = this.newViewBox.x;
-    this.viewBox.y = this.newViewBox.y;
   }
 
-  private onPointerMove(e: TouchEvent | MouseEvent) {
+  private onPointerMove(e: TouchEvent | MouseEvent | WheelEvent) {
     if (!this.isPointerDown) {
       return;
     }
     e.preventDefault();
 
-    const pointerPosition = this.getPointFromEvent(e);
-    this.newViewBox.x = this.viewBox.x - (pointerPosition.x - this.pointerOrigin.x) * this.ratio * this.scale;
-    this.newViewBox.y = this.viewBox.y - (pointerPosition.y - this.pointerOrigin.y) * this.ratio * this.scale;
+    const pointerPosition = this.getPointFromViewBox(e);
+    this.newViewBox.x = this.viewBox.x - (pointerPosition.x - this.pointerOrigin.x) * this.scale;
+    this.newViewBox.y = this.viewBox.y - (pointerPosition.y - this.pointerOrigin.y) * this.scale;
     const viewBoxString = `${this.newViewBox.x} ${this.newViewBox.y} ${this.viewBox.width} ${this.viewBox.height}`;
     this.svg.setAttribute('viewBox', viewBoxString);
+    this.viewBox.x = this.newViewBox.x;
+    this.viewBox.y = this.newViewBox.y;
   }
 
-  private getPointFromViewBox(e: WheelEvent) {
+  private getPointFromViewBox(e: TouchEvent | MouseEvent | WheelEvent) {
     const m = this.svg.getScreenCTM();
     const point = this.svg.createSVGPoint();
 
-    point.x = e.clientX;
-    point.y = e.clientY;
-    if (m) {
-      return point.matrixTransform(m.inverse());
-    } else {
-      throw new Error('m variable is not defined in getPointFromViewBox in Transform');
-    }
-  }
-
-
-  private getPointFromEvent(e: TouchEvent | MouseEvent | WheelEvent) {
-    const point: Point = {x: 0, y: 0};
     if ((window as any).TouchEvent && e instanceof TouchEvent) {
       point.x = e.targetTouches[0].clientX;
       point.y = e.targetTouches[0].clientY;
@@ -122,6 +100,10 @@ export class Transform {
       point.x = e.clientX;
       point.y = e.clientY;
     }
-    return point;
+    if (m) {
+      return point.matrixTransform(m.inverse());
+    } else {
+      throw new Error('m variable is not defined in getPointFromViewBox in Transform');
+    }
   }
 }

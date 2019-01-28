@@ -29,7 +29,7 @@
           <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
           <v-toolbar-title>Application</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn flat small @click="pan">Pan {{ panModeText }}</v-btn>
+            <v-btn flat small>Pan {{ this.panMode }}</v-btn>
             <v-btn flat small @click="clear">Clear</v-btn>
             <v-toolbar-items class="hidden-sm-and-down">
               <v-select
@@ -109,7 +109,7 @@ export default class Main extends Vue {
   private smoothness = { text: '4 - Sharp curves', value: '4'};
   private color = { text: 'Black', value: 'black'};
   private width = { text: '1px', value: '1'};
-  private panMode: boolean = false;
+  private panMode: string = 'off';
   private selectSmoothnessItems = [
     { text: '1 - No smoothing', value: '1' },
     { text: '4 - Sharp curves', value: '4' },
@@ -128,21 +128,30 @@ export default class Main extends Vue {
     { text: '8px', value: '8' },
   ];
 
-  get panModeText() {
-    return this.panMode ? 'on' : 'off';
+  private panOn(e: KeyboardEvent) {
+    if (e.keyCode === 17) {
+      console.log('pan on');
+      this.panMode = 'on';
+      this.controller.panOn();
+    }
+  }
+
+  private panOff(e: KeyboardEvent) {
+    if (e.keyCode === 17) {
+      console.log('pan off');
+      this.panMode = 'off';
+      this.controller.panOff();
+    }
   }
 
   private mounted() {
     this.controller = new Controller('svgElement');
+    window.addEventListener('keydown', this.panOn.bind(this));
+    window.addEventListener('keyup', this.panOff.bind(this));
   }
 
   private clear() {
     this.controller.clear();
-  }
-
-  private pan() {
-    this.panMode = !this.panMode;
-    this.controller.togglePanMode(this.panMode);
   }
 
   private setStrokeProperties() {

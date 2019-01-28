@@ -15,22 +15,24 @@ export class Controller {
     this.transform = new Transform(svgID);
     this.svg = document.getElementById(svgID) as HTMLElement;
     this.draw.toggleDrawEventListners(true);
+    window.addEventListener('keydown', this.panOn.bind(this));
+    window.addEventListener('keyup', this.panOff);
   }
 
-  public togglePanMode(toggle: boolean) {
-    if (toggle) {
-      this.draw.toggleDrawEventListners(false);
-      this.transform.togglePanEventListeners(true);
-      this.svg.addEventListener('wheel', this.fnWheel);
-    } else {
-      this.draw.toggleDrawEventListners(true);
-      this.transform.togglePanEventListeners(false);
-      this.svg.removeEventListener('wheel', this.fnWheel);
-    }
+  public panOn() {
+    this.draw.toggleDrawEventListners(false);
+    this.transform.togglePanEventListeners(true);
+    this.svg.addEventListener('wheel', this.fnWheel);
+  }
+
+  public panOff() {
+    this.draw.toggleDrawEventListners(true);
+    this.transform.togglePanEventListeners(false);
+    this.svg.removeEventListener('wheel', this.fnWheel);
   }
 
   public setZoom(e: WheelEvent) {
-    const scale = e.deltaY > 0 ? 1.02 : 0.98;
+    const scale = e.deltaY > 0 ? 1.05 : 0.95;
     // if ((e.deltaY > 0 && this.scale < 1) || (e.deltaY < 0 && this.scale > 1)) {
     //   this.scaleSpeed = scale;
     // }
