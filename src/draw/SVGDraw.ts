@@ -13,24 +13,9 @@ export class SVGDraw {
   private pathStarted = false;
   private strPath!: string;
   private buffer: Point[] = [];
-  private fnMouseDownDraw: (e: MouseEvent) => void;
-  private fnMouseMoveDraw: (e: MouseEvent) => void;
-  private fnMouseUpDraw: () => void;
 
   constructor(svgID: string) {
-    this.fnMouseDownDraw = this.mouseDownDraw.bind(this);
-    this.fnMouseMoveDraw = this.mouseMoveDraw.bind(this);
-    this.fnMouseUpDraw = this.mouseUpDraw.bind(this);
     this.svg = document.getElementById(svgID) as any as HTMLElement & SVGElement & SVGSVGElement;
-    this.toggleDrawEventListners(true);
-  }
-
-  public togglePanMode(toggle: boolean) {
-    if (toggle) {
-      this.toggleDrawEventListners(false);
-    } else {
-      this.toggleDrawEventListners(true);
-    }
   }
 
   public clear() {
@@ -48,20 +33,7 @@ export class SVGDraw {
     this.strokeWidth = String(Number(width) * scale);
   }
 
-  public toggleDrawEventListners(toggle: boolean) {
-    if (toggle) {
-      this.svg.addEventListener('mousedown', this.fnMouseDownDraw);
-      this.svg.addEventListener('mousemove', this.fnMouseMoveDraw);
-      this.svg.addEventListener('mouseup', this.fnMouseUpDraw);
-    } else {
-      console.log('listeners off');
-      this.svg.removeEventListener('mousedown', this.fnMouseDownDraw);
-      this.svg.removeEventListener('mousemove', this.fnMouseMoveDraw);
-      this.svg.removeEventListener('mouseup', this.fnMouseUpDraw);
-    }
-  }
-
-  private mouseDownDraw(e: MouseEvent) {
+  public onPointerDown(e: TouchEvent | MouseEvent) {
     this.pathStarted = true;
     this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     this.path.setAttribute('fill', 'none');
@@ -76,18 +48,37 @@ export class SVGDraw {
     this.svg.appendChild(this.path);
   }
 
-  private getMousePosition(e: MouseEvent) {
+  public onPointerMove(e: TouchEvent | MouseEvent) {
+    if (this.pathStarted) {
+      this.appendToBuffer(this.getMousePosition(e));
+      this.updateSVGPath();
+    }
+  }
+
+  public onPointerUp() {
+    if (this.pathStarted) {
+      this.pathStarted = false;
+    }
+  }
+
+  private getMousePosition(e: TouchEvent | MouseEvent) {
     const m = this.svg.getScreenCTM();
     const point = this.svg.createSVGPoint();
 
-    point.x = e.clientX;
-    point.y = e.clientY;
+    if ((window as any).TouchEvent && e instanceof TouchEvent) {
+      point.x = e.targetTouches[0].clientX;
+      point.y = e.targetTouches[0].clientY;
+    } else if (e instanceof MouseEvent || e instanceof WheelEvent) {
+      point.x = e.clientX;
+      point.y = e.clientY;
+    }
     if (m) {
       return point.matrixTransform(m.inverse());
     } else {
       throw new Error('m variable is not defined in getPointFromViewBox in Transform');
     }
   }
+
 
   private appendToBuffer(pt: Point) {
     this.buffer.push(pt);
@@ -96,12 +87,6 @@ export class SVGDraw {
     }
   }
 
-  private mouseMoveDraw(e: MouseEvent) {
-    if (this.pathStarted) {
-      this.appendToBuffer(this.getMousePosition(e));
-      this.updateSVGPath();
-    }
-  }
 
   private getAveragePoint(offset: number) {
     const len = this.buffer.length;
@@ -140,9 +125,4 @@ export class SVGDraw {
     }
   }
 
-  private mouseUpDraw() {
-    if (this.pathStarted) {
-      this.pathStarted = false;
-    }
-  }
 }

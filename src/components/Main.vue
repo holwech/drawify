@@ -131,14 +131,14 @@ export default class Main extends Vue {
   private panOn(e: KeyboardEvent) {
     if (e.keyCode === 17) {
       this.panMode = 'on';
-      this.controller.panOn();
+      this.controller.togglePan(true);
     }
   }
 
   private panOff(e: KeyboardEvent) {
     if (e.keyCode === 17) {
       this.panMode = 'off';
-      this.controller.panOff();
+      this.controller.togglePan(false);
     }
   }
 

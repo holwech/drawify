@@ -11,13 +11,7 @@ export class Transform {
   private pointerOrigin: Point = { x: 0, y: 0 };
   private viewBox = { x: 0, y: 0, width: 500, height: 500 };
   private newViewBox = { x: 0, y: 0 };
-  private fnOnPointerDown: (e: MouseEvent | TouchEvent) => void;
-  private fnOnPointerUp: (e: MouseEvent | TouchEvent) => void;
-  private fnOnPointerMove: (e: MouseEvent | TouchEvent) => void;
   constructor(svgID: string) {
-    this.fnOnPointerDown = this.onPointerDown.bind(this);
-    this.fnOnPointerUp = this.onPointerUp.bind(this);
-    this.fnOnPointerMove = this.onPointerMove.bind(this);
     this.svg = document.getElementById(svgID) as any as SVGElement & SVGSVGElement & HTMLElement;
     const viewboxElem = this.svg.getAttributeNS(null, 'viewBox');
     if (viewboxElem !== null) {
@@ -26,35 +20,9 @@ export class Transform {
     } else {
       throw new Error('The SVG element requires the view box attribute to be set.');
     }
-    this.togglePanEventListeners(false);
   }
 
-  public togglePanEventListeners(toggle: boolean) {
-    if (toggle) {
-
-      this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
-      this.svg.addEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
-      this.svg.addEventListener('mouseleave', this.fnOnPointerUp); // Mouse gets out of the this.svg area
-      this.svg.addEventListener('mousemove', this.fnOnPointerMove); // Mouse is moving
-
-      this.svg.addEventListener('touchstart', this.fnOnPointerDown); // Finger is touching the screen
-      this.svg.addEventListener('touchend', this.fnOnPointerUp); // Finger is no longer touching the screen
-      this.svg.addEventListener('touchmove', this.fnOnPointerMove); // Finger is moving
-    } else {
-
-      this.svg.removeEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
-      this.svg.removeEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
-      this.svg.removeEventListener('mouseleave', this.fnOnPointerUp); // Mouse gets out of the this.svg area
-      this.svg.removeEventListener('mousemove', this.fnOnPointerMove); // Mouse is moving
-
-      // Add all touch events listeners fallback
-      this.svg.removeEventListener('touchstart', this.fnOnPointerDown); // Finger is touching the screen
-      this.svg.removeEventListener('touchend', this.fnOnPointerUp); // Finger is no longer touching the screen
-      this.svg.removeEventListener('touchmove', this.fnOnPointerMove); // Finger is moving
-    }
-  }
-
-  public setZoom(e: WheelEvent) {
+  public onWheel(e: WheelEvent) {
     const mousePosition = this.getPointFromViewBox(e);
     this.viewBox.x = mousePosition.x + (this.viewBox.x - mousePosition.x) * this.scale;
     this.viewBox.y = mousePosition.y + (this.viewBox.y - mousePosition.y) * this.scale;
@@ -65,16 +33,16 @@ export class Transform {
     this.svg.setAttribute('viewBox', viewBoxString);
   }
 
-  private onPointerDown(e: TouchEvent | MouseEvent) {
+  public onPointerDown(e: TouchEvent | MouseEvent) {
     this.isPointerDown = true;
     this.pointerOrigin = this.getPointFromViewBox(e);
   }
 
-  private onPointerUp() {
+  public onPointerUp() {
     this.isPointerDown = false;
   }
 
-  private onPointerMove(e: TouchEvent | MouseEvent | WheelEvent) {
+  public onPointerMove(e: TouchEvent | MouseEvent | WheelEvent) {
     if (!this.isPointerDown) {
       return;
     }
