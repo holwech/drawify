@@ -130,7 +130,6 @@ export default class Main extends Vue {
 
   private panOn(e: KeyboardEvent) {
     if (e.keyCode === 17) {
-      console.log('pan on');
       this.panMode = 'on';
       this.controller.panOn();
     }
@@ -138,7 +137,6 @@ export default class Main extends Vue {
 
   private panOff(e: KeyboardEvent) {
     if (e.keyCode === 17) {
-      console.log('pan off');
       this.panMode = 'off';
       this.controller.panOff();
     }
@@ -146,8 +144,8 @@ export default class Main extends Vue {
 
   private mounted() {
     this.controller = new Controller('svgElement');
-    window.addEventListener('keydown', this.panOn.bind(this));
-    window.addEventListener('keyup', this.panOff.bind(this));
+    window.addEventListener('keydown', this.panOn);
+    window.addEventListener('keyup', this.panOff);
   }
 
   private clear() {

@@ -19,13 +19,15 @@ export class Controller {
     window.addEventListener('keyup', this.panOff);
   }
 
-  public panOn() {
+  public panOn = () => {
+    console.log('pan on');
     this.draw.toggleDrawEventListners(false);
     this.transform.togglePanEventListeners(true);
     this.svg.addEventListener('wheel', this.fnWheel);
   }
 
-  public panOff() {
+  public panOff = () => {
+    console.log('pan off');
     this.draw.toggleDrawEventListners(true);
     this.transform.togglePanEventListeners(false);
     this.svg.removeEventListener('wheel', this.fnWheel);
