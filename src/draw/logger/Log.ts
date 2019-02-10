@@ -1,4 +1,5 @@
-import { LogObject, IPoint } from './LogObject';
+import { LogObject } from './LogObject';
+import { ILogPoint } from '../interfaces';
 
 export default class Log {
   private numObj: number = 0;
@@ -12,7 +13,7 @@ export default class Log {
     return this.startTime;
   }
 
-  public addObject(point: IPoint, objectType: string, startTime: number) {
+  public addObject(point: ILogPoint, objectType: string, startTime: number) {
     this.objects.push(
       new LogObject(
         this.numObj,
@@ -24,7 +25,7 @@ export default class Log {
     this.numObj++;
   }
 
-  public addPoint(point: IPoint) {
+  public addPoint(point: ILogPoint) {
     this.objects[this.numObj - 1].addPoint(point);
   }
 }

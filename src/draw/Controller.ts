@@ -1,5 +1,7 @@
 import { SVGDraw } from './SVGDraw';
 import { Transform } from './Transform';
+import { IStrokeStyle } from './interfaces';
+import { IPoint } from './logger/LogObject';
 
 enum BoardState {
   DRAW = 'DRAW',
@@ -16,15 +18,17 @@ export class Controller {
   // State properties
   private scale = 1;
   private state = BoardState.DRAW;
+  private strokeStyle: IStrokeStyle;
 
   private svg: HTMLElement;
   private draw: SVGDraw;
   private transform: Transform;
 
-  constructor(svgID: string) {
+  constructor(svgID: string, style: IStrokeStyle) {
     this.draw = new SVGDraw(svgID);
     this.transform = new Transform(svgID);
     this.svg = document.getElementById(svgID) as HTMLElement;
+    this.strokeStyle = style;
 
     // Event listeners
     this.fnWheel = this.onWheel.bind(this);
@@ -48,7 +52,9 @@ export class Controller {
   }
 
   public setStrokeProperties(color: string, smoothness: string, width: string) {
-    this.draw.setStrokeProperties(color, smoothness, width, this.scale);
+    this.strokeStyle.bufferSize = smoothness;
+    this.strokeStyle.color = color;
+    this.strokeStyle.width = String(Number(width) * this.scale);
   }
 
   private addAllEventListeners() {
@@ -105,9 +111,10 @@ export class Controller {
   }
 
   private onPointerDown(e: TouchEvent | MouseEvent) {
+    const point = this.getPointerPosition(e);
     switch (this.state) {
       case BoardState.DRAW: {
-        this.draw.onPointerDown(e);
+        this.draw.onPointerDown(e, this.strokeStyle);
         break;
       }
       case BoardState.PAN: {
@@ -123,7 +130,7 @@ export class Controller {
   private onPointerMove(e: TouchEvent | MouseEvent) {
     switch (this.state) {
       case BoardState.DRAW: {
-        this.draw.onPointerMove(e);
+        this.draw.onPointerMove(e, this.strokeStyle.bufferSize);
         break;
       }
       case BoardState.PAN: {
@@ -150,5 +157,17 @@ export class Controller {
         throw new Error('Not state ' + this.state + ' in onPointerUp');
       }
     }
+  }
+
+  private getPointerPosition(e: TouchEvent | MouseEvent): IPoint {
+    const point: IPoint = { x: 0, y: 0 };
+    if ((window as any).TouchEvent && e instanceof TouchEvent) {
+      point.x = e.targetTouches[0].clientX;
+      point.y = e.targetTouches[0].clientY;
+    } else if (e instanceof MouseEvent || e instanceof WheelEvent) {
+      point.x = e.clientX;
+      point.y = e.clientY;
+    }
+    return point;
   }
 }

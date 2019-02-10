@@ -1,3 +1,5 @@
+import { IStrokeStyle } from './interfaces';
+
 interface Point {
   x: number;
   y: number;
@@ -5,9 +7,6 @@ interface Point {
 
 export class SVGDraw {
   public scale = 1;
-  private strokeColor = 'black';
-  private strokeWidth = '2';
-  private bufferSize = '8';
   private svg: HTMLElement & SVGElement & SVGSVGElement;
   private path: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   private pathStarted = false;
@@ -26,32 +25,25 @@ export class SVGDraw {
     }
   }
 
-  public setStrokeProperties(color: string, smoothness: string, width: string, scale: number) {
-    this.bufferSize = smoothness;
-    this.strokeColor = color;
-    console.log(String(Number(width) * scale));
-    this.strokeWidth = String(Number(width) * scale);
-  }
-
-  public onPointerDown(e: TouchEvent | MouseEvent) {
+  public onPointerDown(e: TouchEvent | MouseEvent, style: IStrokeStyle) {
     this.pathStarted = true;
     this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     this.path.setAttribute('fill', 'none');
-    this.path.setAttribute('stroke', this.strokeColor);
-    this.path.setAttribute('stroke-width', this.strokeWidth);
+    this.path.setAttribute('stroke', style.color);
+    this.path.setAttribute('stroke-width', style.width);
     this.path.setAttribute('vector-effect', 'non-scaling-stroke');
     this.buffer = [];
     const pt: Point = this.getMousePosition(e);
-    this.appendToBuffer(pt);
+    this.appendToBuffer(pt, style.bufferSize);
     this.strPath = 'M' + pt.x + ' ' + pt.y;
     this.path.setAttribute('d', this.strPath);
     this.svg.appendChild(this.path);
   }
 
-  public onPointerMove(e: TouchEvent | MouseEvent) {
+  public onPointerMove(e: TouchEvent | MouseEvent, bufferSize: string) {
     if (this.pathStarted) {
-      this.appendToBuffer(this.getMousePosition(e));
-      this.updateSVGPath();
+      this.appendToBuffer(this.getMousePosition(e), bufferSize);
+      this.updateSVGPath(bufferSize);
     }
   }
 
@@ -80,17 +72,17 @@ export class SVGDraw {
   }
 
 
-  private appendToBuffer(pt: Point) {
+  private appendToBuffer(pt: Point, bufferSize: string) {
     this.buffer.push(pt);
-    while (this.buffer.length > Number(this.bufferSize)) {
+    while (this.buffer.length > Number(bufferSize)) {
       this.buffer.shift();
     }
   }
 
 
-  private getAveragePoint(offset: number) {
+  private getAveragePoint(offset: number, bufferSize: string) {
     const len = this.buffer.length;
-    if (len % 2 === 1 || len >= Number(this.bufferSize)) {
+    if (len % 2 === 1 || len >= Number(bufferSize)) {
       let totalX = 0;
       let totalY = 0;
       let pt: Point = {
@@ -112,13 +104,13 @@ export class SVGDraw {
     return null;
   }
 
-  private updateSVGPath() {
-    let pt: Point | null = this.getAveragePoint(0);
+  private updateSVGPath(bufferSize: string) {
+    let pt: Point | null = this.getAveragePoint(0, bufferSize);
     if (pt) {
       this.strPath += ' L' + pt!.x + ' ' + pt!.y;
       let tempPath = '';
       for (let offset = 2; offset < this.buffer.length; offset += 2) {
-        pt = this.getAveragePoint(offset);
+        pt = this.getAveragePoint(offset, bufferSize);
         tempPath += ' L' + pt!.x + ' ' + pt!.y;
       }
       this.path.setAttribute('d', this.strPath + tempPath);

@@ -1,14 +1,8 @@
-export interface IPoint {
-  time: number;
-  x: number;
-  y: number;
-  type: string;
-  stringPath: string;
-}
+import { ILogPoint } from '../interfaces';
 
 export class LogObject {
   private numPoints: number = 0;
-  private path: IPoint[] = [];
+  private path: ILogPoint[] = [];
 
   constructor(
     private id: number,
@@ -17,7 +11,7 @@ export class LogObject {
   ) {
   }
 
-  public addPoint(point: IPoint) {
+  public addPoint(point: ILogPoint) {
     this.path.push(point);
     this.numPoints++;
   }

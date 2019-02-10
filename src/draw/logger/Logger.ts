@@ -1,4 +1,4 @@
-import { IPoint } from './LogObject';
+import { ILogPoint } from '../interfaces';
 import Log from './Log';
 
 export class Logger {
@@ -8,37 +8,35 @@ export class Logger {
     this.log = new Log(new Date().getTime());
   }
 
-  private onPointerDown(e: TouchEvent | MouseEvent) {
+  // private onPointerDown(e: TouchEvent | MouseEvent) {
 
-    this.log.addObject()
-  }
+  //   this.log.addObject()
+  // }
 
-  private createPoint(e: TouchEvent | MouseEvent): IPoint {
-    return {
-      time: this.log.getStartTime,
-      e.
-    }
-  }
+  // private createPoint(e: TouchEvent | MouseEvent): IPoint {
+  //   return {
+  //     time: this.log.getStartTime,
+  //     e.
+  //   }
+  // }
 
-  private newObject(startPoint: {type: string, x: number, y: number}) {
-    const startTime = new Date().getTime();
-    
+  // private newObject(startPoint: {type: string, x: number, y: number}) {
+  //   const startTime = new Date().getTime();
 
-    this.log.objects.push({
-      startTime,
-      numPoints: 1,
-      points: [{
-          point: {type: startPoint.type, x: startPoint.x, y: startPoint.y},
-          stringPoint: startPoint.type + startPoint.x + ' ' + startPoint.y,
-          numPoints: 1,
-          time: startTime,
-      }],
-    });
-  }
+  //   this.log.objects.push({
+  //     startTime,
+  //     numPoints: 1,
+  //     points: [{
+  //         point: {type: startPoint.type, x: startPoint.x, y: startPoint.y},
+  //         stringPoint: startPoint.type + startPoint.x + ' ' + startPoint.y,
+  //         numPoints: 1,
+  //         time: startTime,
+  //     }],
+  //   });
+  // }
 
-  private addPoint() {
-    this.log.objects.points[].push({
-      
-    })
-  }
+  // private addPoint() {
+  //   this.log.objects.points[].push({
+  //   })
+  // }
 }

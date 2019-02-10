@@ -143,7 +143,11 @@ export default class Main extends Vue {
   }
 
   private mounted() {
-    this.controller = new Controller('svgElement');
+    this.controller = new Controller('svgElement', {
+      color: this.color.value,
+      width: this.width.value,
+      bufferSize: this.smoothness.value,
+    });
     window.addEventListener('keydown', this.panOn);
     window.addEventListener('keyup', this.panOff);
   }
