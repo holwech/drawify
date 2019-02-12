@@ -1,7 +1,6 @@
 import { SVGDraw } from './SVGDraw';
 import { Transform } from './Transform';
-import { IStrokeStyle } from './interfaces';
-import { IPoint } from './logger/LogObject';
+import { IStrokeStyle, IPoint } from './interfaces';
 
 enum BoardState {
   DRAW = 'DRAW',
@@ -20,14 +19,14 @@ export class Controller {
   private state = BoardState.DRAW;
   private strokeStyle: IStrokeStyle;
 
-  private svg: HTMLElement;
+  private svg: HTMLElement & SVGElement & SVGSVGElement;
   private draw: SVGDraw;
   private transform: Transform;
 
   constructor(svgID: string, style: IStrokeStyle) {
     this.draw = new SVGDraw(svgID);
     this.transform = new Transform(svgID);
-    this.svg = document.getElementById(svgID) as HTMLElement;
+    this.svg = document.getElementById(svgID) as any as HTMLElement & SVGElement & SVGSVGElement;
     this.strokeStyle = style;
 
     // Event listeners
@@ -51,10 +50,10 @@ export class Controller {
     this.draw.clear();
   }
 
-  public setStrokeProperties(color: string, smoothness: string, width: string) {
+  public setStrokeProperties(color: string, smoothness: number, width: number) {
     this.strokeStyle.bufferSize = smoothness;
     this.strokeStyle.color = color;
-    this.strokeStyle.width = String(Number(width) * this.scale);
+    this.strokeStyle.width = width * this.scale;
   }
 
   private addAllEventListeners() {
@@ -99,26 +98,26 @@ export class Controller {
   }
 
   private onWheel(e: WheelEvent) {
+    e.preventDefault();
     if (this.state === BoardState.PAN) {
       const scale = e.deltaY > 0 ? 1.05 : 0.95;
-      e.preventDefault();
-      this.transform.scale = scale;
-      this.draw.scale = scale;
-      this.transform.onWheel(e);
-      this.draw.scale *= scale;
+      this.strokeStyle.width = this.strokeStyle.width * scale;
+      const point = this.getPointerPosition(e);
+      this.transform.onWheel(point, scale);
       this.scale *= scale;
     }
   }
 
   private onPointerDown(e: TouchEvent | MouseEvent) {
+    e.preventDefault();
     const point = this.getPointerPosition(e);
     switch (this.state) {
       case BoardState.DRAW: {
-        this.draw.onPointerDown(e, this.strokeStyle);
+        this.draw.onPointerDown(point, this.strokeStyle);
         break;
       }
       case BoardState.PAN: {
-        this.transform.onPointerDown(e);
+        this.transform.onPointerDown(point);
         break;
       }
       default: {
@@ -128,13 +127,15 @@ export class Controller {
   }
 
   private onPointerMove(e: TouchEvent | MouseEvent) {
+    e.preventDefault();
+    const point = this.getPointerPosition(e);
     switch (this.state) {
       case BoardState.DRAW: {
-        this.draw.onPointerMove(e, this.strokeStyle.bufferSize);
+        this.draw.onPointerMove(point, this.strokeStyle.bufferSize);
         break;
       }
       case BoardState.PAN: {
-        this.transform.onPointerMove(e);
+        this.transform.onPointerMove(point, this.scale);
         break;
       }
       default: {
@@ -159,15 +160,25 @@ export class Controller {
     }
   }
 
-  private getPointerPosition(e: TouchEvent | MouseEvent): IPoint {
-    const point: IPoint = { x: 0, y: 0 };
+  private getPointerPosition(e: TouchEvent | MouseEvent | WheelEvent): IPoint {
+    const m = this.svg.getScreenCTM();
+    let svgPoint = this.svg.createSVGPoint();
     if ((window as any).TouchEvent && e instanceof TouchEvent) {
-      point.x = e.targetTouches[0].clientX;
-      point.y = e.targetTouches[0].clientY;
+      svgPoint.x = e.targetTouches[0].clientX;
+      svgPoint.y = e.targetTouches[0].clientY;
     } else if (e instanceof MouseEvent || e instanceof WheelEvent) {
-      point.x = e.clientX;
-      point.y = e.clientY;
+      svgPoint.x = e.clientX;
+      svgPoint.y = e.clientY;
     }
-    return point;
+    if (m) {
+      svgPoint = svgPoint.matrixTransform(m.inverse());
+      return {
+        x: svgPoint.x,
+        y: svgPoint.y,
+        dm: svgPoint,
+      };
+    } else {
+      throw new Error('m variable is not defined in getPointFromViewBox in Transform');
+    }
   }
 }

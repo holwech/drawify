@@ -9,10 +9,11 @@ export interface ILogPoint {
 export interface IPoint {
   x: number;
   y: number;
+  dm?: DOMPoint;
 }
 
 export interface IStrokeStyle {
   color: string;
-  width: string;
-  bufferSize: string;
+  width: number;
+  bufferSize: number;
 }

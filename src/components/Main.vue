@@ -106,14 +106,14 @@ export default class Main extends Vue {
   private drawer = false;
   private controller!: Controller;
   private msg: string = 'Drawing board';
-  private smoothness = { text: '4 - Sharp curves', value: '4'};
+  private smoothness = { text: '4 - Sharp curves', value: 4};
   private color = { text: 'Black', value: 'black'};
-  private width = { text: '1px', value: '1'};
+  private width = { text: '1px', value: 1};
   private panMode: string = 'off';
   private selectSmoothnessItems = [
-    { text: '1 - No smoothing', value: '1' },
-    { text: '4 - Sharp curves', value: '4' },
-    { text: '20 - Hyper smooth curves', value: '20' },
+    { text: '1 - No smoothing', value: 1 },
+    { text: '4 - Sharp curves', value: 4 },
+    { text: '20 - Hyper smooth curves', value: 20 },
   ];
   private selectColorItems = [
     { text: 'Black', value: 'black' },
@@ -122,10 +122,10 @@ export default class Main extends Vue {
     { text: 'Green', value: 'green' },
   ];
   private selectWidthItems = [
-    { text: '1px', value: '1' },
-    { text: '2px', value: '2' },
-    { text: '4px', value: '4' },
-    { text: '8px', value: '8' },
+    { text: '1px', value: 1 },
+    { text: '2px', value: 2 },
+    { text: '4px', value: 4 },
+    { text: '8px', value: 8 },
   ];
 
   private panOn(e: KeyboardEvent) {
