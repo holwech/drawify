@@ -29,6 +29,10 @@ export class Controller {
     this.svg = document.getElementById(svgID) as any as HTMLElement & SVGElement & SVGSVGElement;
     this.strokeStyle = style;
 
+    if (!this.svg.getScreenCTM()) {
+      throw new Error('m variable is not defined in getPointFromViewBox in Transform');
+    }
+
     // Event listeners
     this.fnWheel = this.onWheel.bind(this);
     this.fnOnPointerDown = this.onPointerDown.bind(this);
@@ -108,7 +112,7 @@ export class Controller {
     }
   }
 
-  private onPointerDown(e: TouchEvent | MouseEvent) {
+  private onPointerDown(e: MouseEvent) {
     e.preventDefault();
     const point = this.getPointerPosition(e);
     switch (this.state) {
@@ -126,7 +130,7 @@ export class Controller {
     }
   }
 
-  private onPointerMove(e: TouchEvent | MouseEvent) {
+  private onPointerMove(e: MouseEvent) {
     e.preventDefault();
     const point = this.getPointerPosition(e);
     switch (this.state) {
@@ -160,25 +164,11 @@ export class Controller {
     }
   }
 
-  private getPointerPosition(e: TouchEvent | MouseEvent | WheelEvent): IPoint {
-    const m = this.svg.getScreenCTM();
-    let svgPoint = this.svg.createSVGPoint();
-    if ((window as any).TouchEvent && e instanceof TouchEvent) {
-      svgPoint.x = e.targetTouches[0].clientX;
-      svgPoint.y = e.targetTouches[0].clientY;
-    } else if (e instanceof MouseEvent || e instanceof WheelEvent) {
-      svgPoint.x = e.clientX;
-      svgPoint.y = e.clientY;
-    }
-    if (m) {
-      svgPoint = svgPoint.matrixTransform(m.inverse());
-      return {
-        x: svgPoint.x,
-        y: svgPoint.y,
-        dm: svgPoint,
-      };
-    } else {
-      throw new Error('m variable is not defined in getPointFromViewBox in Transform');
-    }
+  private getPointerPosition(e: MouseEvent | WheelEvent): DOMPoint {
+    const m = this.svg.getScreenCTM() as DOMMatrix;
+    const svgPoint = this.svg.createSVGPoint();
+    svgPoint.x = e.clientX;
+    svgPoint.y = e.clientY;
+    return svgPoint.matrixTransform(m.inverse());
   }
 }

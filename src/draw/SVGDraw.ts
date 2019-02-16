@@ -1,11 +1,11 @@
-import { IStrokeStyle, IPoint } from './interfaces';
+import { IStrokeStyle } from './interfaces';
 
 export class SVGDraw {
   private svg: HTMLElement & SVGElement & SVGSVGElement;
   private path: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   private pathStarted = false;
   private strPath!: string;
-  private buffer: IPoint[] = [];
+  private buffer: DOMPoint[] = [];
 
   constructor(svgID: string) {
     this.svg = document.getElementById(svgID) as any as HTMLElement & SVGElement & SVGSVGElement;
@@ -19,7 +19,7 @@ export class SVGDraw {
     }
   }
 
-  public onPointerDown(point: IPoint, style: IStrokeStyle) {
+  public onPointerDown(point: DOMPoint, style: IStrokeStyle) {
     this.pathStarted = true;
     this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     this.path.setAttribute('fill', 'none');
@@ -34,7 +34,7 @@ export class SVGDraw {
     this.svg.appendChild(this.path);
   }
 
-  public onPointerMove(point: IPoint, bufferSize: number) {
+  public onPointerMove(point: DOMPoint, bufferSize: number) {
     if (this.pathStarted) {
       this.appendToBuffer(point, bufferSize);
       this.updateSVGPath(bufferSize);
@@ -47,7 +47,7 @@ export class SVGDraw {
     }
   }
 
-  private appendToBuffer(point: IPoint, bufferSize: number) {
+  private appendToBuffer(point: DOMPoint, bufferSize: number) {
     this.buffer.push(point);
     while (this.buffer.length > bufferSize) {
       this.buffer.shift();
@@ -59,10 +59,7 @@ export class SVGDraw {
     if (len % 2 === 1 || len >= bufferSize) {
       let totalX = 0;
       let totalY = 0;
-      let point: IPoint = {
-        x: 0,
-        y: 0,
-      };
+      let point: DOMPoint = new DOMPoint();
       let count = 0;
       for (let i = offset; i < len; i++) {
         count++;
@@ -70,16 +67,13 @@ export class SVGDraw {
         totalX += point.x;
         totalY += point.y;
       }
-      return {
-        x: totalX / count,
-        y: totalY / count,
-      };
+      return new DOMPoint(totalX / count, totalY / count);
     }
     return null;
   }
 
   private updateSVGPath(bufferSize: number) {
-    let point: IPoint | null = this.getAveragePoint(0, bufferSize);
+    let point: DOMPoint | null = this.getAveragePoint(0, bufferSize);
     if (point) {
       this.strPath += ' L' + point!.x + ' ' + point!.y;
       let tempPath = '';
