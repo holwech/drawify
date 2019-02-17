@@ -7,8 +7,8 @@ export class SVGDraw {
   private strPath!: string;
   private buffer: DOMPoint[] = [];
 
-  constructor(svgID: string) {
-    this.svg = document.getElementById(svgID) as any as HTMLElement & SVGElement & SVGSVGElement;
+  constructor(svgElement: HTMLElement & SVGElement & SVGSVGElement) {
+    this.svg = svgElement;
   }
 
   public clear() {

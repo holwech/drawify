@@ -1,28 +1,19 @@
+import { IViewBox } from './interfaces';
 
 export class Transform {
-  public scaleSpeed = 1;
   private svg: SVGElement & SVGElement & SVGSVGElement;
   private isPointerDown = false;
   private pointerOrigin: DOMPoint = new DOMPoint();
-  private viewBox = { x: 0, y: 0, width: 500, height: 500 };
-  private newViewBox = { x: 0, y: 0 };
-  constructor(svgID: string) {
-    this.svg = document.getElementById(svgID) as any as SVGElement & SVGSVGElement & HTMLElement;
-    const viewboxElem = this.svg.getAttributeNS(null, 'viewBox');
-    if (viewboxElem !== null) {
-      const arr = viewboxElem.split(' ').map(Number);
-      this.viewBox = { x: arr[0], y: arr[1], width: arr[2], height: arr[3] };
-    } else {
-      throw new Error('The SVG element requires the view box attribute to be set.');
-    }
+  constructor(svgElement: SVGElement & SVGElement & SVGSVGElement) {
+    this.svg = svgElement;
   }
 
-  public onWheel(point: DOMPoint, scale: number) {
-    this.viewBox.x = point.x + (this.viewBox.x - point.x) * scale;
-    this.viewBox.y = point.y + (this.viewBox.y - point.y) * scale;
-    this.viewBox.width = this.viewBox.width * scale;
-    this.viewBox.height = this.viewBox.height * scale;
-    const viewBoxString = `${this.viewBox.x} ${this.viewBox.y} ${this.viewBox.width} ${this.viewBox.height}`;
+  public onWheel(point: DOMPoint, viewBox: IViewBox, scale: number) {
+    viewBox.x = point.x + (viewBox.x - point.x) * scale;
+    viewBox.y = point.y + (viewBox.y - point.y) * scale;
+    viewBox.width = viewBox.width * scale;
+    viewBox.height = viewBox.height * scale;
+    const viewBoxString = `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`;
     this.svg.setAttribute('viewBox', viewBoxString);
   }
 
@@ -35,16 +26,13 @@ export class Transform {
     this.isPointerDown = false;
   }
 
-  public onPointerMove(point: DOMPoint, scale: number) {
+  public onPointerMove(point: DOMPoint, viewBox: IViewBox) {
     if (!this.isPointerDown) {
       return;
     }
-
-    this.newViewBox.x = this.viewBox.x - (point.x - this.pointerOrigin.x) * scale;
-    this.newViewBox.y = this.viewBox.y - (point.y - this.pointerOrigin.y) * scale;
-    const viewBoxString = `${this.newViewBox.x} ${this.newViewBox.y} ${this.viewBox.width} ${this.viewBox.height}`;
+    viewBox.x = viewBox.x - (point.x - this.pointerOrigin.x);
+    viewBox.y = viewBox.y - (point.y - this.pointerOrigin.y);
+    const viewBoxString = `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`;
     this.svg.setAttribute('viewBox', viewBoxString);
-    this.viewBox.x = this.newViewBox.x;
-    this.viewBox.y = this.newViewBox.y;
   }
 }

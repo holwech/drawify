@@ -1,36 +1,47 @@
 import { SVGDraw } from './SVGDraw';
 import { Transform } from './Transform';
-import { IStrokeStyle, IPoint } from './interfaces';
+import { IStrokeStyle, IViewBox } from './interfaces';
 
 enum BoardState {
   DRAW = 'DRAW',
   PAN = 'PAN',
 }
 
+const SCALE_FACTOR = 0.05;
+
 export class Controller {
   // Event listeners
   private fnWheel: (e: WheelEvent) => void;
-  private fnOnPointerDown: (e: MouseEvent | TouchEvent) => void;
-  private fnOnPointerUp: (e: MouseEvent | TouchEvent) => void;
-  private fnOnPointerMove: (e: MouseEvent | TouchEvent) => void;
+  private fnOnPointerDown: (e: MouseEvent) => void;
+  private fnOnPointerUp: (e: MouseEvent) => void;
+  private fnOnPointerMove: (e: MouseEvent) => void;
 
   // State properties
   private scale = 1;
   private state = BoardState.DRAW;
   private strokeStyle: IStrokeStyle;
+  private viewBox: IViewBox;
 
   private svg: HTMLElement & SVGElement & SVGSVGElement;
   private draw: SVGDraw;
   private transform: Transform;
 
   constructor(svgID: string, style: IStrokeStyle) {
-    this.draw = new SVGDraw(svgID);
-    this.transform = new Transform(svgID);
     this.svg = document.getElementById(svgID) as any as HTMLElement & SVGElement & SVGSVGElement;
+    this.draw = new SVGDraw(this.svg);
+    this.transform = new Transform(this.svg);
     this.strokeStyle = style;
 
     if (!this.svg.getScreenCTM()) {
       throw new Error('m variable is not defined in getPointFromViewBox in Transform');
+    }
+
+    const viewboxElem = this.svg.getAttributeNS(null, 'viewBox');
+    if (viewboxElem !== null) {
+      const arr = viewboxElem.split(' ').map(Number);
+      this.viewBox = { x: arr[0], y: arr[1], width: arr[2], height: arr[3] };
+    } else {
+      throw new Error('The SVG element requires the view box attribute to be set.');
     }
 
     // Event listeners
@@ -104,10 +115,10 @@ export class Controller {
   private onWheel(e: WheelEvent) {
     e.preventDefault();
     if (this.state === BoardState.PAN) {
-      const scale = e.deltaY > 0 ? 1.05 : 0.95;
+      const scale = e.deltaY > 0 ? 1 + SCALE_FACTOR : 1 - SCALE_FACTOR;
       this.strokeStyle.width = this.strokeStyle.width * scale;
       const point = this.getPointerPosition(e);
-      this.transform.onWheel(point, scale);
+      this.transform.onWheel(point, this.viewBox, scale);
       this.scale *= scale;
     }
   }
@@ -139,7 +150,7 @@ export class Controller {
         break;
       }
       case BoardState.PAN: {
-        this.transform.onPointerMove(point, this.scale);
+        this.transform.onPointerMove(point, this.viewBox);
         break;
       }
       default: {
@@ -165,10 +176,12 @@ export class Controller {
   }
 
   private getPointerPosition(e: MouseEvent | WheelEvent): DOMPoint {
-    const m = this.svg.getScreenCTM() as DOMMatrix;
     const svgPoint = this.svg.createSVGPoint();
     svgPoint.x = e.clientX;
     svgPoint.y = e.clientY;
-    return svgPoint.matrixTransform(m.inverse());
+    // Null check is done in constructor
+    return svgPoint.matrixTransform(
+      (this.svg.getScreenCTM() as DOMMatrix).inverse(),
+    );
   }
 }

@@ -3,9 +3,14 @@ import Log from './Log';
 
 export class Logger {
   private log: Log;
+  private startTime = 0;
 
   constructor() {
     this.log = new Log(new Date().getTime());
+  }
+
+  private start() {
+    this.startTime = new Date().getTime();
   }
 
   // private onPointerDown(e: TouchEvent | MouseEvent) {
