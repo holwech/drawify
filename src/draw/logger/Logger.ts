@@ -6,7 +6,7 @@ export class Logger {
   private startTime = 0;
 
   constructor() {
-    this.log = new Log(new Date().getTime());
+    this.log = new Log();
   }
 
   private start() {
