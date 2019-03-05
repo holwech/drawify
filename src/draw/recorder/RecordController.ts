@@ -1,16 +1,38 @@
-import { ILogPoint } from '../interfaces';
-import Log from './Log';
+import { IRecordPoint, IPoint, ActionType } from '../interfaces';
+import RecordLog from './RecordLog';
+import Timer from './Timer';
 
-export class Logger {
-  private log: Log;
-  private startTime = 0;
+export class RecordController {
+  private recordLog: RecordLog;
+  private timer: Timer;
 
   constructor() {
-    this.log = new Log(new Date().getTime());
+    this.recordLog = new RecordLog();
   }
 
-  private start() {
-    this.startTime = new Date().getTime();
+  public start() {
+    this.timer.start();
+  }
+
+  public pause() {
+    this.timer.pause();
+  }
+
+  public stop() {
+    this.timer.stop();
+  }
+
+  public action(point: IPoint, type: ActionType) {
+
+  }
+
+  private newObject(point: IPoint, type: ActionType) {
+    const time = this.timer.getTime();
+    this.recordLog.newObject(
+      { time, ...point},
+      type,
+      time,
+    );
   }
 
   // private onPointerDown(e: TouchEvent | MouseEvent) {

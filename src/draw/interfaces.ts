@@ -1,9 +1,7 @@
-export interface ILogPoint {
+export interface IRecordPoint {
   time: number;
   x: number;
   y: number;
-  type: string;
-  stringPath: string;
 }
 
 export interface IPoint {
@@ -22,4 +20,10 @@ export interface IViewBox {
   y: number;
   width: number;
   height: number;
+}
+
+export enum ActionType {
+  DRAW = 'DRAW',
+  ZOOM = 'ZOOM',
+  PAN = 'PAN',
 }
