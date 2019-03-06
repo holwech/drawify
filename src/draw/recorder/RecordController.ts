@@ -1,4 +1,4 @@
-import { IRecordPoint, IPoint, ActionType } from '../interfaces';
+import { IRecordPoint, IPoint, Action, BoardState } from '../interfaces';
 import RecordLog from './RecordLog';
 import Timer from './Timer';
 
@@ -22,17 +22,33 @@ export class RecordController {
     this.timer.stop();
   }
 
-  public action(point: IPoint, type: ActionType) {
-
+  public action(point: IPoint, action: Action, boardState: BoardState) {
+    switch (action) {
+      case Action.POINTER_DOWN:
+        this.newObject(point, action, boardState);
+        break;
+      case Action.POINTER_MOVE:
+        this.addPoint(point);
+        break;
+      default:
+        break;
+    }
   }
 
-  private newObject(point: IPoint, type: ActionType) {
+
+  private newObject(point: IPoint, action: Action, boardState: BoardState) {
     const time = this.timer.getTime();
     this.recordLog.newObject(
       { time, ...point},
-      type,
+      action,
+      boardState,
       time,
     );
+  }
+
+  private addPoint(point: IPoint) {
+    const time = this.timer.getTime();
+    this.recordLog.addPoint({time, ...point});
   }
 
   // private onPointerDown(e: TouchEvent | MouseEvent) {
