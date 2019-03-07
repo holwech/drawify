@@ -1,11 +1,7 @@
 import { SVGDraw } from './SVGDraw';
 import { Transform } from './Transform';
-import { IStrokeStyle, IViewBox } from './interfaces';
+import { IStrokeStyle, IViewBox, BoardState } from './interfaces';
 
-enum BoardState {
-  DRAW = 'DRAW',
-  PAN = 'PAN',
-}
 
 const SCALE_FACTOR = 0.05;
 
@@ -127,17 +123,14 @@ export class Controller {
     e.preventDefault();
     const point = this.getPointerPosition(e);
     switch (this.state) {
-      case BoardState.DRAW: {
+      case BoardState.DRAW:
         this.draw.onPointerDown(point, this.strokeStyle);
         break;
-      }
-      case BoardState.PAN: {
+      case BoardState.PAN:
         this.transform.onPointerDown(point);
         break;
-      }
-      default: {
+      default:
         throw new Error('No state ' + this.state + ' in onPointerDown');
-      }
     }
   }
 
@@ -145,33 +138,27 @@ export class Controller {
     e.preventDefault();
     const point = this.getPointerPosition(e);
     switch (this.state) {
-      case BoardState.DRAW: {
+      case BoardState.DRAW:
         this.draw.onPointerMove(point, this.strokeStyle.bufferSize);
         break;
-      }
-      case BoardState.PAN: {
+      case BoardState.PAN:
         this.transform.onPointerMove(point, this.viewBox);
         break;
-      }
-      default: {
+      default:
         throw new Error('Not state ' + this.state + ' in onPointerMove');
-      }
     }
   }
 
   private onPointerUp() {
     switch (this.state) {
-      case BoardState.DRAW: {
+      case BoardState.DRAW:
         this.draw.onPointerUp();
         break;
-      }
-      case BoardState.PAN: {
+      case BoardState.PAN:
         this.transform.onPointerUp();
         break;
-      }
-      default: {
+      default:
         throw new Error('Not state ' + this.state + ' in onPointerUp');
-      }
     }
   }
 
