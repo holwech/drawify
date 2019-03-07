@@ -1,16 +1,27 @@
 import { ILogPoint } from '../interfaces';
 import Log from './Log';
+import Timer from './Timer';
 
 export class Logger {
   private log: Log;
   private startTime = 0;
+  private timer: Timer;
 
   constructor() {
     this.log = new Log();
+    this.timer = new Timer();
   }
 
   private start() {
-    this.startTime = new Date().getTime();
+    this.timer.start();
+  }
+
+  private stop() {
+    this.timer.stop();
+  }
+
+  private pause() {
+    this.timer.pause();
   }
 
   // private onPointerDown(e: TouchEvent | MouseEvent) {
