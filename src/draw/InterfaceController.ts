@@ -1,5 +1,6 @@
 import { SVGDraw } from './SVGDraw';
 import { Transform } from './Transform';
+import { RecordController } from './recorder/RecordController';
 import { IStrokeStyle, IViewBox, BoardState } from './interfaces';
 
 
@@ -21,6 +22,8 @@ export class Controller {
   private svg: HTMLElement & SVGElement & SVGSVGElement;
   private draw: SVGDraw;
   private transform: Transform;
+  private recordLog: RecordController;
+  private recording = false;
 
   constructor(svgID: string, style: IStrokeStyle) {
     this.svg = document.getElementById(svgID) as any as HTMLElement & SVGElement & SVGSVGElement;
@@ -65,6 +68,27 @@ export class Controller {
     this.strokeStyle.bufferSize = smoothness;
     this.strokeStyle.color = color;
     this.strokeStyle.width = width * this.scale;
+  }
+
+  public startRecording() {
+    this.recordLog.start();
+    this.recording = true;
+  }
+
+  public pauseRecording() {
+    this.recordLog.pause();
+    this.recording = true;
+  }
+
+  public stopRecording() {
+    this.recordLog.stop();
+    this.recording = false;
+  }
+
+  private recordEvent() {
+    if(this.recording) {
+
+    }
   }
 
   private addAllEventListeners() {

@@ -8,6 +8,7 @@ export class RecordController {
 
   constructor() {
     this.recordLog = new RecordLog();
+    this.timer = new Timer();
   }
 
   public start() {
@@ -22,7 +23,11 @@ export class RecordController {
     this.timer.stop();
   }
 
-  public action(point: IPoint, action: Action, boardState: BoardState) {
+  public printLog() {
+    this.recordLog.print();
+  }
+
+  public event(point: IPoint, action: Action, boardState: BoardState) {
     switch (action) {
       case Action.POINTER_DOWN:
         this.newObject(point, action, boardState);
@@ -34,7 +39,6 @@ export class RecordController {
         break;
     }
   }
-
 
   private newObject(point: IPoint, action: Action, boardState: BoardState) {
     const time = this.timer.getTime();

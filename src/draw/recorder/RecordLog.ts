@@ -16,6 +16,10 @@ export default class RecordLog {
     this.objects[this.numObj].addPoint(point);
   }
 
+  public print() {
+    console.log(this.objects);
+  }
+
   private newID() {
     this.numObj++;
     return this.numObj;
