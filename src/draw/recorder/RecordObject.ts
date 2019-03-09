@@ -1,4 +1,4 @@
-import { IRecordPoint, Action, BoardState } from '../interfaces';
+import { IRecordPoint, EventType, BoardState } from '../config/interfaces';
 
 export class RecordObject {
   private numPoints: number = 0;
@@ -6,7 +6,7 @@ export class RecordObject {
 
   constructor(
     private id: number,
-    private action: Action,
+    private event: EventType,
     private boardState: BoardState,
     private startTime: number,
   ) {

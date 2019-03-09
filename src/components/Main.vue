@@ -67,26 +67,6 @@
                 color='black'
               ></v-select>
             </v-toolbar-items>
-            <v-toolbar-items class="hidden-sm-and-down">
-              <v-btn @click="timer.start()">
-                Start
-              </v-btn>
-            </v-toolbar-items>
-            <v-toolbar-items class="hidden-sm-and-down">
-              <v-btn @click="timer.stop()">
-                Stop
-              </v-btn>
-            </v-toolbar-items>
-            <v-toolbar-items class="hidden-sm-and-down">
-              <v-btn @click="timer.pause()">
-                Pause
-              </v-btn>
-            </v-toolbar-items>
-            <v-toolbar-items class="hidden-sm-and-down">
-              <v-btn @click="printTime">
-                Print time
-              </v-btn>
-            </v-toolbar-items>
           </v-toolbar>
         <v-content>
         <v-container fluid fill-height ma-0 pa-0>
@@ -119,12 +99,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { Controller } from '../draw/Controller';
-import Timer from '../draw/logger/Timer';
+import { BoardState, IStrokeProps } from '../draw/config/interfaces';
+import { Controller } from '../draw/InterfaceController';
 
 @Component
 export default class Main extends Vue {
-  private timer!: Timer;
   private drawer = false;
   private controller!: Controller;
   private msg: string = 'Drawing board';
@@ -153,14 +132,14 @@ export default class Main extends Vue {
   private panOn(e: KeyboardEvent) {
     if (e.keyCode === 17) {
       this.panMode = 'on';
-      this.controller.togglePan(true);
+      this.controller.setState(BoardState.PAN);
     }
   }
 
   private panOff(e: KeyboardEvent) {
     if (e.keyCode === 17) {
       this.panMode = 'off';
-      this.controller.togglePan(false);
+      this.controller.setState(BoardState.DRAW);
     }
   }
 
@@ -170,7 +149,6 @@ export default class Main extends Vue {
       width: this.width.value,
       bufferSize: this.smoothness.value,
     });
-    this.timer = new Timer();
     window.addEventListener('keydown', this.panOn);
     window.addEventListener('keyup', this.panOff);
   }
@@ -181,11 +159,11 @@ export default class Main extends Vue {
 
   private setStrokeProperties() {
     console.log(this.smoothness.value, this.color.value, this.width.value);
-    this.controller.setStrokeProperties(this.color.value, this.smoothness.value, this.width.value);
-  }
-
-  private printTime() {
-    console.log(this.timer.getTime());
+    this.controller.setStrokeProperties({
+      color: this.color.value,
+      width: this.width.value,
+      bufferSize: this.smoothness.value,
+    });
   }
 }
 </script>

@@ -1,4 +1,4 @@
-import { IViewBox } from './interfaces';
+import { IViewBox } from '../config/interfaces';
 
 export class Transform {
   private svg: SVGElement & SVGElement & SVGSVGElement;

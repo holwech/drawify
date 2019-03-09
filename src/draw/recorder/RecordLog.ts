@@ -1,13 +1,13 @@
 import { RecordObject } from './RecordObject';
-import { IRecordPoint, Action, BoardState } from '../interfaces';
+import { IRecordPoint, EventType, BoardState } from '../config/interfaces';
 
 export default class RecordLog {
   private numObj: number = -1;
   private objects: RecordObject[] = [];
 
-  public newObject(point: IRecordPoint, action: Action, boardState: BoardState, startTime: number) {
+  public newObject(point: IRecordPoint, event: EventType, boardState: BoardState, startTime: number) {
     this.objects.push(
-      new RecordObject(this.newID(), action, boardState, startTime),
+      new RecordObject(this.newID(), event, boardState, startTime),
     );
     this.objects[this.numObj].addPoint(point);
   }

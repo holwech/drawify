@@ -9,7 +9,7 @@ export interface IPoint {
   y: number;
 }
 
-export interface IStrokeStyle {
+export interface IStrokeProps {
   color: string;
   width: number;
   bufferSize: number;
@@ -22,14 +22,24 @@ export interface IViewBox {
   height: number;
 }
 
-export enum Action {
+export interface IEvent {
+  eventType: EventType;
+  e?: MouseEvent | WheelEvent;
+  strokeProps?: IStrokeProps;
+  state?: BoardState;
+}
+
+export enum EventType {
   ONWHEEL = 'ONWHEEL',
   POINTER_DOWN = 'POINTER_DOWN',
   POINTER_MOVE = 'POINTER_MOVE',
   POINTER_UP = 'POINTER_UP',
+  SET_STROKE_PROPS = 'SET_STROKE_PROPS',
+  CLEAR = 'CLEAR',
+  SET_STATE = 'SET_STATE',
 }
 
 export enum BoardState {
   DRAW = 'DRAW',
   PAN = 'PAN',
-    }
+}

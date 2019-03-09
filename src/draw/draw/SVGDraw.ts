@@ -1,4 +1,4 @@
-import { IStrokeStyle } from './interfaces';
+import { IStrokeProps } from './../config/interfaces';
 
 export class SVGDraw {
   private svg: HTMLElement & SVGElement & SVGSVGElement;
@@ -19,7 +19,7 @@ export class SVGDraw {
     }
   }
 
-  public onPointerDown(point: DOMPoint, style: IStrokeStyle) {
+  public onPointerDown(point: DOMPoint, style: IStrokeProps) {
     this.pathStarted = true;
     this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     this.path.setAttribute('fill', 'none');

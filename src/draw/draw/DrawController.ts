@@ -1,142 +1,75 @@
 import { SVGDraw } from './SVGDraw';
 import { Transform } from './Transform';
-import { RecordController } from './recorder/RecordController';
-import { IStrokeStyle, IViewBox, BoardState } from './interfaces';
-
+import { IStrokeProps, IViewBox, BoardState, IEvent, EventType } from '../config/interfaces';
 
 const SCALE_FACTOR = 0.05;
 
-export class Controller {
-  // Event listeners
-  private fnWheel: (e: WheelEvent) => void;
-  private fnOnPointerDown: (e: MouseEvent) => void;
-  private fnOnPointerUp: (e: MouseEvent) => void;
-  private fnOnPointerMove: (e: MouseEvent) => void;
-
+export class DrawController {
   // State properties
   private scale = 1;
   private state = BoardState.DRAW;
-  private strokeStyle: IStrokeStyle;
+  private strokeProps: IStrokeProps;
   private viewBox: IViewBox;
 
   private svg: HTMLElement & SVGElement & SVGSVGElement;
   private draw: SVGDraw;
   private transform: Transform;
-  private recordLog: RecordController;
-  private recording = false;
 
-  constructor(svgID: string, style: IStrokeStyle) {
-    this.svg = document.getElementById(svgID) as any as HTMLElement & SVGElement & SVGSVGElement;
+  constructor(svgElement: HTMLElement & SVGElement & SVGSVGElement, style: IStrokeProps, viewBox: IViewBox) {
+    this.svg = svgElement;
     this.draw = new SVGDraw(this.svg);
     this.transform = new Transform(this.svg);
-    this.strokeStyle = style;
-
-    if (!this.svg.getScreenCTM()) {
-      throw new Error('m variable is not defined in getPointFromViewBox in Transform');
-    }
-
-    const viewboxElem = this.svg.getAttributeNS(null, 'viewBox');
-    if (viewboxElem !== null) {
-      const arr = viewboxElem.split(' ').map(Number);
-      this.viewBox = { x: arr[0], y: arr[1], width: arr[2], height: arr[3] };
-    } else {
-      throw new Error('The SVG element requires the view box attribute to be set.');
-    }
-
-    // Event listeners
-    this.fnWheel = this.onWheel.bind(this);
-    this.fnOnPointerDown = this.onPointerDown.bind(this);
-    this.fnOnPointerUp = this.onPointerUp.bind(this);
-    this.fnOnPointerMove = this.onPointerMove.bind(this);
-
-    this.addAllEventListeners();
+    this.strokeProps = style;
+    this.viewBox = viewBox;
   }
 
-  public togglePan(toggle: boolean) {
-    if (toggle) {
-      this.state = BoardState.PAN;
-    } else {
-      this.state = BoardState.DRAW;
+  public execute(event: IEvent) {
+    switch (event.eventType) {
+      case EventType.POINTER_DOWN:
+        this.onPointerDown(event.e!);
+        break;
+      case EventType.POINTER_MOVE:
+        this.onPointerMove(event.e!);
+        break;
+      case EventType.POINTER_UP:
+        this.onPointerUp();
+        break;
+      case EventType.SET_STROKE_PROPS:
+        this.setStrokeProperties(event.strokeProps!);
+        break;
+      case EventType.ONWHEEL:
+        this.onWheel(event.e as WheelEvent);
+        break;
+      case EventType.CLEAR:
+        this.clear();
+        break;
+      case EventType.SET_STATE:
+        this.setState(event.state!);
+        break;
+      default:
+        break;
     }
   }
 
-  public clear() {
+  private setState(state: BoardState) {
+    this.state = state;
+  }
+
+  private clear() {
     this.draw.clear();
   }
 
-  public setStrokeProperties(color: string, smoothness: number, width: number) {
-    this.strokeStyle.bufferSize = smoothness;
-    this.strokeStyle.color = color;
-    this.strokeStyle.width = width * this.scale;
-  }
-
-  public startRecording() {
-    this.recordLog.start();
-    this.recording = true;
-  }
-
-  public pauseRecording() {
-    this.recordLog.pause();
-    this.recording = true;
-  }
-
-  public stopRecording() {
-    this.recordLog.stop();
-    this.recording = false;
-  }
-
-  private recordEvent() {
-    if(this.recording) {
-
-    }
-  }
-
-  private addAllEventListeners() {
-    this.addPointerEventListeners();
-    this.addWheelEventListener();
-  }
-
-  private removeAllEventListeners() {
-    this.removePointerEventListeners();
-    this.removeWheelEventListener();
-  }
-
-  private addPointerEventListeners() {
-    this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
-    this.svg.addEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
-    this.svg.addEventListener('mouseleave', this.fnOnPointerUp); // Mouse gets out of the this.svg area
-    this.svg.addEventListener('mousemove', this.fnOnPointerMove); // Mouse is moving
-
-    // this.svg.addEventListener('touchstart', this.fnOnPointerDown); // Finger is touching the screen
-    // this.svg.addEventListener('touchend', this.fnOnPointerUp); // Finger is no longer touching the screen
-    // this.svg.addEventListener('touchmove', this.fnOnPointerMove); // Finger is moving
-  }
-
-  private removePointerEventListeners() {
-    this.svg.removeEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
-    this.svg.removeEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
-    this.svg.removeEventListener('mouseleave', this.fnOnPointerUp); // Mouse gets out of the this.svg area
-    this.svg.removeEventListener('mousemove', this.fnOnPointerMove); // Mouse is moving
-
-    // Add all touch events listeners fallback
-    // this.svg.removeEventListener('touchstart', this.fnOnPointerDown); // Finger is touching the screen
-    // this.svg.removeEventListener('touchend', this.fnOnPointerUp); // Finger is no longer touching the screen
-    // this.svg.removeEventListener('touchmove', this.fnOnPointerMove); // Finger is moving
-  }
-
-  private addWheelEventListener() {
-    this.svg.addEventListener('wheel', this.fnWheel);
-  }
-
-  private removeWheelEventListener() {
-    this.svg.removeEventListener('wheel', this.fnWheel);
+  private setStrokeProperties(strokeProps: IStrokeProps) {
+    this.strokeProps.bufferSize = strokeProps.bufferSize;
+    this.strokeProps.color = strokeProps.color;
+    this.strokeProps.width = strokeProps.width * this.scale;
   }
 
   private onWheel(e: WheelEvent) {
     e.preventDefault();
     if (this.state === BoardState.PAN) {
       const scale = e.deltaY > 0 ? 1 + SCALE_FACTOR : 1 - SCALE_FACTOR;
-      this.strokeStyle.width = this.strokeStyle.width * scale;
+      this.strokeProps.width = this.strokeProps.width * scale;
       const point = this.getPointerPosition(e);
       this.transform.onWheel(point, this.viewBox, scale);
       this.scale *= scale;
@@ -148,7 +81,7 @@ export class Controller {
     const point = this.getPointerPosition(e);
     switch (this.state) {
       case BoardState.DRAW:
-        this.draw.onPointerDown(point, this.strokeStyle);
+        this.draw.onPointerDown(point, this.strokeProps);
         break;
       case BoardState.PAN:
         this.transform.onPointerDown(point);
@@ -163,7 +96,7 @@ export class Controller {
     const point = this.getPointerPosition(e);
     switch (this.state) {
       case BoardState.DRAW:
-        this.draw.onPointerMove(point, this.strokeStyle.bufferSize);
+        this.draw.onPointerMove(point, this.strokeProps.bufferSize);
         break;
       case BoardState.PAN:
         this.transform.onPointerMove(point, this.viewBox);

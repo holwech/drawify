@@ -1,4 +1,4 @@
-import { IRecordPoint, IPoint, Action, BoardState } from '../interfaces';
+import { IRecordPoint, IPoint, EventType, BoardState } from '../config/interfaces';
 import RecordLog from './RecordLog';
 import Timer from './Timer';
 
@@ -27,12 +27,12 @@ export class RecordController {
     this.recordLog.print();
   }
 
-  public event(point: IPoint, action: Action, boardState: BoardState) {
-    switch (action) {
-      case Action.POINTER_DOWN:
-        this.newObject(point, action, boardState);
+  public event(point: IPoint, event: EventType, boardState: BoardState) {
+    switch (event) {
+      case EventType.POINTER_DOWN:
+        this.newObject(point, event, boardState);
         break;
-      case Action.POINTER_MOVE:
+      case EventType.POINTER_MOVE:
         this.addPoint(point);
         break;
       default:
@@ -40,11 +40,11 @@ export class RecordController {
     }
   }
 
-  private newObject(point: IPoint, action: Action, boardState: BoardState) {
+  private newObject(point: IPoint, event: EventType, boardState: BoardState) {
     const time = this.timer.getTime();
     this.recordLog.newObject(
       { time, ...point},
-      action,
+      event,
       boardState,
       time,
     );
@@ -55,12 +55,12 @@ export class RecordController {
     this.recordLog.addPoint({time, ...point});
   }
 
-  // private onPointerDown(e: TouchEvent | MouseEvent) {
+  // private onPointerDown(e: TouchEventType | MouseEventType) {
 
   //   this.log.addObject()
   // }
 
-  // private createPoint(e: TouchEvent | MouseEvent): IPoint {
+  // private createPoint(e: TouchEventType | MouseEventType): IPoint {
   //   return {
   //     time: this.log.getStartTime,
   //     e.
