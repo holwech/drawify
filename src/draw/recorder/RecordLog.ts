@@ -1,26 +1,18 @@
-import { RecordObject } from './RecordObject';
-import { IRecordPoint, EventType, BoardState } from '../config/interfaces';
+import { IEvent, ILogEvent } from '../utils/interfaces';
 
 export default class RecordLog {
-  private numObj: number = -1;
-  private objects: RecordObject[] = [];
+  public numObj: number = -1;
+  public log: ILogEvent[] = [];
 
-  public newObject(point: IRecordPoint, event: EventType, boardState: BoardState, startTime: number) {
-    this.objects.push(
-      new RecordObject(this.newID(), event, boardState, startTime),
-    );
-    this.objects[this.numObj].addPoint(point);
+  public commit(event: IEvent, time: number): void {
+    this.log.push({
+      event,
+      time,
+      id: this.newID(),
+    });
   }
 
-  public addPoint(point: IRecordPoint) {
-    this.objects[this.numObj].addPoint(point);
-  }
-
-  public print() {
-    console.log(this.objects);
-  }
-
-  private newID() {
+  private newID(): number {
     this.numObj++;
     return this.numObj;
   }

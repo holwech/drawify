@@ -1,3 +1,5 @@
+import { BoardState } from '../utils/interfaces';
+
 enum TimerState {
   UINIT,
   STARTED,
@@ -11,7 +13,7 @@ export default class Timer {
   private pauseTime = 0;
   private state: TimerState = TimerState.UINIT;
 
-  public getTime() {
+  public getTime(): number {
     switch (this.state) {
       case TimerState.UINIT: {
         return 0;
@@ -28,23 +30,23 @@ export default class Timer {
     }
   }
 
-  public getStopTime() {
+  public getStopTime(): number {
     if (this.state !== TimerState.STOPPED) {
       return 0;
     }
     return this.stopTime;
   }
 
-  public getState() {
+  public getState(): TimerState {
     return this.state;
   }
 
-  public restart() {
+  public restart(): void {
     this.startTime = new Date().getTime();
     this.stopTime = this.startTime;
   }
 
-  public start() {
+  public start(): void {
     switch (this.state) {
       case TimerState.UINIT: {
         this.startTime = new Date().getTime();
@@ -68,7 +70,7 @@ export default class Timer {
     console.log('State is ' + this.state);
   }
 
-  public pause() {
+  public pause(): void {
     switch (this.state) {
       case TimerState.UINIT: {
         return;
@@ -88,7 +90,7 @@ export default class Timer {
     console.log('State is ' + this.state);
   }
 
-  public stop() {
+  public stop(): void {
     switch (this.state) {
       case TimerState.UINIT: {
         return;

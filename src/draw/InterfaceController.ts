@@ -1,8 +1,13 @@
 import { RecordController } from './recorder/RecordController';
 import { DrawController } from './draw/DrawController';
-import { IStrokeProps, EventType, BoardState } from './config/interfaces';
+import { IStrokeProps, EventType, BoardState, IEvent } from './utils/interfaces';
 
 export class Controller {
+  // Event functions
+  private fnOnWheel: (e: WheelEvent) => void;
+  private fnOnPointerDown: (e: MouseEvent) => void;
+  private fnOnPointerMove: (e: MouseEvent) => void;
+  private fnOnPointerUp: (e: MouseEvent) => void;
 
   private svg: HTMLElement & SVGElement & SVGSVGElement;
   private recordLog: RecordController;
@@ -21,91 +26,71 @@ export class Controller {
     } else {
       throw new Error('The SVG element requires the view box attribute to be set.');
     }
-    this.draw = new DrawController(this.svg, style, viewBox);
 
+    this.draw = new DrawController(this.svg, style, viewBox);
     this.recordLog = new RecordController();
-    this.addAllEventListeners();
+    this.fnOnWheel = this.onWheel;
+    this.fnOnPointerDown = this.onPointerDown;
+    this.fnOnPointerMove = this.onPointerMove;
+    this.fnOnPointerUp = this.onPointerUp;
+    this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
+    this.svg.addEventListener('wheel', this.fnOnWheel);
   }
 
-  public startRecording() {
+  public startRecording(): void {
     this.recordLog.start();
   }
 
-  public pauseRecording() {
+  public pauseRecording(): void {
     this.recordLog.pause();
   }
 
-  public stopRecording() {
+  public stopRecording(): void {
     this.recordLog.stop();
   }
 
-  public clear() {
-    this.draw.execute({ eventType: EventType.CLEAR });
+  public printLog(): void {
+    this.recordLog.printLog();
   }
 
-  public setState(state: BoardState) {
-    this.draw.execute({ eventType: EventType.SET_STATE, state });
+  public clear(): void {
+    this.dispatchEvent({ eventType: EventType.CLEAR });
   }
 
-  public setStrokeProperties(strokeProps: IStrokeProps) {
-    this.draw.execute({ eventType: EventType.SET_STROKE_PROPS, strokeProps });
+  public setState(state: BoardState): void {
+    this.dispatchEvent({ eventType: EventType.SET_STATE, state });
   }
 
-  private fnWheel = (e: WheelEvent) => {
-    this.draw.execute({ eventType: EventType.ONWHEEL, e });
+  public setStrokeProperties(strokeProps: IStrokeProps): void {
+    this.dispatchEvent({ eventType: EventType.SET_STROKE_PROPS, strokeProps });
   }
 
-  private fnOnPointerDown = (e: MouseEvent) => {
-    this.draw.execute({ eventType: EventType.POINTER_DOWN, e });
+  private onWheel = (e: WheelEvent) => {
+    this.dispatchEvent({ eventType: EventType.ONWHEEL, e });
   }
 
-  private fnOnPointerUp = (e: MouseEvent) => {
-    this.draw.execute({ eventType: EventType.POINTER_UP, e });
-  }
-
-  private fnOnPointerMove = (e: MouseEvent) => {
-    this.draw.execute({ eventType: EventType.POINTER_MOVE, e });
-  }
-
-  private addAllEventListeners() {
-    this.addPointerEventListeners();
-    this.addWheelEventListener();
-  }
-
-  private removeAllEventListeners() {
-    this.removePointerEventListeners();
-    this.removeWheelEventListener();
-  }
-
-  private addPointerEventListeners() {
-    this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
-    this.svg.addEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
-    this.svg.addEventListener('mouseleave', this.fnOnPointerUp); // Mouse gets out of the this.svg area
-    this.svg.addEventListener('mousemove', this.fnOnPointerMove); // Mouse is moving
-
-    // this.svg.addEventListener('touchstart', this.fnOnPointerDown); // Finger is touching the screen
-    // this.svg.addEventListener('touchend', this.fnOnPointerUp); // Finger is no longer touching the screen
-    // this.svg.addEventListener('touchmove', this.fnOnPointerMove); // Finger is moving
-  }
-
-  private removePointerEventListeners() {
+  private onPointerDown = (e: MouseEvent) => {
+    this.dispatchEvent({ eventType: EventType.POINTER_DOWN, e });
     this.svg.removeEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
+    this.svg.addEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
+    this.svg.addEventListener('mouseleave', this.fnOnPointerUp); // Releasing the mouse
+    this.svg.addEventListener('mousemove', this.fnOnPointerMove); // Mouse is moving
+  }
+
+  private onPointerUp = (e: MouseEvent) => {
+    this.dispatchEvent({ eventType: EventType.POINTER_UP, e });
     this.svg.removeEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
-    this.svg.removeEventListener('mouseleave', this.fnOnPointerUp); // Mouse gets out of the this.svg area
+    this.svg.removeEventListener('mouseleave', this.fnOnPointerUp); // Releasing the mouse
     this.svg.removeEventListener('mousemove', this.fnOnPointerMove); // Mouse is moving
-
-    // Add all touch events listeners fallback
-    // this.svg.removeEventListener('touchstart', this.fnOnPointerDown); // Finger is touching the screen
-    // this.svg.removeEventListener('touchend', this.fnOnPointerUp); // Finger is no longer touching the screen
-    // this.svg.removeEventListener('touchmove', this.fnOnPointerMove); // Finger is moving
+    this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
   }
 
-  private addWheelEventListener() {
-    this.svg.addEventListener('wheel', this.fnWheel);
+  private onPointerMove = (e: MouseEvent) => {
+    this.dispatchEvent({ eventType: EventType.POINTER_MOVE, e });
   }
 
-  private removeWheelEventListener() {
-    this.svg.removeEventListener('wheel', this.fnWheel);
+  private dispatchEvent(event: IEvent): void {
+    this.draw.execute(event);
+    this.recordLog.dispatch(event);
   }
-
 }

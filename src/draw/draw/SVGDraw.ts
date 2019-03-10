@@ -1,4 +1,4 @@
-import { IStrokeProps } from './../config/interfaces';
+import { IStrokeProps } from './../utils/interfaces';
 
 export class SVGDraw {
   private svg: HTMLElement & SVGElement & SVGSVGElement;
@@ -11,7 +11,7 @@ export class SVGDraw {
     this.svg = svgElement;
   }
 
-  public clear() {
+  public clear(): void {
     let lastChild = this.svg.lastChild;
     while (lastChild) {
       this.svg.removeChild(lastChild);
@@ -19,7 +19,7 @@ export class SVGDraw {
     }
   }
 
-  public onPointerDown(point: DOMPoint, style: IStrokeProps) {
+  public onPointerDown(point: DOMPoint, style: IStrokeProps): void {
     this.pathStarted = true;
     this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     this.path.setAttribute('fill', 'none');
@@ -34,27 +34,27 @@ export class SVGDraw {
     this.svg.appendChild(this.path);
   }
 
-  public onPointerMove(point: DOMPoint, bufferSize: number) {
+  public onPointerMove(point: DOMPoint, bufferSize: number): void {
     if (this.pathStarted) {
       this.appendToBuffer(point, bufferSize);
       this.updateSVGPath(bufferSize);
     }
   }
 
-  public onPointerUp() {
+  public onPointerUp(): void {
     if (this.pathStarted) {
       this.pathStarted = false;
     }
   }
 
-  private appendToBuffer(point: DOMPoint, bufferSize: number) {
+  private appendToBuffer(point: DOMPoint, bufferSize: number): void {
     this.buffer.push(point);
     while (this.buffer.length > bufferSize) {
       this.buffer.shift();
     }
   }
 
-  private getAveragePoint(offset: number, bufferSize: number) {
+  private getAveragePoint(offset: number, bufferSize: number): null | DOMPoint {
     const len = this.buffer.length;
     if (len % 2 === 1 || len >= bufferSize) {
       let totalX = 0;
@@ -72,7 +72,7 @@ export class SVGDraw {
     return null;
   }
 
-  private updateSVGPath(bufferSize: number) {
+  private updateSVGPath(bufferSize: number): void {
     let point: DOMPoint | null = this.getAveragePoint(0, bufferSize);
     if (point) {
       this.strPath += ' L' + point!.x + ' ' + point!.y;

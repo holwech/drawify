@@ -29,6 +29,12 @@ export interface IEvent {
   state?: BoardState;
 }
 
+export interface ILogEvent {
+  event: IEvent;
+  time: number;
+  id: number;
+}
+
 export enum EventType {
   ONWHEEL = 'ONWHEEL',
   POINTER_DOWN = 'POINTER_DOWN',

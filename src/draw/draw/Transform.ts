@@ -1,4 +1,4 @@
-import { IViewBox } from '../config/interfaces';
+import { IViewBox } from '../utils/interfaces';
 
 export class Transform {
   private svg: SVGElement & SVGElement & SVGSVGElement;
@@ -8,7 +8,7 @@ export class Transform {
     this.svg = svgElement;
   }
 
-  public onWheel(point: DOMPoint, viewBox: IViewBox, scale: number) {
+  public onWheel(point: DOMPoint, viewBox: IViewBox, scale: number): void {
     viewBox.x = point.x + (viewBox.x - point.x) * scale;
     viewBox.y = point.y + (viewBox.y - point.y) * scale;
     viewBox.width = viewBox.width * scale;
@@ -17,16 +17,16 @@ export class Transform {
     this.svg.setAttribute('viewBox', viewBoxString);
   }
 
-  public onPointerDown(point: DOMPoint) {
+  public onPointerDown(point: DOMPoint): void {
     this.isPointerDown = true;
     this.pointerOrigin = point;
   }
 
-  public onPointerUp() {
+  public onPointerUp(): void {
     this.isPointerDown = false;
   }
 
-  public onPointerMove(point: DOMPoint, viewBox: IViewBox) {
+  public onPointerMove(point: DOMPoint, viewBox: IViewBox): void {
     if (!this.isPointerDown) {
       return;
     }

@@ -1,6 +1,6 @@
 import { SVGDraw } from './SVGDraw';
 import { Transform } from './Transform';
-import { IStrokeProps, IViewBox, BoardState, IEvent, EventType } from '../config/interfaces';
+import { IStrokeProps, IViewBox, BoardState, IEvent, EventType } from '../utils/interfaces';
 
 const SCALE_FACTOR = 0.05;
 
@@ -23,7 +23,7 @@ export class DrawController {
     this.viewBox = viewBox;
   }
 
-  public execute(event: IEvent) {
+  public execute(event: IEvent): void {
     switch (event.eventType) {
       case EventType.POINTER_DOWN:
         this.onPointerDown(event.e!);
@@ -51,21 +51,21 @@ export class DrawController {
     }
   }
 
-  private setState(state: BoardState) {
+  private setState(state: BoardState): void {
     this.state = state;
   }
 
-  private clear() {
+  private clear(): void {
     this.draw.clear();
   }
 
-  private setStrokeProperties(strokeProps: IStrokeProps) {
+  private setStrokeProperties(strokeProps: IStrokeProps): void {
     this.strokeProps.bufferSize = strokeProps.bufferSize;
     this.strokeProps.color = strokeProps.color;
     this.strokeProps.width = strokeProps.width * this.scale;
   }
 
-  private onWheel(e: WheelEvent) {
+  private onWheel(e: WheelEvent): void {
     e.preventDefault();
     if (this.state === BoardState.PAN) {
       const scale = e.deltaY > 0 ? 1 + SCALE_FACTOR : 1 - SCALE_FACTOR;
@@ -76,7 +76,7 @@ export class DrawController {
     }
   }
 
-  private onPointerDown(e: MouseEvent) {
+  private onPointerDown(e: MouseEvent): void {
     e.preventDefault();
     const point = this.getPointerPosition(e);
     switch (this.state) {
@@ -91,7 +91,7 @@ export class DrawController {
     }
   }
 
-  private onPointerMove(e: MouseEvent) {
+  private onPointerMove(e: MouseEvent): void {
     e.preventDefault();
     const point = this.getPointerPosition(e);
     switch (this.state) {
@@ -106,7 +106,7 @@ export class DrawController {
     }
   }
 
-  private onPointerUp() {
+  private onPointerUp(): void {
     switch (this.state) {
       case BoardState.DRAW:
         this.draw.onPointerUp();

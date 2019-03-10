@@ -31,6 +31,9 @@
             <v-spacer></v-spacer>
             <v-btn flat small>Pan {{ this.panMode }}</v-btn>
             <v-btn flat small @click="clear">Clear</v-btn>
+            <v-btn @click="controller.startRecording()">Start recording</v-btn>
+            <v-btn @click="controller.stopRecording()">Stop recording</v-btn>
+            <v-btn @click="controller.printLog()"> Print log </v-btn>
             <v-toolbar-items class="hidden-sm-and-down">
               <v-select
                 item-text="text"
@@ -99,7 +102,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { BoardState, IStrokeProps } from '../draw/config/interfaces';
+import { BoardState, IStrokeProps } from '../draw/utils/interfaces';
 import { Controller } from '../draw/InterfaceController';
 
 @Component
