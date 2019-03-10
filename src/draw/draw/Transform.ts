@@ -4,6 +4,7 @@ export class Transform {
   private svg: SVGElement & SVGElement & SVGSVGElement;
   private isPointerDown = false;
   private pointerOrigin: DOMPoint = new DOMPoint();
+
   constructor(svgElement: SVGElement & SVGElement & SVGSVGElement) {
     this.svg = svgElement;
   }

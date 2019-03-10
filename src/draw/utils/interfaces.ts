@@ -27,6 +27,7 @@ export interface IEvent {
   e?: MouseEvent | WheelEvent;
   strokeProps?: IStrokeProps;
   state?: BoardState;
+  viewBox?: IViewBox;
 }
 
 export interface ILogEvent {
@@ -43,6 +44,7 @@ export enum EventType {
   SET_STROKE_PROPS = 'SET_STROKE_PROPS',
   CLEAR = 'CLEAR',
   SET_STATE = 'SET_STATE',
+  SET_VIEWBOX = 'SET_VIEWBOX',
 }
 
 export enum BoardState {

@@ -1,4 +1,4 @@
-import { IEvent, ILogEvent } from '../utils/interfaces';
+import { IEvent, EventType, ILogEvent, IStrokeProps, IViewBox, BoardState } from '../utils/interfaces';
 
 export default class RecordLog {
   public numObj: number = -1;
