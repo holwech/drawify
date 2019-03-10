@@ -1,15 +1,18 @@
 import { IEvent } from '../utils/interfaces';
 import RecordLog from './RecordLog';
-import Timer from './Timer';
+import Timer from '../utils/Timer';
 
 export class RecordController {
   private recordLog: RecordLog;
   private timer: Timer;
   private recording = false;
 
-  constructor() {
+  constructor(initialState: IEvent[] = []) {
     this.recordLog = new RecordLog();
     this.timer = new Timer();
+    initialState.forEach((event) => {
+      this.recordLog.commit(event, this.timer.getTime());
+    });
   }
 
   public start(): void {

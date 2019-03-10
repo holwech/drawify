@@ -8,28 +8,38 @@ export class DrawController {
   // State properties
   private scale = 1;
   private state = BoardState.DRAW;
-  private strokeProps: IStrokeProps;
-  private viewBox: IViewBox;
+  private strokeProps: IStrokeProps = {
+    color: 'green',
+    width: 50,
+    bufferSize: 20,
+  };
+  private viewBox: IViewBox = {
+    x: 0, y: 0, width: 1200, height: 800,
+  };
 
   private svg: HTMLElement & SVGElement & SVGSVGElement;
   private draw: SVGDraw;
   private transform: Transform;
 
-  constructor(svgElement: HTMLElement & SVGElement & SVGSVGElement, style: IStrokeProps, viewBox: IViewBox) {
+  constructor(
+    svgElement: HTMLElement & SVGElement & SVGSVGElement,
+    initialState: IEvent[] = [],
+  ) {
     this.svg = svgElement;
     this.draw = new SVGDraw(this.svg);
     this.transform = new Transform(this.svg);
-    this.strokeProps = style;
-    this.viewBox = viewBox;
+    initialState.forEach((event) => {
+      this.execute(event);
+    });
   }
 
   public execute(event: IEvent): void {
     switch (event.eventType) {
-      case EventType.POINTER_DOWN:
-        this.onPointerDown(event.e!);
-        break;
       case EventType.POINTER_MOVE:
         this.onPointerMove(event.e!);
+        break;
+      case EventType.POINTER_DOWN:
+        this.onPointerDown(event.e!);
         break;
       case EventType.POINTER_UP:
         this.onPointerUp();
@@ -45,6 +55,9 @@ export class DrawController {
         break;
       case EventType.SET_STATE:
         this.setState(event.state!);
+        break;
+      case EventType.SET_VIEWBOX:
+        this.setViexBox(event.viewBox!);
         break;
       default:
         break;
@@ -63,6 +76,10 @@ export class DrawController {
     this.strokeProps.bufferSize = strokeProps.bufferSize;
     this.strokeProps.color = strokeProps.color;
     this.strokeProps.width = strokeProps.width * this.scale;
+  }
+
+  private setViexBox(viexBox: IViewBox): void {
+    this.viewBox = viexBox;
   }
 
   private onWheel(e: WheelEvent): void {

@@ -1,4 +1,4 @@
-import { BoardState } from '../utils/interfaces';
+import { BoardState } from './interfaces';
 
 enum TimerState {
   UINIT,

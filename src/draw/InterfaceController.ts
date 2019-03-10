@@ -1,6 +1,6 @@
 import { RecordController } from './recorder/RecordController';
 import { DrawController } from './draw/DrawController';
-import { IStrokeProps, EventType, BoardState, IEvent } from './utils/interfaces';
+import { IStrokeProps, EventType, BoardState, IEvent, IViewBox } from './utils/interfaces';
 
 export class Controller {
   // Event functions
@@ -13,7 +13,7 @@ export class Controller {
   private recordLog: RecordController;
   private draw: DrawController;
 
-  constructor(svgID: string, style: IStrokeProps) {
+  constructor(svgID: string, strokeProps: IStrokeProps) {
     this.svg = document.getElementById(svgID) as any as HTMLElement & SVGElement & SVGSVGElement;
     if (!this.svg.getScreenCTM()) {
       throw new Error('m variable is not defined in getPointFromViewBox in Transform');
@@ -27,25 +27,35 @@ export class Controller {
       throw new Error('The SVG element requires the view box attribute to be set.');
     }
 
-    this.draw = new DrawController(this.svg, style, viewBox);
-    this.recordLog = new RecordController();
+    const initialState = [
+      { eventType: EventType.SET_STROKE_PROPS, strokeProps },
+      { eventType: EventType.SET_VIEWBOX, viewBox },
+    ];
+    this.draw = new DrawController(this.svg, initialState);
+    this.recordLog = new RecordController(initialState);
+
+    // Event Listenerws
     this.fnOnWheel = this.onWheel;
     this.fnOnPointerDown = this.onPointerDown;
     this.fnOnPointerMove = this.onPointerMove;
     this.fnOnPointerUp = this.onPointerUp;
-    this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
-    this.svg.addEventListener('wheel', this.fnOnWheel);
   }
 
   public startRecording(): void {
+    this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
+    this.svg.addEventListener('wheel', this.fnOnWheel);
     this.recordLog.start();
   }
 
   public pauseRecording(): void {
+    this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
+    this.svg.addEventListener('wheel', this.fnOnWheel);
     this.recordLog.pause();
   }
 
   public stopRecording(): void {
+    this.svg.removeEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
+    this.svg.removeEventListener('wheel', this.fnOnWheel);
     this.recordLog.stop();
   }
 
@@ -63,6 +73,10 @@ export class Controller {
 
   public setStrokeProperties(strokeProps: IStrokeProps): void {
     this.dispatchEvent({ eventType: EventType.SET_STROKE_PROPS, strokeProps });
+  }
+
+  public setViewBox(viewBox: IViewBox): void {
+    this.dispatchEvent({ eventType: EventType.SET_VIEWBOX, viewBox });
   }
 
   private onWheel = (e: WheelEvent) => {
