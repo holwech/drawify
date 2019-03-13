@@ -1,8 +1,12 @@
 import { RecordController } from './recorder/RecordController';
 import { DrawController } from './draw/DrawController';
+import { PlayController } from './player/PlayController';
 import { IStrokeProps, EventType, BoardState, IEvent, IViewBox } from './utils/interfaces';
 
 export class Controller {
+  public recordLog: RecordController;
+  public draw: DrawController;
+
   // Event functions
   private fnOnWheel: (e: WheelEvent) => void;
   private fnOnPointerDown: (e: MouseEvent) => void;
@@ -10,8 +14,6 @@ export class Controller {
   private fnOnPointerUp: (e: MouseEvent) => void;
 
   private svg: HTMLElement & SVGElement & SVGSVGElement;
-  private recordLog: RecordController;
-  private draw: DrawController;
 
   constructor(svgID: string, strokeProps: IStrokeProps) {
     this.svg = document.getElementById(svgID) as any as HTMLElement & SVGElement & SVGSVGElement;
@@ -39,6 +41,13 @@ export class Controller {
     this.fnOnPointerDown = this.onPointerDown;
     this.fnOnPointerMove = this.onPointerMove;
     this.fnOnPointerUp = this.onPointerUp;
+  }
+
+  public playRecording(): void {
+    this.draw.execute({ eventType: EventType.CLEAR });
+    this.stopRecording();
+    const player = new PlayController(this.svg, this.recordLog.getLog());
+    player.play();
   }
 
   public startRecording(): void {

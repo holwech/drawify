@@ -1,11 +1,11 @@
-import { IEvent } from '../utils/interfaces';
+import { IEvent, ILogEvent } from '../utils/interfaces';
 import RecordLog from './RecordLog';
 import Timer from '../utils/Timer';
 
 export class RecordController {
+  public recording = false;
   private recordLog: RecordLog;
   private timer: Timer;
-  private recording = false;
 
   constructor(initialState: IEvent[] = []) {
     this.recordLog = new RecordLog();
@@ -38,5 +38,9 @@ export class RecordController {
 
   public printLog(): void {
     console.log(this.recordLog.log);
+  }
+
+  public getLog(): ILogEvent[] {
+    return this.recordLog.log;
   }
 }

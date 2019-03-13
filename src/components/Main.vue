@@ -29,11 +29,12 @@
           <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
           <v-toolbar-title>Application</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn flat small>Pan {{ this.panMode }}</v-btn>
-            <v-btn flat small @click="clear">Clear</v-btn>
-            <v-btn @click="controller.startRecording()">Start recording</v-btn>
+            <v-btn flat small>Pan {{ this.panMode }} (Hold CTRL)</v-btn>
+            <v-btn small @click="clear">Clear</v-btn>
+            <v-btn color="success" @click="controller.startRecording()">Start recording</v-btn>
             <v-btn @click="controller.stopRecording()">Stop recording</v-btn>
-            <v-btn @click="controller.printLog()"> Print log </v-btn>
+            <!-- <v-btn @click="controller.printLog()"> Print log </v-btn> -->
+            <v-btn color="success" @click="controller.playRecording()"> Play </v-btn>
             <v-toolbar-items class="hidden-sm-and-down">
               <v-select
                 item-text="text"
@@ -109,6 +110,7 @@ import { Controller } from '../draw/InterfaceController';
 export default class Main extends Vue {
   private drawer = false;
   private controller!: Controller;
+  private dialog = false;
   private msg: string = 'Drawing board';
   private smoothness = { text: '4 - Sharp curves', value: 4};
   private color = { text: 'Black', value: 'black'};
@@ -132,21 +134,21 @@ export default class Main extends Vue {
     { text: '8px', value: 8 },
   ];
 
-  private panOn(e: KeyboardEvent) {
+  private panOn(e: KeyboardEvent): void {
     if (e.keyCode === 17) {
       this.panMode = 'on';
       this.controller.setState(BoardState.PAN);
     }
   }
 
-  private panOff(e: KeyboardEvent) {
+  private panOff(e: KeyboardEvent): void {
     if (e.keyCode === 17) {
       this.panMode = 'off';
       this.controller.setState(BoardState.DRAW);
     }
   }
 
-  private mounted() {
+  private mounted(): void {
     this.controller = new Controller('svgElement', {
       color: this.color.value,
       width: this.width.value,
@@ -156,11 +158,11 @@ export default class Main extends Vue {
     window.addEventListener('keyup', this.panOff);
   }
 
-  private clear() {
+  private clear(): void {
     this.controller.clear();
   }
 
-  private setStrokeProperties() {
+  private setStrokeProperties(): void {
     console.log(this.smoothness.value, this.color.value, this.width.value);
     this.controller.setStrokeProperties({
       color: this.color.value,
