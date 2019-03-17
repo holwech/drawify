@@ -1,4 +1,4 @@
-import { IViewBox } from '../utils/interfaces';
+import { IViewBox } from '../utils/boardInterfaces';
 
 export class Transform {
   private svg: SVGElement & SVGElement & SVGSVGElement;

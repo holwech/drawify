@@ -1,5 +1,3 @@
-import { BoardState } from './interfaces';
-
 enum TimerState {
   UINIT,
   STARTED,
@@ -15,18 +13,14 @@ export default class Timer {
 
   public getTime(): number {
     switch (this.state) {
-      case TimerState.UINIT: {
+      case TimerState.UINIT:
         return 0;
-      }
-      case TimerState.STARTED: {
+      case TimerState.STARTED:
         return new Date().getTime() - this.startTime;
-      }
-      case TimerState.PAUSED: {
+      case TimerState.PAUSED:
         return this.pauseTime - this.startTime;
-      }
-      case TimerState.STOPPED: {
+      case TimerState.STOPPED:
         return this.stopTime - this.startTime;
-      }
     }
   }
 
@@ -48,23 +42,19 @@ export default class Timer {
 
   public start(): void {
     switch (this.state) {
-      case TimerState.UINIT: {
+      case TimerState.UINIT:
         this.startTime = new Date().getTime();
         break;
-      }
-      case TimerState.PAUSED: {
+      case TimerState.PAUSED:
         this.startTime += new Date().getTime() - this.pauseTime;
         break;
-      }
-      case TimerState.STOPPED: {
+      case TimerState.STOPPED:
         this.startTime = new Date().getTime();
         this.stopTime = this.startTime;
         this.pauseTime = this.startTime;
         break;
-      }
-      default: {
+      default:
         break;
-      }
     }
     this.state = TimerState.STARTED;
     console.log('State is ' + this.state);
@@ -72,19 +62,15 @@ export default class Timer {
 
   public pause(): void {
     switch (this.state) {
-      case TimerState.UINIT: {
+      case TimerState.UINIT:
         return;
-      }
-      case TimerState.STARTED: {
+      case TimerState.STARTED:
         this.pauseTime = new Date().getTime();
         break;
-      }
-      case TimerState.STOPPED: {
+      case TimerState.STOPPED:
         return;
-      }
-      default: {
+      default:
         break;
-      }
     }
     this.state = TimerState.PAUSED;
     console.log('State is ' + this.state);
@@ -92,20 +78,16 @@ export default class Timer {
 
   public stop(): void {
     switch (this.state) {
-      case TimerState.UINIT: {
+      case TimerState.UINIT:
         return;
-      }
-      case TimerState.STARTED: {
+      case TimerState.STARTED:
         this.stopTime = new Date().getTime();
         break;
-      }
-      case TimerState.PAUSED: {
+      case TimerState.PAUSED:
         this.stopTime = this.pauseTime;
         break;
-      }
-      default: {
+      default:
         break;
-      }
     }
     this.state = TimerState.STOPPED;
     console.log('State is ' + this.state);

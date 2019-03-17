@@ -1,34 +1,57 @@
 import Timer from '../utils/Timer';
-import { DrawController } from '../draw/DrawController';
-import { IEvent, ILogEvent, EventType } from '../utils/interfaces';
+import { IEvent } from '../utils/boardInterfaces';
+import { AppController } from '../AppController';
 
 export class PlayController {
   private timer: Timer;
-  private drawController: DrawController;
-  private svg: HTMLElement & SVGElement & SVGSVGElement;
-  private log: ILogEvent[];
+  private log: IEvent[];
   private currIdx = 0;
-  private stop = false;
+  private stopPlay = false;
+  private app: AppController;
 
-  constructor(svgElement: HTMLElement & SVGElement & SVGSVGElement, log: ILogEvent[]) {
-    this.svg = svgElement;
+  constructor(app: AppController) {
+    this.app = app;
     this.timer = new Timer();
-    this.drawController = new DrawController(this.svg);
-    this.log = log;
+    this.log = [];
   }
 
   public play(): void {
     this.timer.start();
+    this.currIdx = 0;
     this.executeEvent();
   }
 
+  public pause(): void {
+    this.timer.pause();
+    this.stopPlay = true;
+  }
+
+  public stop(): void {
+    this.timer.stop();
+    this.log = [];
+    this.stopPlay = true;
+  }
+
+  public setEventLog(log: IEvent[]): void {
+    this.log = log;
+  }
+
+  private reset(): void {
+    this.currIdx = 0;
+    this.timer.stop();
+  }
+
   private executeEvent(): void {
-    setTimeout(() => {
-      if (!this.stop) {
-        this.drawController.execute(this.log[this.currIdx].event);
-        this.currIdx++;
-        this.executeEvent();
-      }
-    }, this.log[this.currIdx].time - this.timer.getTime());
+    if (this.currIdx === this.log.length) {
+      this.reset();
+    } else {
+      setTimeout(() => {
+        if (!this.stopPlay) {
+          this.app.dispatchEvent(this.log[this.currIdx]);
+          this.currIdx++;
+          this.executeEvent();
+        }
+      }, this.log[this.currIdx].time! - this.timer.getTime());
+    }
   }
 }
