@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/330bbe5a-073e-473c-ae37-5f95684bd9a1/deploy-status)](https://app.netlify.com/sites/priceless-hodgkin-3234a5/deploys)
+
 # draw
 
 ## Autocompile Typescript
