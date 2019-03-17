@@ -1,4 +1,4 @@
-import { IStrokeProps } from './../utils/interfaces';
+import { IStrokeProps } from '../utils/boardInterfaces';
 
 export class SVGDraw {
   private svg: HTMLElement & SVGElement & SVGSVGElement;

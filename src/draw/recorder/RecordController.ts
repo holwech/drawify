@@ -1,46 +1,25 @@
-import { IEvent, ILogEvent } from '../utils/interfaces';
-import RecordLog from './RecordLog';
+import { IEvent, ILogEvent } from '../utils/boardInterfaces';
 import Timer from '../utils/Timer';
+import { AppController } from '../AppController';
 
 export class RecordController {
-  public recording = false;
-  private recordLog: RecordLog;
-  private timer: Timer;
+  private log: IEvent[] = [];
 
-  constructor(initialState: IEvent[] = []) {
-    this.recordLog = new RecordLog();
-    this.timer = new Timer();
+  constructor(app: AppController, initialState: IEvent[] = []) {
     initialState.forEach((event) => {
-      this.recordLog.commit(event, this.timer.getTime());
+      this.record(event);
     });
   }
 
-  public start(): void {
-    this.timer.start();
-    this.recording = true;
-  }
-
-  public pause(): void {
-    this.timer.pause();
-    this.recording = true;
-  }
-
-  public stop(): void {
-    this.timer.stop();
-    this.recording = false;
-  }
-
-  public dispatch(event: IEvent): void {
-    if (this.recording) {
-      this.recordLog.commit(event, this.timer.getTime());
-    }
+  public record(event: IEvent): void {
+    this.log.push(event);
   }
 
   public printLog(): void {
-    console.log(this.recordLog.log);
+    console.log(this.log);
   }
 
-  public getLog(): ILogEvent[] {
-    return this.recordLog.log;
+  public getEventLog(): IEvent[] {
+    return this.log;
   }
 }

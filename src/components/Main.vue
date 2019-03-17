@@ -103,7 +103,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { BoardState, IStrokeProps } from '../draw/utils/interfaces';
+import { BoardState, IStrokeProps } from '../draw/utils/boardInterfaces';
 import { Controller } from '../draw/InterfaceController';
 
 @Component

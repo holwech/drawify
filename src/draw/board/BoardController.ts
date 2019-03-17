@@ -1,13 +1,15 @@
 import { SVGDraw } from './SVGDraw';
 import { Transform } from './Transform';
-import { IStrokeProps, IViewBox, BoardState, IEvent, EventType } from '../utils/interfaces';
+import { IStrokeProps, IViewBox, BoardState, IEvent, EventType } from '../utils/boardInterfaces';
+import { AppController } from '../AppController';
 
 const SCALE_FACTOR = 0.05;
 
-export class DrawController {
+export class BoardController {
   // State properties
   private scale = 1;
   private state = BoardState.DRAW;
+  private app: AppController;
   private strokeProps: IStrokeProps = {
     color: 'green',
     width: 50,
@@ -23,9 +25,11 @@ export class DrawController {
 
   constructor(
     svgElement: HTMLElement & SVGElement & SVGSVGElement,
+    app: AppController,
     initialState: IEvent[] = [],
   ) {
     this.svg = svgElement;
+    this.app = app;
     this.draw = new SVGDraw(this.svg);
     this.transform = new Transform(this.svg);
     initialState.forEach((event) => {
