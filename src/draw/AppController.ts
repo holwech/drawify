@@ -33,7 +33,7 @@ export class AppController {
   }
 
   public dispatchEvent(event: IEvent): void {
-    console.log(event.eventType);
+    console.log('EVENT: ' + event.eventType);
     switch (this.appState) {
       case AppState.UINIT:
         console.log('App uninitialized');
@@ -59,29 +59,32 @@ export class AppController {
   }
 
   public dispatchAction(action: IAction): void {
-    console.log(action.action);
+    console.log('ACTION: ' + action.action);
     switch (action.action) {
       case ActionType.RECORD_START:
+        this.appState = AppState.RECORD_START;
         this.timer.start();
         this.event.executeAction(action);
-        this.appState = AppState.RECORD_START;
         break;
       case ActionType.RECORD_STOP:
-        this.event.executeAction(action);
         this.appState = AppState.RECORD_STOP;
+        this.event.executeAction(action);
         break;
       case ActionType.RECORD_PAUSE:
         this.timer.pause();
-        this.event.executeAction(action);
         this.appState = AppState.RECORD_PAUSE;
+        this.event.executeAction(action);
         break;
       case ActionType.PLAY_START:
-        if (this.appState !== AppState.PLAY_PAUSE && this.appState !== AppState.PLAY_STOP) {
-          this.board.execute({ eventType: EventType.CLEAR });
+        if (
+          this.appState !== AppState.PLAY_PAUSE &&
+          this.appState !== AppState.PLAY_STOP &&
+          this.appState !== AppState.PLAY_START
+          ) {
+          this.player.setEventLog(this.recorder.getEventLog());
         }
-        this.player.setEventLog(this.recorder.getEventLog());
-        this.player.play();
         this.appState = AppState.PLAY_START;
+        this.player.play();
         break;
       case ActionType.PLAY_STOP:
         this.player.stop();

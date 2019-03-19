@@ -41,8 +41,12 @@ export class Controller {
     this.app.init(this.board, this.player, this.recorder, this.event);
   }
 
-  public playRecording(): void {
+  public startPlayer(): void {
     this.app.dispatchAction({ action: ActionType.PLAY_START });
+  }
+
+  public pausePlayer(): void {
+    this.app.dispatchAction({ action: ActionType.PLAY_PAUSE });
   }
 
   public startRecording(): void {

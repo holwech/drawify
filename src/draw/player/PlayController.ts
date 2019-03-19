@@ -1,12 +1,12 @@
 import Timer from '../utils/Timer';
-import { IEvent } from '../utils/boardInterfaces';
+import { IEvent, EventType } from '../utils/boardInterfaces';
 import { AppController } from '../AppController';
 
 export class PlayController {
   private timer: Timer;
   private log: IEvent[];
   private currIdx = 0;
-  private stopPlay = false;
+  private isPlaying = false;
   private app: AppController;
 
   constructor(app: AppController) {
@@ -16,20 +16,23 @@ export class PlayController {
   }
 
   public play(): void {
-    this.timer.start();
-    this.currIdx = 0;
-    this.executeEvent();
+    if (!this.isPlaying) {
+      this.app.dispatchEvent({ eventType: EventType.CLEAR });
+      this.timer.start();
+      this.isPlaying = true;
+      this.executeEvent();
+    }
   }
 
   public pause(): void {
     this.timer.pause();
-    this.stopPlay = true;
+    this.isPlaying = false;
   }
 
   public stop(): void {
     this.timer.stop();
     this.log = [];
-    this.stopPlay = true;
+    this.isPlaying = false;
   }
 
   public setEventLog(log: IEvent[]): void {
@@ -39,6 +42,7 @@ export class PlayController {
   private reset(): void {
     this.currIdx = 0;
     this.timer.stop();
+    this.isPlaying = false;
   }
 
   private executeEvent(): void {
@@ -46,7 +50,7 @@ export class PlayController {
       this.reset();
     } else {
       setTimeout(() => {
-        if (!this.stopPlay) {
+        if (this.isPlaying) {
           this.app.dispatchEvent(this.log[this.currIdx]);
           this.currIdx++;
           this.executeEvent();

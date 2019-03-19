@@ -34,7 +34,8 @@
             <v-btn color="success" @click="controller.startRecording()">Start recording</v-btn>
             <v-btn @click="controller.stopRecording()">Stop recording</v-btn>
             <!-- <v-btn @click="controller.printLog()"> Print log </v-btn> -->
-            <v-btn color="success" @click="controller.playRecording()"> Play </v-btn>
+            <v-btn color="success" @click="controller.startPlayer()"> Play </v-btn>
+            <v-btn @click="controller.pausePlayer()"> Pause </v-btn>
             <v-toolbar-items class="hidden-sm-and-down">
               <v-select
                 item-text="text"
