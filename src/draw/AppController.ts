@@ -1,35 +1,47 @@
-import { IEvent, EventType } from './utils/boardInterfaces';
+import { IEvent, EventType, IStrokeProps } from './utils/boardInterfaces';
 import { BoardController } from './board/BoardController';
 import { PlayController } from './player/PlayController';
 import { RecordController } from './recorder/RecordController';
 import { EventController } from './event/EventController';
 import { AppState, IAction, ActionType } from './utils/appInterfaces';
 import Timer from './utils/Timer';
+import { State } from './State';
 
 export class AppController {
-  private board!: BoardController;
-  private player!: PlayController;
-  private recorder!: RecordController;
-  private event!: EventController;
+  public state: State;
+  private board: BoardController;
+  private player: PlayController;
+  private recorder: RecordController;
+  private event: EventController;
   private appState = AppState.UINIT;
-
-  private numObj = 0;
+  private svg: HTMLElement & SVGElement & SVGSVGElement;
   private timer: Timer;
+  private numObj = 0;
 
-  constructor() {
+  constructor(svgID: string, strokeProps: IStrokeProps) {
     this.timer = new Timer();
-  }
+    this.svg = document.getElementById(svgID) as any as HTMLElement & SVGElement & SVGSVGElement;
+    if (!this.svg.getScreenCTM()) {
+      throw new Error('getScreenCTM is not defined');
+    }
+    let viewBox = { x: 0, y: 0, width: 1200, height: 800 };
+    const viewboxElem = this.svg.getAttributeNS(null, 'viewBox');
+    if (viewboxElem !== null) {
+      const arr = viewboxElem.split(' ').map(Number);
+      viewBox = { x: arr[0], y: arr[1], width: arr[2], height: arr[3] };
+    } else {
+      throw new Error('The SVG element requires the view box attribute to be set.');
+    }
 
-  public init(
-    board: BoardController,
-    player: PlayController,
-    recorder: RecordController,
-    event: EventController,
-  ): void {
-    this.board = board;
-    this.player = player;
-    this.recorder = recorder;
-    this.event = event;
+    const initialState = [
+      { eventType: EventType.SET_STROKE_PROPS, strokeProps },
+      { eventType: EventType.SET_VIEWBOX, viewBox },
+    ];
+    this.board = new BoardController(this.svg, this, initialState);
+    this.recorder = new RecordController(this, initialState);
+    this.player = new PlayController(this);
+    this.event = new EventController(this.svg, this);
+    this.state = new State();
   }
 
   public dispatchEvent(event: IEvent): void {
