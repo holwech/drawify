@@ -1,103 +1,101 @@
-import { IEvent, EventType } from './utils/boardInterfaces';
+import { IEvent, EventType, IStrokeProps } from './utils/boardInterfaces';
 import { BoardController } from './board/BoardController';
 import { PlayController } from './player/PlayController';
 import { RecordController } from './recorder/RecordController';
 import { EventController } from './event/EventController';
-import { AppState, IAction, ActionType } from './utils/appInterfaces';
-import Timer from './utils/Timer';
+import { IAction, ActionType, AppStates } from './utils/appInterfaces';
+import AppState from './AppState';
 
 export class AppController {
-  private board!: BoardController;
-  private player!: PlayController;
-  private recorder!: RecordController;
-  private event!: EventController;
-  private appState = AppState.UINIT;
+  public state: AppState;
+  private board: BoardController;
+  private player: PlayController;
+  private recorder: RecordController;
+  private event: EventController;
+  private svg: HTMLElement & SVGElement & SVGSVGElement;
 
-  private numObj = 0;
-  private timer: Timer;
+  constructor(svgID: string, strokeProps: IStrokeProps) {
+    this.state = new AppState();
+    this.svg = document.getElementById(svgID) as any as HTMLElement & SVGElement & SVGSVGElement;
+    if (!this.svg.getScreenCTM()) {
+      throw new Error('getScreenCTM is not defined');
+    }
+    let viewBox = { x: 0, y: 0, width: 1200, height: 800 };
+    const viewboxElem = this.svg.getAttributeNS(null, 'viewBox');
+    if (viewboxElem !== null) {
+      const arr = viewboxElem.split(' ').map(Number);
+      viewBox = { x: arr[0], y: arr[1], width: arr[2], height: arr[3] };
+    } else {
+      throw new Error('The SVG element requires the view box attribute to be set.');
+    }
 
-  constructor() {
-    this.timer = new Timer();
-  }
-
-  public init(
-    board: BoardController,
-    player: PlayController,
-    recorder: RecordController,
-    event: EventController,
-  ): void {
-    this.board = board;
-    this.player = player;
-    this.recorder = recorder;
-    this.event = event;
+    const initialState = [
+      { eventType: EventType.SET_STROKE_PROPS, strokeProps },
+      { eventType: EventType.SET_VIEWBOX, viewBox },
+    ];
+    this.board = new BoardController(this.svg, this, initialState);
+    this.recorder = new RecordController(this, initialState);
+    this.player = new PlayController(this, this.state.playState);
+    this.event = new EventController(this.svg, this);
   }
 
   public dispatchEvent(event: IEvent): void {
-    console.log(event.eventType);
-    switch (this.appState) {
-      case AppState.UINIT:
+    console.log('EVENT: ' + event.eventType);
+    switch (this.state.state) {
+      case AppStates.UINIT:
         console.log('App uninitialized');
         break;
-      case AppState.RECORD_START:
-        event.time = this.timer.getTime();
+      case AppStates.RECORDING:
+        event.time = this.state.timer.getTime();
         this.board.execute(event);
         this.recorder.record(event);
         break;
-      case AppState.RECORD_STOP:
-        break;
-      case AppState.RECORD_PAUSE:
-        event.time = this.timer.getTime();
-        this.board.execute(event);
-        this.recorder.record(event);
-        break;
-      case AppState.PLAY_START:
+      case AppStates.PLAYING:
         this.board.execute(event);
         break;
       default:
-        throw new Error('No case for appState ' + this.appState);
+        throw new Error('No case for appState ' + this.state.state);
     }
   }
 
   public dispatchAction(action: IAction): void {
-    console.log(action.action);
+    console.log('ACTION: ' + action.action);
     switch (action.action) {
       case ActionType.RECORD_START:
-        this.timer.start();
+        this.state.state = AppStates.RECORDING;
+        this.state.timer.start();
         this.event.executeAction(action);
-        this.appState = AppState.RECORD_START;
         break;
       case ActionType.RECORD_STOP:
+        this.state.state = AppStates.RECORDING;
+        this.state.timer.stop();
         this.event.executeAction(action);
-        this.appState = AppState.RECORD_STOP;
         break;
       case ActionType.RECORD_PAUSE:
-        this.timer.pause();
+        this.state.state = AppStates.RECORDING;
+        this.state.timer.pause();
         this.event.executeAction(action);
-        this.appState = AppState.RECORD_PAUSE;
         break;
       case ActionType.PLAY_START:
-        if (this.appState !== AppState.PLAY_PAUSE && this.appState !== AppState.PLAY_STOP) {
-          this.board.execute({ eventType: EventType.CLEAR });
+        if (
+          this.state.state === AppStates.RECORDING ||
+          this.state.state === AppStates.UINIT
+        ) {
+          this.player.setEventLog(this.recorder.getEventLog());
         }
-        this.player.setEventLog(this.recorder.getEventLog());
+        this.state.state = AppStates.PLAYING;
         this.player.play();
-        this.appState = AppState.PLAY_START;
         break;
       case ActionType.PLAY_STOP:
         this.player.stop();
-        this.appState = AppState.PLAY_STOP;
+        this.state.state = AppStates.PLAYING;
         break;
       case ActionType.PLAY_PAUSE:
         this.player.pause();
-        this.appState = AppState.PLAY_PAUSE;
+        this.state.state = AppStates.PLAYING;
         break;
       default:
         throw new Error('No case for action ' + action.action);
     }
-  }
-
-  private newID(): number {
-    this.numObj++;
-    return this.numObj;
   }
 }

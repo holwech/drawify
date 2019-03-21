@@ -1,57 +1,98 @@
 import Timer from '../utils/Timer';
-import { IEvent } from '../utils/boardInterfaces';
+import { IEvent, EventType } from '../utils/boardInterfaces';
 import { AppController } from '../AppController';
+import { PlayStates } from './playInterfaces';
+import PlayState from './PlayState';
 
 export class PlayController {
-  private timer: Timer;
-  private log: IEvent[];
-  private currIdx = 0;
-  private stopPlay = false;
   private app: AppController;
+  private state: PlayState;
 
-  constructor(app: AppController) {
+  constructor(app: AppController, state: PlayState) {
     this.app = app;
-    this.timer = new Timer();
-    this.log = [];
+    this.state = state;
+    this.state.timer = new Timer();
+    this.state.log = [];
   }
 
   public play(): void {
-    this.timer.start();
-    this.currIdx = 0;
-    this.executeEvent();
+    switch (this.state.state) {
+      case PlayStates.PLAY:
+        break;
+      case PlayStates.PAUSE:
+        this.state.timer.start();
+        this.state.state = PlayStates.PLAY;
+        this.playEvents();
+        break;
+      case PlayStates.STOP:
+        this.reset();
+        this.state.timer.start();
+        this.state.state = PlayStates.PLAY;
+        this.playEvents();
+        break;
+      default:
+        break;
+    }
+    this.state.state = PlayStates.PLAY;
   }
 
   public pause(): void {
-    this.timer.pause();
-    this.stopPlay = true;
+    switch (this.state.state) {
+      case PlayStates.PLAY:
+        this.state.timer.pause();
+        break;
+      case PlayStates.PAUSE:
+        break;
+      case PlayStates.STOP:
+        this.state.timer.pause();
+        break;
+      default:
+        break;
+    }
+    this.state.state = PlayStates.PAUSE;
   }
 
   public stop(): void {
-    this.timer.stop();
-    this.log = [];
-    this.stopPlay = true;
+    switch (this.state.state) {
+      case PlayStates.PLAY:
+        this.state.timer.stop();
+        break;
+      case PlayStates.PAUSE:
+        this.state.timer.stop();
+        break;
+      case PlayStates.STOP:
+        break;
+      default:
+        break;
+    }
+    this.state.state = PlayStates.STOP;
   }
 
   public setEventLog(log: IEvent[]): void {
-    this.log = log;
+    this.state.log = log;
+  }
+
+  public deleteEventLog(): void {
+    this.state.log = [];
   }
 
   private reset(): void {
-    this.currIdx = 0;
-    this.timer.stop();
+    this.app.dispatchEvent({ eventType: EventType.CLEAR });
+    this.state.currIdx = 0;
+    this.state.timer.stop();
   }
 
-  private executeEvent(): void {
-    if (this.currIdx === this.log.length) {
-      this.reset();
-    } else {
+  private playEvents(): void {
+    if (this.state.currIdx !== this.state.log.length) {
       setTimeout(() => {
-        if (!this.stopPlay) {
-          this.app.dispatchEvent(this.log[this.currIdx]);
-          this.currIdx++;
-          this.executeEvent();
+        if (this.state.state === PlayStates.PLAY) {
+          this.app.dispatchEvent(this.state.log[this.state.currIdx]);
+          this.state.currIdx++;
+          this.playEvents();
         }
-      }, this.log[this.currIdx].time! - this.timer.getTime());
+      }, this.state.log[this.state.currIdx].time! - this.state.timer.getTime());
+    } else {
+      this.stop();
     }
   }
 }

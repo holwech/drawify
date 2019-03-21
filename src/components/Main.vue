@@ -34,7 +34,8 @@
             <v-btn color="success" @click="controller.startRecording()">Start recording</v-btn>
             <v-btn @click="controller.stopRecording()">Stop recording</v-btn>
             <!-- <v-btn @click="controller.printLog()"> Print log </v-btn> -->
-            <v-btn color="success" @click="controller.playRecording()"> Play </v-btn>
+            <v-btn color="success" @click="controller.startPlayer()"> Play </v-btn>
+            <v-btn @click="controller.pausePlayer()"> Pause </v-btn>
             <v-toolbar-items class="hidden-sm-and-down">
               <v-select
                 item-text="text"
@@ -72,13 +73,13 @@
               ></v-select>
             </v-toolbar-items>
           </v-toolbar>
-        <v-content>
-        <v-container fluid fill-height ma-0 pa-0>
-          <v-layout
-          justify-center
-          align-center
-          row wrap
-          >
+        <v-content ma-0 pa-0 style="padding: 0px">
+          <v-container fluid fill-height ma-0 pa-0>
+            <v-layout
+            justify-center
+            align-center
+            row wrap
+            >
             <v-flex text-xs-center>
               <svg
                   xmlns="http://www.w3.org/2000/svg"

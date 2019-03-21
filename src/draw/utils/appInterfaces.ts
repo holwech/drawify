@@ -1,11 +1,7 @@
-export enum AppState {
+export enum AppStates {
   UINIT = 'UINIT',
-  RECORD_START = 'RECORD_START',
-  RECORD_STOP = 'RECORD_STOP',
-  RECORD_PAUSE = 'RECORD_PAUSE',
-  PLAY_START = 'PLAY_START',
-  PLAY_STOP = 'PLAY_STOP',
-  PLAY_PAUSE = 'PLAY_PAUSE',
+  RECORDING = 'RECORDING',
+  PLAYING = 'PLAYING',
 }
 
 export enum ActionType {
