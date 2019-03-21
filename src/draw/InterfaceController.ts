@@ -1,15 +1,12 @@
 import { AppController } from './AppController';
 import { IStrokeProps, EventType, BoardState, IViewBox } from './utils/boardInterfaces';
 import { ActionType } from './utils/appInterfaces';
-import { State } from './State';
 
 export class Controller {
-  public state: State;
   private app: AppController;
 
   constructor(svgID: string, strokeProps: IStrokeProps) {
     this.app = new AppController(svgID, strokeProps);
-    this.state = this.app.state;
   }
 
   public startPlayer(): void {
