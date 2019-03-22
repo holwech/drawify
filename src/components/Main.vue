@@ -35,6 +35,7 @@
             <v-btn @click="controller.stopRecording()">Stop recording</v-btn>
             <!-- <v-btn @click="controller.printLog()"> Print log </v-btn> -->
             <v-btn color="success" @click="controller.startPlayer()"> Play </v-btn>
+            <v-btn color="success" @click="controller.reversePlayer()"> Reverse </v-btn>
             <v-btn @click="controller.pausePlayer()"> Pause </v-btn>
             <v-toolbar-items class="hidden-sm-and-down">
               <v-select
@@ -74,6 +75,21 @@
             </v-toolbar-items>
           </v-toolbar>
         <v-content ma-0 pa-0 style="padding: 0px">
+            <v-container
+              fluid
+              grid-list-lg
+            >
+              <v-layout
+                row
+                wrap
+              >
+                <v-flex xs12>
+                  <v-slider
+                    v-model="slider"
+                  ></v-slider>
+                </v-flex>
+              </v-layout>
+            </v-container>
           <v-container fluid fill-height ma-0 pa-0>
             <v-layout
             justify-center
@@ -114,6 +130,7 @@ export default class Main extends Vue {
   private dialog = false;
   private msg: string = 'Drawing board';
   private smoothness = { text: '4 - Sharp curves', value: 4};
+  private slider = 0;
   private color = { text: 'Black', value: 'black'};
   private width = { text: '1px', value: 1};
   private panMode: string = 'off';

@@ -13,6 +13,10 @@ export class Controller {
     this.app.dispatchAction({ action: ActionType.PLAY_START });
   }
 
+  public reversePlayer(): void {
+    this.app.dispatchAction({ action: ActionType.PLAY_REVERSE });
+  }
+
   public pausePlayer(): void {
     this.app.dispatchAction({ action: ActionType.PLAY_PAUSE });
   }

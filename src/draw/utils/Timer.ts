@@ -1,37 +1,46 @@
-enum TimerState {
+enum TimerStates {
   UINIT,
   STARTED,
   PAUSED,
   STOPPED,
+  REVERSE,
 }
 
 export default class Timer {
   private startTime = 0;
   private stopTime = 0;
   private pauseTime = 0;
-  private state: TimerState = TimerState.UINIT;
+  private reverseTime = 0;
+  private state: TimerStates = TimerStates.UINIT;
 
   public getTime(): number {
     switch (this.state) {
-      case TimerState.UINIT:
+      case TimerStates.UINIT:
         return 0;
-      case TimerState.STARTED:
+      case TimerStates.STARTED:
         return new Date().getTime() - this.startTime;
-      case TimerState.PAUSED:
+      case TimerStates.PAUSED:
         return this.pauseTime - this.startTime;
-      case TimerState.STOPPED:
+      case TimerStates.STOPPED:
         return this.stopTime - this.startTime;
+      case TimerStates.REVERSE:
+        const time = this.reverseTime - this.startTime - new Date().getTime();
+        if (time < 0) {
+          return 0;
+        } else {
+          return time;
+        }
     }
   }
 
   public getStopTime(): number {
-    if (this.state !== TimerState.STOPPED) {
+    if (this.state !== TimerStates.STOPPED) {
       return 0;
     }
     return this.stopTime;
   }
 
-  public getState(): TimerState {
+  public getState(): TimerStates {
     return this.state;
   }
 
@@ -42,54 +51,81 @@ export default class Timer {
 
   public start(): void {
     switch (this.state) {
-      case TimerState.UINIT:
+      case TimerStates.UINIT:
         this.startTime = new Date().getTime();
         break;
-      case TimerState.PAUSED:
+      case TimerStates.PAUSED:
         this.startTime += new Date().getTime() - this.pauseTime;
         break;
-      case TimerState.STOPPED:
+      case TimerStates.STOPPED:
         this.startTime = new Date().getTime();
         this.stopTime = this.startTime;
         this.pauseTime = this.startTime;
         break;
+      case TimerStates.REVERSE:
+        this.startTime = new Date().getTime() - this.getTime();
+        break;
       default:
         break;
     }
-    this.state = TimerState.STARTED;
+    this.state = TimerStates.STARTED;
     console.log('State is ' + this.state);
+  }
+
+  public reverse(): void {
+    switch (this.state) {
+      case TimerStates.UINIT:
+        this.reverseTime = this.startTime;
+        break;
+      case TimerStates.STARTED:
+        this.reverseTime = new Date().getTime();
+        break;
+      case TimerStates.PAUSED:
+        this.reverseTime = this.pauseTime;
+        break;
+      case TimerStates.STOPPED:
+        throw new Error('Cannot run reverse on a stopped timer');
+      default:
+        break;
+    }
+    this.state = TimerStates.REVERSE;
   }
 
   public pause(): void {
     switch (this.state) {
-      case TimerState.UINIT:
-        return;
-      case TimerState.STARTED:
+      case TimerStates.UINIT:
+        break;
+      case TimerStates.STARTED:
         this.pauseTime = new Date().getTime();
         break;
-      case TimerState.STOPPED:
-        return;
+      case TimerStates.STOPPED:
+        break;
+      case TimerStates.REVERSE:
+        const currentTime = new Date().getTime();
+        this.startTime = currentTime - this.getTime();
+        this.pauseTime = currentTime;
+        break;
       default:
         break;
     }
-    this.state = TimerState.PAUSED;
+    this.state = TimerStates.PAUSED;
     console.log('State is ' + this.state);
   }
 
   public stop(): void {
     switch (this.state) {
-      case TimerState.UINIT:
+      case TimerStates.UINIT:
         return;
-      case TimerState.STARTED:
+      case TimerStates.STARTED:
         this.stopTime = new Date().getTime();
         break;
-      case TimerState.PAUSED:
+      case TimerStates.PAUSED:
         this.stopTime = this.pauseTime;
         break;
       default:
         break;
     }
-    this.state = TimerState.STOPPED;
+    this.state = TimerStates.STOPPED;
     console.log('State is ' + this.state);
   }
 }

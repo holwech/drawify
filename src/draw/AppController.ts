@@ -94,6 +94,10 @@ export class AppController {
         this.player.pause();
         this.state.state = AppStates.PLAYING;
         break;
+      case ActionType.PLAY_REVERSE:
+        this.player.reverse();
+        this.state.state = AppStates.PLAYING;
+        break;
       default:
         throw new Error('No case for action ' + action.action);
     }
