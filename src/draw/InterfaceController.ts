@@ -3,7 +3,7 @@ import { IStrokeProps, EventType, BoardState, IViewBox } from './utils/boardInte
 import { ActionType } from './utils/appInterfaces';
 
 export class Controller {
-  private app: AppController;
+  public app: AppController;
 
   constructor(svgID: string, strokeProps: IStrokeProps) {
     this.app = new AppController(svgID, strokeProps);

@@ -6,12 +6,18 @@ enum TimerStates {
   REVERSE,
 }
 
+interface ITimeMonitor {
+  minutes: number;
+  seconds: number;
+}
+
 export default class Timer {
   private startTime = 0;
   private stopTime = 0;
   private pauseTime = 0;
   private reverseTime = 0;
   private state: TimerStates = TimerStates.UINIT;
+  private timeMonitorInterval!: number;
 
   public getTime(): number {
     switch (this.state) {
@@ -127,5 +133,14 @@ export default class Timer {
     }
     this.state = TimerStates.STOPPED;
     console.log('State is ' + this.state);
+  }
+
+  public bindTimeMonitor(timeObj: ITimeMonitor): void {
+    this.timeMonitorInterval = setInterval(() => {
+      const currentTime = this.getTime();
+      timeObj.minutes = Math.floor((currentTime % (1000 * 60 * 60)) / (1000 * 60));
+      timeObj.seconds = Math.floor((currentTime % (1000 * 60)) / 1000);
+      console.log(timeObj.seconds);
+    }, 1000);
   }
 }

@@ -28,6 +28,7 @@
         <v-toolbar color="indigo" dark fixed app>
           <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
           <v-toolbar-title>Application</v-toolbar-title>
+            {{ timeObj.minutes + ":" + timeObj.seconds }}
             <v-spacer></v-spacer>
             <v-btn flat small>Pan {{ this.panMode }} (Hold CTRL)</v-btn>
             <v-btn small @click="clear">Clear</v-btn>
@@ -119,7 +120,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { BoardState, IStrokeProps } from '../draw/utils/boardInterfaces';
 import { Controller } from '../draw/InterfaceController';
 
@@ -134,6 +135,7 @@ export default class Main extends Vue {
   private color = { text: 'Black', value: 'black'};
   private width = { text: '1px', value: 1};
   private panMode: string = 'off';
+  private timeObj = { minutes: 0, seconds: 0};
   private selectSmoothnessItems = [
     { text: '1 - No smoothing', value: 1 },
     { text: '4 - Sharp curves', value: 4 },
@@ -172,6 +174,7 @@ export default class Main extends Vue {
       width: this.width.value,
       bufferSize: this.smoothness.value,
     });
+    this.controller.app.state.timer.bindTimeMonitor(this.timeObj);
     window.addEventListener('keydown', this.panOn);
     window.addEventListener('keyup', this.panOff);
   }
