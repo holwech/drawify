@@ -1,4 +1,4 @@
-import Timer from './utils/Timer';
+import Timer from './timer/Timer';
 import { AppStates } from './utils/appInterfaces';
 import PlayState from './player/PlayState';
 

@@ -1,4 +1,4 @@
-import Timer from '../utils/Timer';
+import Timer from '../timer/Timer';
 import { PlayStates } from './playInterfaces';
 import { IEvent } from '../utils/boardInterfaces';
 

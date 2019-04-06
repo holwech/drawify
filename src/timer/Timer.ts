@@ -1,10 +1,4 @@
-enum TimerStates {
-  UINIT,
-  STARTED,
-  PAUSED,
-  STOPPED,
-  REVERSE,
-}
+import { TimerStates } from './timerInterfaces';
 
 interface ITimeMonitor {
   minutes: number;
@@ -24,13 +18,13 @@ export default class Timer {
       case TimerStates.UINIT:
         return 0;
       case TimerStates.STARTED:
-        return new Date().getTime() - this.startTime;
+        return Date.now() - this.startTime;
       case TimerStates.PAUSED:
         return this.pauseTime - this.startTime;
       case TimerStates.STOPPED:
         return this.stopTime - this.startTime;
       case TimerStates.REVERSE:
-        const time = this.reverseTime - this.startTime - new Date().getTime();
+        const time = 2 * this.reverseTime - this.startTime - Date.now();
         if (time < 0) {
           return 0;
         } else {
@@ -51,31 +45,30 @@ export default class Timer {
   }
 
   public restart(): void {
-    this.startTime = new Date().getTime();
+    this.startTime = Date.now();
     this.stopTime = this.startTime;
   }
 
   public start(): void {
     switch (this.state) {
       case TimerStates.UINIT:
-        this.startTime = new Date().getTime();
+        this.startTime = Date.now();
         break;
       case TimerStates.PAUSED:
-        this.startTime += new Date().getTime() - this.pauseTime;
+        this.startTime += Date.now() - this.pauseTime;
         break;
       case TimerStates.STOPPED:
-        this.startTime = new Date().getTime();
+        this.startTime = Date.now();
         this.stopTime = this.startTime;
         this.pauseTime = this.startTime;
         break;
       case TimerStates.REVERSE:
-        this.startTime = new Date().getTime() - this.getTime();
+        this.startTime = Date.now() - this.getTime();
         break;
       default:
         break;
     }
     this.state = TimerStates.STARTED;
-    console.log('State is ' + this.state);
   }
 
   public reverse(): void {
@@ -84,10 +77,12 @@ export default class Timer {
         this.reverseTime = this.startTime;
         break;
       case TimerStates.STARTED:
-        this.reverseTime = new Date().getTime();
+        this.reverseTime = Date.now();
         break;
       case TimerStates.PAUSED:
-        this.reverseTime = this.pauseTime;
+        const currentTime = Date.now();
+        this.startTime += currentTime - this.pauseTime;
+        this.reverseTime = currentTime;
         break;
       case TimerStates.STOPPED:
         throw new Error('Cannot run reverse on a stopped timer');
@@ -102,12 +97,12 @@ export default class Timer {
       case TimerStates.UINIT:
         break;
       case TimerStates.STARTED:
-        this.pauseTime = new Date().getTime();
+        this.pauseTime = Date.now();
         break;
       case TimerStates.STOPPED:
         break;
       case TimerStates.REVERSE:
-        const currentTime = new Date().getTime();
+        const currentTime = Date.now();
         this.startTime = currentTime - this.getTime();
         this.pauseTime = currentTime;
         break;
@@ -115,7 +110,6 @@ export default class Timer {
         break;
     }
     this.state = TimerStates.PAUSED;
-    console.log('State is ' + this.state);
   }
 
   public stop(): void {
@@ -123,7 +117,7 @@ export default class Timer {
       case TimerStates.UINIT:
         return;
       case TimerStates.STARTED:
-        this.stopTime = new Date().getTime();
+        this.stopTime = Date.now();
         break;
       case TimerStates.PAUSED:
         this.stopTime = this.pauseTime;
@@ -132,7 +126,6 @@ export default class Timer {
         break;
     }
     this.state = TimerStates.STOPPED;
-    console.log('State is ' + this.state);
   }
 
   public bindTimeMonitor(timeObj: ITimeMonitor): void {
