@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1554567478145" clover="3.2.0">
+  <project timestamp="1554567478146" name="All files">
+    <metrics statements="81" coveredstatements="61" conditionals="25" coveredconditionals="15" methods="12" coveredmethods="9" elements="118" coveredelements="85" complexity="0" loc="81" ncloc="81" packages="1" files="2" classes="2"/>
+    <file name="Timer.ts" path="/home/holwech/code/draw/src/timer/Timer.ts">
+      <metrics statements="75" coveredstatements="55" conditionals="23" coveredconditionals="13" methods="11" coveredmethods="8"/>
+      <line num="1" count="1" type="stmt"/>
+      <line num="8" count="1" type="stmt"/>
+      <line num="9" count="12" type="stmt"/>
+      <line num="10" count="12" type="stmt"/>
+      <line num="11" count="12" type="stmt"/>
+      <line num="12" count="12" type="stmt"/>
+      <line num="13" count="12" type="stmt"/>
+      <line num="16" count="1" type="stmt"/>
+      <line num="19" count="2" type="stmt"/>
+      <line num="21" count="8" type="stmt"/>
+      <line num="23" count="1" type="stmt"/>
+      <line num="25" count="2" type="stmt"/>
+      <line num="27" count="6" type="stmt"/>
+      <line num="29" count="1" type="stmt"/>
+      <line num="31" count="5" type="stmt"/>
+      <line num="36" count="1" type="stmt"/>
+      <line num="38" count="0" type="stmt"/>
+      <line num="40" count="0" type="stmt"/>
+      <line num="43" count="1" type="stmt"/>
+      <line num="44" count="2" type="stmt"/>
+      <line num="47" count="1" type="stmt"/>
+      <line num="48" count="1" type="stmt"/>
+      <line num="49" count="1" type="stmt"/>
+      <line num="52" count="1" type="stmt"/>
+      <line num="55" count="9" type="stmt"/>
+      <line num="56" count="9" type="stmt"/>
+      <line num="58" count="2" type="stmt"/>
+      <line num="59" count="2" type="stmt"/>
+      <line num="61" count="1" type="stmt"/>
+      <line num="62" count="1" type="stmt"/>
+      <line num="63" count="1" type="stmt"/>
+      <line num="64" count="1" type="stmt"/>
+      <line num="66" count="2" type="stmt"/>
+      <line num="67" count="2" type="stmt"/>
+      <line num="69" count="0" type="stmt"/>
+      <line num="71" count="14" type="stmt"/>
+      <line num="74" count="1" type="stmt"/>
+      <line num="77" count="0" type="stmt"/>
+      <line num="78" count="0" type="stmt"/>
+      <line num="80" count="3" type="stmt"/>
+      <line num="81" count="3" type="stmt"/>
+      <line num="83" count="2" type="stmt"/>
+      <line num="84" count="2" type="stmt"/>
+      <line num="85" count="2" type="stmt"/>
+      <line num="86" count="2" type="stmt"/>
+      <line num="88" count="0" type="stmt"/>
+      <line num="90" count="0" type="stmt"/>
+      <line num="92" count="5" type="stmt"/>
+      <line num="95" count="1" type="stmt"/>
+      <line num="98" count="0" type="stmt"/>
+      <line num="100" count="3" type="stmt"/>
+      <line num="101" count="3" type="stmt"/>
+      <line num="103" count="0" type="stmt"/>
+      <line num="105" count="1" type="stmt"/>
+      <line num="106" count="1" type="stmt"/>
+      <line num="107" count="1" type="stmt"/>
+      <line num="108" count="1" type="stmt"/>
+      <line num="110" count="0" type="stmt"/>
+      <line num="112" count="4" type="stmt"/>
+      <line num="115" count="1" type="stmt"/>
+      <line num="118" count="0" type="stmt"/>
+      <line num="120" count="2" type="stmt"/>
+      <line num="121" count="2" type="stmt"/>
+      <line num="123" count="0" type="stmt"/>
+      <line num="124" count="0" type="stmt"/>
+      <line num="126" count="0" type="stmt"/>
+      <line num="128" count="2" type="stmt"/>
+      <line num="131" count="1" type="stmt"/>
+      <line num="132" count="0" type="stmt"/>
+      <line num="133" count="0" type="stmt"/>
+      <line num="134" count="0" type="stmt"/>
+      <line num="135" count="0" type="stmt"/>
+      <line num="136" count="0" type="stmt"/>
+      <line num="137" count="0" type="stmt"/>
+      <line num="140" count="1" type="stmt"/>
+    </file>
+    <file name="timerInterfaces.ts" path="/home/holwech/code/draw/src/timer/timerInterfaces.ts">
+      <metrics statements="6" coveredstatements="6" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+      <line num="1" count="1" type="cond" truecount="2" falsecount="0"/>
+      <line num="2" count="1" type="stmt"/>
+      <line num="3" count="1" type="stmt"/>
+      <line num="4" count="1" type="stmt"/>
+      <line num="5" count="1" type="stmt"/>
+      <line num="6" count="1" type="stmt"/>
+    </file>
+  </project>
+</coverage>
