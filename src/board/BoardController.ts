@@ -16,23 +16,22 @@ export class BoardController {
     bufferSize: 20,
   };
   private viewBox: IViewBox = {
-    x: 0, y: 0, width: 1200, height: 800,
+    x: 0,
+    y: 0,
+    width: 1200,
+    height: 800,
   };
 
   private svg: HTMLElement & SVGElement & SVGSVGElement;
   private draw: SVGDraw;
   private transform: Transform;
 
-  constructor(
-    svgElement: HTMLElement & SVGElement & SVGSVGElement,
-    app: AppController,
-    initialState: IEvent[] = [],
-  ) {
+  constructor(svgElement: HTMLElement & SVGElement & SVGSVGElement, app: AppController, initialState: IEvent[] = []) {
     this.svg = svgElement;
     this.app = app;
     this.draw = new SVGDraw(this.svg);
     this.transform = new Transform(this.svg);
-    initialState.forEach((event) => {
+    initialState.forEach(event => {
       this.execute(event);
     });
   }
@@ -145,8 +144,6 @@ export class BoardController {
     svgPoint.x = e.clientX;
     svgPoint.y = e.clientY;
     // Null check is done in constructor
-    return svgPoint.matrixTransform(
-      (this.svg.getScreenCTM() as DOMMatrix).inverse(),
-    );
+    return svgPoint.matrixTransform((this.svg.getScreenCTM() as DOMMatrix).inverse());
   }
 }

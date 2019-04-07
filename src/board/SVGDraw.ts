@@ -84,5 +84,4 @@ export class SVGDraw {
       this.path.setAttribute('d', this.strPath + tempPath);
     }
   }
-
 }
