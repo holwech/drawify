@@ -6,7 +6,7 @@ export class RecordController {
   private log: IEvent[] = [];
 
   constructor(app: AppController, initialState: IEvent[] = []) {
-    initialState.forEach((event) => {
+    initialState.forEach(event => {
       this.record(event);
     });
   }

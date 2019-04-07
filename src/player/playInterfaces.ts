@@ -1,6 +1,6 @@
 export enum PlayStates {
-    PLAY = 'PLAY',
-    PAUSE = 'PAUSE',
-    STOP = 'STOP',
-    REVERSE = 'REVERSE',
+  PLAY = 'PLAY',
+  PAUSE = 'PAUSE',
+  STOP = 'STOP',
+  REVERSE = 'REVERSE',
 }

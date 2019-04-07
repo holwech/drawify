@@ -1,34 +1,53 @@
 {
-  "name": "draw",
-  "version": "1.0.0",
-  "description": "[![Netlify Status](https://api.netlify.com/api/v1/badges/330bbe5a-073e-473c-ae37-5f95684bd9a1/deploy-status)](https://app.netlify.com/sites/priceless-hodgkin-3234a5/deploys)",
-  "main": "index.js",
+  "name": "draw-ts",
+  "version": "0.0.4",
+  "description": "Stateful drawing tool with zero dependencies",
+  "main": "lib/InterfaceController.js",
+  "types": "lib/InterfaceController.d.ts",
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^24.0.11",
     "jest": "^24.7.1",
+    "prettier": "^1.16.4",
     "ts-jest": "^24.0.2",
     "ts-loader": "^5.3.3",
     "tslint": "^5.15.0",
+    "tslint-config-prettier": "^1.18.0",
     "tslint-webpack-plugin": "^2.0.4",
-    "typescript": "^3.4.2",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0",
-    "webpack-dev-server": "^3.2.1"
+    "typescript": "^3.4.2"
   },
   "scripts": {
     "dev": "webpack-dev-server --mode development",
-    "test:watch": "jest --watch"
+    "build": "tsc",
+    "build:watch": "tsc -w",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A",
+    "postversion": "git push && git push --tags"
   },
+  
   "repository": {
     "type": "git",
     "url": "git+https://github.com/holwech/draw.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "draw",
+    "typescript",
+    "canvas",
+    "ts"
+  ],
+  "author": "Joachim Holwech",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/holwech/draw/issues"
   },
+  "files": [
+    "/lib"
+  ],
   "homepage": "https://github.com/holwech/draw#readme"
 }

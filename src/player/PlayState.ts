@@ -8,5 +8,5 @@ export default class PlayState {
     public log: IEvent[] = [],
     public currIdx = 0,
     public state = PlayStates.STOP,
-  ) { }
+  ) {}
 }
