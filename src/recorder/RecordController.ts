@@ -1,12 +1,12 @@
 import { IEvent, ILogEvent } from '../utils/boardInterfaces';
-import Timer from '../utils/Timer';
+import Timer from '../timer/Timer';
 import { AppController } from '../AppController';
 
 export class RecordController {
   private log: IEvent[] = [];
 
   constructor(app: AppController, initialState: IEvent[] = []) {
-    initialState.forEach((event) => {
+    initialState.forEach(event => {
       this.record(event);
     });
   }

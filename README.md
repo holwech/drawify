@@ -1,34 +1,12 @@
-[![Netlify Status](https://api.netlify.com/api/v1/badges/330bbe5a-073e-473c-ae37-5f95684bd9a1/deploy-status)](https://app.netlify.com/sites/priceless-hodgkin-3234a5/deploys)
-
 # draw
 
-## Autocompile Typescript
-In VSCode click `CTRL+SHIFT+b` and select `tsc:watch - tsconfig.json`. This compiles everything except for the frontend. To compile this, open a terminal view, navigate to the frontend folder and run `npm run serve`.
+A stateful drawing tool with zero dependencies.
 
-## Project setup
-```
-npm install
-```
+See [example](https://github.com/holwech/draw-frontend) for how to use this library.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### Developing for draw-ts
+Install package `npm install`
 
-### Compiles and minifies for production
-```
-npm run build
-```
+Use `NPM link` for local development.
 
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Publishing changes to registry `npm version <major/minor/patch>` and then `npm publish`. This will run tests, linting and push to git repo.
