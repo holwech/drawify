@@ -1,6 +1,6 @@
 {
   "name": "draw-ts",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Stateful drawing tool with zero dependencies",
   "main": "lib/InterfaceController.js",
   "types": "lib/InterfaceController.d.ts",
@@ -30,7 +30,6 @@
     "version": "npm run format && git add -A",
     "postversion": "git push && git push --tags"
   },
-  
   "repository": {
     "type": "git",
     "url": "git+https://github.com/holwech/draw.git"
