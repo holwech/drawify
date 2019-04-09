@@ -1,7 +1,7 @@
 export enum TimerStates {
-  UINIT,
-  STARTED,
-  PAUSED,
-  STOPPED,
-  REVERSE,
+  UINIT = 'UINIT',
+  STARTED = 'STARTED',
+  PAUSED = 'PAUSED',
+  STOPPED = 'STOPPED',
+  REVERSE = 'REVERSE',
 }

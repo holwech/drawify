@@ -16,7 +16,6 @@ describe('core functions', () => {
 describe('timer functions', () => {
   it('should restart timer correctly', () => {
     const timer = new Timer();
-    const currTime = 0;
     moveTimeTo(0);
     timer.start();
     moveTimeTo(1000);
@@ -54,6 +53,19 @@ describe('timer functions', () => {
     moveTimeTo(3000);
     expect(timer.getTime()).toBe(2000);
   });
+
+  it('show return the same time after pause', () => {
+    const timer = new Timer();
+    moveTimeTo(0);
+    timer.start();
+    moveTimeTo(1000);
+    timer.pause();
+    moveTimeTo(2000);
+    expect(timer.getTime()).toBe(1000);
+    moveTimeTo(10000);
+    expect(timer.getTime()).toBe(1000);
+  });
+
 
   it('show correct time after stop and then start', () => {
     const timer = new Timer();

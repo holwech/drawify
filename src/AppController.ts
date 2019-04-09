@@ -81,18 +81,22 @@ export class AppController {
           this.player.setEventLog(this.recorder.getEventLog());
         }
         this.state.state = AppStates.PLAYING;
+        this.state.timer.start();
         this.player.play();
         break;
       case ActionType.PLAY_STOP:
         this.player.stop();
+        this.state.timer.stop();
         this.state.state = AppStates.PLAYING;
         break;
       case ActionType.PLAY_PAUSE:
         this.player.pause();
+        this.state.timer.pause();
         this.state.state = AppStates.PLAYING;
         break;
       case ActionType.PLAY_REVERSE:
         this.player.reverse();
+        this.state.timer.reverse();
         this.state.state = AppStates.PLAYING;
         break;
       default:

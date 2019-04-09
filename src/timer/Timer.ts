@@ -130,7 +130,6 @@ export default class Timer {
 
   public bindTimeMonitor(timeObj: ITimeMonitor): void {
     this.timeMonitorInterval = setInterval(() => {
-      console.log(this.state);
       const currentTime = this.getTime();
       timeObj.minutes = Math.floor((currentTime % (1000 * 60 * 60)) / (1000 * 60));
       timeObj.seconds = Math.floor((currentTime % (1000 * 60)) / 1000);
