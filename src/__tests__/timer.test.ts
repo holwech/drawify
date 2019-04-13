@@ -14,17 +14,17 @@ describe('core functions', () => {
 });
 
 describe('timer functions', () => {
-  it('should restart timer correctly', () => {
-    const timer = new Timer();
-    moveTimeTo(0);
-    timer.start();
-    moveTimeTo(1000);
-    timer.restart();
-    moveTimeTo(2000);
-    expect(timer.getTime()).toBe(1000);
-    moveTimeTo(4000);
-    expect(timer.getTime()).toBe(3000);
-  });
+  // it('should restart timer correctly', () => {
+  //   const timer = new Timer();
+  //   moveTimeTo(0);
+  //   timer.start();
+  //   moveTimeTo(1000);
+  //   timer.restart();
+  //   moveTimeTo(2000);
+  //   expect(timer.getTime()).toBe(1000);
+  //   moveTimeTo(4000);
+  //   expect(timer.getTime()).toBe(3000);
+  // });
 
   it('uninitalized timer should give 0', () => {
     const timer = new Timer();
@@ -32,13 +32,51 @@ describe('timer functions', () => {
     expect(timer.getTime()).toBe(0);
   });
 
-  it('show correc time for started timer', () => {
+  it('show correct time for started timer', () => {
     const timer = new Timer();
     moveTimeTo(0);
     timer.start();
     moveTimeTo(1000);
     expect(timer.getState()).toBe(TimerStates.STARTED);
     expect(timer.getTime()).toBe(1000);
+  });
+
+  it('should restart and show correct time length', () => {
+    const timer = new Timer();
+    moveTimeTo(0);
+    timer.start();
+    moveTimeTo(1500);
+    timer.restart();
+    expect(timer.getLengthTime()).toBe(1500);
+    timer.start();
+    moveTimeTo(2000);
+    expect(timer.getLengthTime()).toBe(1500);
+    timer.pause();
+    moveTimeTo(2500);
+    expect(timer.getLengthTime()).toBe(1500);
+  });
+
+  it('should restart timer and return correct time', () => {
+    const timer = new Timer();
+    moveTimeTo(0);
+    timer.start();
+    moveTimeTo(1000);
+    timer.restart();
+    expect(timer.getTime()).toBe(0);
+    moveTimeTo(1500);
+    expect(timer.getTime()).toBe(500);
+    timer.pause();
+    moveTimeTo(2000);
+    timer.restart();
+    moveTimeTo(2500);
+    expect(timer.getTime()).toBe(0);
+    timer.start();
+    moveTimeTo(3000);
+    expect(timer.getLengthTime()).toBe(1000);
+    timer.reverse();
+    moveTimeTo(3250);
+    expect(timer.getLengthTime()).toBe(1500);
+    expect(timer.getTime()).toBe(250);
   });
 
   it('show correct time after pause and then start', () => {
@@ -64,21 +102,6 @@ describe('timer functions', () => {
     expect(timer.getTime()).toBe(1000);
     moveTimeTo(10000);
     expect(timer.getTime()).toBe(1000);
-  });
-
-
-  it('show correct time after stop and then start', () => {
-    const timer = new Timer();
-    moveTimeTo(0);
-    timer.start();
-    moveTimeTo(1000);
-    expect(timer.getTime()).toBe(1000);
-    timer.stop();
-    moveTimeTo(2000);
-    expect(timer.getTime()).toBe(1000);
-    timer.start();
-    moveTimeTo(4000);
-    expect(timer.getTime()).toBe(2000);
   });
 
   it('show correct time after start -> reverse -> start', () => {
@@ -127,8 +150,6 @@ describe('timer functions', () => {
     moveTimeTo(6000);
     timer.start();
     moveTimeTo(8000);
-    timer.stop();
-    moveTimeTo(10000);
     expect(timer.getTime()).toBe(3000);
   });
 

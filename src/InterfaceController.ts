@@ -22,10 +22,10 @@ export class Controller {
     this.app.dispatchAction({ action: ActionType.REVERSE });
   }
 
-  public stop(): void {
-    this.app.dispatchAction({ action: ActionType.STOP });
+  public reset(): void {
+    this.app.dispatchAction({ action: ActionType.RESET });
   }
-  
+
   public recordOn(): void {
     this.app.dispatchAction({ action: ActionType.RECORD_ON })
   }

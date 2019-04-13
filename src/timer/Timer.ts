@@ -15,7 +15,6 @@ export default class Timer {
     lengthSeconds: '00',
   };
   private startTime = 0;
-  private stopTime = 0;
   private pauseTime = 0;
   private reverseTime = 0;
   private lengthTime = 0;
@@ -33,8 +32,6 @@ export default class Timer {
         return Date.now() - this.startTime;
       case TimerStates.PAUSED:
         return this.pauseTime - this.startTime;
-      case TimerStates.STOPPED:
-        return this.stopTime - this.startTime;
       case TimerStates.REVERSE:
         const time = 2 * this.reverseTime - this.startTime - Date.now();
         if (time < 0) {
@@ -52,20 +49,25 @@ export default class Timer {
     }
   }
 
-  public getStopTime(): number {
-    if (this.state !== TimerStates.STOPPED) {
-      return 0;
-    }
-    return this.stopTime;
-  }
-
   public getState(): TimerStates {
     return this.state;
   }
+  
+  public getLengthTime(): number {
+    return this.lengthTime - this.startTime;
+  }
 
   public restart(): void {
-    this.startTime = Date.now();
-    this.stopTime = this.startTime;
+    this.setLengthTime();
+    const currentTime = Date.now();
+    this.lengthTime = currentTime + this.lengthTime - this.startTime
+    this.startTime = currentTime;
+    this.pauseTime = this.startTime;
+  }
+
+  public reset(): void {
+    this.restart();
+    this.lengthTime = this.startTime;
   }
 
   public start(): void {
@@ -75,11 +77,6 @@ export default class Timer {
         break;
       case TimerStates.PAUSED:
         this.startTime += Date.now() - this.pauseTime;
-        break;
-      case TimerStates.STOPPED:
-        this.startTime = Date.now();
-        this.stopTime = this.startTime;
-        this.pauseTime = this.startTime;
         break;
       case TimerStates.REVERSE:
         this.startTime = Date.now() - this.getTime();
@@ -96,6 +93,7 @@ export default class Timer {
         this.reverseTime = this.startTime;
         break;
       case TimerStates.STARTED:
+        this.setLengthTime();
         this.reverseTime = Date.now();
         break;
       case TimerStates.PAUSED:
@@ -103,8 +101,6 @@ export default class Timer {
         this.startTime += currentTime - this.pauseTime;
         this.reverseTime = currentTime;
         break;
-      case TimerStates.STOPPED:
-        throw new Error('Cannot run reverse on a stopped timer');
       default:
         break;
     }
@@ -116,9 +112,8 @@ export default class Timer {
       case TimerStates.UINIT:
         break;
       case TimerStates.STARTED:
+        this.setLengthTime();
         this.pauseTime = Date.now();
-        break;
-      case TimerStates.STOPPED:
         break;
       case TimerStates.REVERSE:
         const currentTime = Date.now();
@@ -129,22 +124,6 @@ export default class Timer {
         break;
     }
     this.state = TimerStates.PAUSED;
-  }
-
-  public stop(): void {
-    switch (this.state) {
-      case TimerStates.UINIT:
-        return;
-      case TimerStates.STARTED:
-        this.stopTime = Date.now();
-        break;
-      case TimerStates.PAUSED:
-        this.stopTime = this.pauseTime;
-        break;
-      default:
-        break;
-    }
-    this.state = TimerStates.STOPPED;
   }
 
   public startTimeMonitor(): void {
@@ -159,6 +138,13 @@ export default class Timer {
         this.timeMonitor.lengthSeconds = this.timeMonitor.seconds;
       }
     }, 1000);
+  }
+
+  private now(): number {
+    if (!this.startTime) {
+      this.startTime = Date.now();
+    }
+    return Date.now() - this.startTime;
   }
 
   private pad(n: string, width: number, z?: string | undefined): string {

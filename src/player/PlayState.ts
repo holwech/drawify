@@ -7,6 +7,6 @@ export default class PlayState {
     public timer: Timer,
     public log: IEvent[] = [],
     public currIdx = 0,
-    public state = PlayStates.STOP,
+    public state = PlayStates.PAUSE,
   ) {}
 }

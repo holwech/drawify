@@ -57,6 +57,7 @@ export class AppController {
 
   public dispatchAction(action: IAction): void {
     console.log('ACTION: ' + action.action);
+    this.player.setEventLog(this.recorder.getEventLog());
     switch(action.action) {
       case ActionType.RECORD_ON:
         this.event.addEventListeners();
@@ -68,23 +69,6 @@ export class AppController {
         this.state.timer.setLengthTime();
         this.state.state = AppStates.PLAYING;
         break;
-      default:
-        switch (this.state.state) {
-          case AppStates.PLAYING:
-            this.playActionDispatchController(action);
-            break;
-          case AppStates.RECORDING:
-            this.playActionDispatchController(action);
-            break;
-          default:
-            break;
-        }
-        break;
-    }
-  }
-
-  private playActionDispatchController(action: IAction): void {
-    switch (action.action) {
       case ActionType.START:
         this.player.play();
         break;
@@ -94,10 +78,9 @@ export class AppController {
       case ActionType.REVERSE:
         this.player.reverse();
         break;
-      case ActionType.STOP:
-        this.player.stop();
-        break;
       case ActionType.RESET:
+        this.player.reset();
+        break;
       default:
         break;
     }

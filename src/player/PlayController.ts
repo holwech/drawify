@@ -22,12 +22,6 @@ export class PlayController {
         this.state.state = PlayStates.PLAY;
         this.playEvents();
         break;
-      case PlayStates.STOP:
-        this.reset();
-        this.state.timer.start();
-        this.state.state = PlayStates.PLAY;
-        this.playEvents();
-        break;
       case PlayStates.REVERSE:
         this.state.timer.start();
         this.state.state = PlayStates.PLAY;
@@ -46,9 +40,6 @@ export class PlayController {
         break;
       case PlayStates.PAUSE:
         break;
-      case PlayStates.STOP:
-        this.state.timer.pause();
-        break;
       case PlayStates.REVERSE:
         this.state.timer.pause();
         break;
@@ -56,22 +47,6 @@ export class PlayController {
         break;
     }
     this.state.state = PlayStates.PAUSE;
-  }
-
-  public stop(): void {
-    switch (this.state.state) {
-      case PlayStates.PLAY:
-        this.state.timer.stop();
-        break;
-      case PlayStates.PAUSE:
-        this.state.timer.stop();
-        break;
-      case PlayStates.STOP:
-        break;
-      default:
-        break;
-    }
-    this.state.state = PlayStates.STOP;
   }
 
   public reverse(): void {
@@ -95,10 +70,10 @@ export class PlayController {
     this.state.log = [];
   }
 
-  private reset(): void {
+  public reset(): void {
     this.app.dispatchEvent({ eventType: EventType.CLEAR });
     this.state.currIdx = 0;
-    this.state.timer.stop();
+    this.state.timer.pause();
   }
 
   private playEvents(): void {
@@ -111,7 +86,7 @@ export class PlayController {
         }
       }, this.state.log[this.state.currIdx].time! - this.state.timer.getTime());
     } else {
-      this.stop();
+      this.pause();
     }
   }
 
@@ -126,7 +101,7 @@ export class PlayController {
         }
       }, this.state.timer.getTime() - this.state.log[this.state.currIdx].time!);
     } else {
-      this.stop();
+      this.pause();
     }
   }
 }
