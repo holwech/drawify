@@ -5,13 +5,10 @@ import { PlayStates } from './playInterfaces';
 import PlayState from './PlayState';
 
 export class PlayController {
-  private app: AppController;
-  private state: PlayState;
-
-  constructor(app: AppController, state: PlayState) {
-    this.app = app;
-    this.state = state;
-    this.state.timer = new Timer();
+  constructor(
+    private app: AppController,
+    private state: PlayState
+  ) {
     this.state.log = [];
   }
 

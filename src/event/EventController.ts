@@ -1,6 +1,5 @@
 import { EventType } from '../utils/boardInterfaces';
 import { AppController } from '../AppController';
-import { IAction, ActionType } from '../utils/appInterfaces';
 
 export class EventController {
   // Event functions
@@ -17,23 +16,14 @@ export class EventController {
     this.fnOnPointerUp = this.onPointerUp;
   }
 
-  public executeAction(action: IAction): void {
-    switch (action.action) {
-      case ActionType.RECORD_START:
-        this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
-        this.svg.addEventListener('wheel', this.fnOnWheel);
-        break;
-      case ActionType.RECORD_PAUSE:
-        this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
-        this.svg.addEventListener('wheel', this.fnOnWheel);
-        break;
-      case ActionType.RECORD_STOP:
-        this.svg.removeEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
-        this.svg.removeEventListener('wheel', this.fnOnWheel);
-        break;
-      default:
-        break;
-    }
+  public addEventListeners(): void {
+    this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
+    this.svg.addEventListener('wheel', this.fnOnWheel);
+  }
+
+  public removeEventListeners(): void {
+    this.svg.removeEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
+    this.svg.removeEventListener('wheel', this.fnOnWheel);
   }
 
   private onWheel = (e: WheelEvent) => {

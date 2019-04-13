@@ -8,29 +8,29 @@ export class Controller {
   constructor(svgID: string, strokeProps: IStrokeProps) {
     this.app = new AppController(svgID, strokeProps);
   }
-
-  public startPlayer(): void {
-    this.app.dispatchAction({ action: ActionType.PLAY_START });
+  
+  public start(): void {
+    this.app.dispatchAction({ action: ActionType.START });
   }
 
-  public reversePlayer(): void {
-    this.app.dispatchAction({ action: ActionType.PLAY_REVERSE });
+  public pause(): void {
+    this.app.dispatchAction({ action: ActionType.PAUSE });
+  }
+  
+  public reverse(): void {
+    this.app.dispatchAction({ action: ActionType.REVERSE });
   }
 
-  public pausePlayer(): void {
-    this.app.dispatchAction({ action: ActionType.PLAY_PAUSE });
+  public stop(): void {
+    this.app.dispatchAction({ action: ActionType.STOP });
+  }
+  
+  public recordOn(): void {
+    this.app.dispatchAction({ action: ActionType.RECORD_ON })
   }
 
-  public startRecording(): void {
-    this.app.dispatchAction({ action: ActionType.RECORD_START });
-  }
-
-  public pauseRecording(): void {
-    this.app.dispatchAction({ action: ActionType.RECORD_PAUSE });
-  }
-
-  public stopRecording(): void {
-    this.app.dispatchAction({ action: ActionType.RECORD_STOP });
+  public recordOff(): void {
+    this.app.dispatchAction({ action: ActionType.RECORD_OFF })
   }
 
   public clear(): void {

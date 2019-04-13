@@ -42,9 +42,6 @@ export class AppController {
   public dispatchEvent(event: IEvent): void {
     console.log('EVENT: ' + event.eventType);
     switch (this.state.state) {
-      case AppStates.UINIT:
-        console.log('App uninitialized');
-        break;
       case AppStates.RECORDING:
         event.time = this.state.timer.getTime();
         this.board.execute(event);
@@ -60,47 +57,93 @@ export class AppController {
 
   public dispatchAction(action: IAction): void {
     console.log('ACTION: ' + action.action);
-    switch (action.action) {
-      case ActionType.RECORD_START:
-        this.state.state = AppStates.RECORDING;
+    switch(action.action) {
+      case ActionType.RECORD_ON:
+        this.event.addEventListeners();
         this.state.timer.start();
-        this.event.executeAction(action);
-        break;
-      case ActionType.RECORD_STOP:
         this.state.state = AppStates.RECORDING;
-        this.state.timer.stop();
-        this.event.executeAction(action);
         break;
-      case ActionType.RECORD_PAUSE:
-        this.state.state = AppStates.RECORDING;
-        this.state.timer.pause();
-        this.event.executeAction(action);
-        break;
-      case ActionType.PLAY_START:
-        if (this.state.state === AppStates.RECORDING || this.state.state === AppStates.UINIT) {
-          this.player.setEventLog(this.recorder.getEventLog());
-        }
-        this.state.state = AppStates.PLAYING;
-        this.state.timer.start();
-        this.player.play();
-        break;
-      case ActionType.PLAY_STOP:
-        this.player.stop();
-        this.state.timer.stop();
-        this.state.state = AppStates.PLAYING;
-        break;
-      case ActionType.PLAY_PAUSE:
-        this.player.pause();
-        this.state.timer.pause();
-        this.state.state = AppStates.PLAYING;
-        break;
-      case ActionType.PLAY_REVERSE:
-        this.player.reverse();
-        this.state.timer.reverse();
+      case ActionType.RECORD_OFF:
+        this.event.removeEventListeners();
         this.state.state = AppStates.PLAYING;
         break;
       default:
-        throw new Error('No case for action ' + action.action);
+        switch (this.state.state) {
+          case AppStates.PLAYING:
+            this.playActionDispatchController(action);
+            break;
+          case AppStates.RECORDING:
+            break;
+          default:
+            break;
+        }
+        break;
+    }
+  }
+
+  private playActionDispatchController(action: IAction): void {
+    switch (action.action) {
+      case ActionType.START:
+        this.player.play();
+        break;
+      case ActionType.PAUSE:
+        this.player.pause();
+        break;
+      case ActionType.REVERSE:
+        this.player.reverse();
+        break;
+      case ActionType.STOP:
+        this.player.stop();
+        break;
+      default:
+        break;
     }
   }
 }
+
+//   public dispatchAction(action: IAction): void {
+//     console.log('ACTION: ' + action.action);
+//     switch (action.action) {
+//       case ActionType.RECORD_START:
+//         this.state.state = AppStates.RECORDING;
+//         this.state.timer.start();
+//         this.event.executeAction(action);
+//         break;
+//       case ActionType.RECORD_STOP:
+//         this.state.state = AppStates.RECORDING;
+//         this.state.timer.stop();
+//         this.event.executeAction(action);
+//         break;
+//       case ActionType.RECORD_PAUSE:
+//         this.state.state = AppStates.RECORDING;
+//         this.state.timer.pause();
+//         this.event.executeAction(action);
+//         break;
+//       case ActionType.PLAY_START:
+//         if (this.state.state === AppStates.RECORDING || this.state.state === AppStates.UINIT) {
+//           this.player.setEventLog(this.recorder.getEventLog());
+//         }
+//         this.state.state = AppStates.PLAYING;
+//         this.state.timer.start();
+//         this.player.play();
+//         break;
+//       case ActionType.PLAY_STOP:
+//         this.player.stop();
+//         this.state.timer.stop();
+//         this.state.state = AppStates.PLAYING;
+//         break;
+//       case ActionType.PLAY_PAUSE:
+//         this.player.pause();
+//         this.state.timer.pause();
+//         this.state.state = AppStates.PLAYING;
+//         break;
+//       case ActionType.PLAY_REVERSE:
+//         this.player.reverse();
+//         this.state.timer.reverse();
+//         this.state.state = AppStates.PLAYING;
+//         break;
+//       default:
+//         throw new Error('No case for action ' + action.action);
+//     }
+//   }
+// }
