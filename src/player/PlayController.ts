@@ -3,6 +3,7 @@ import { IEvent, EventType } from '../utils/boardInterfaces';
 import { AppController } from '../AppController';
 import { PlayStates } from './playInterfaces';
 import PlayState from './PlayState';
+import { ActionType } from '../utils/appInterfaces';
 
 export class PlayController {
   constructor(

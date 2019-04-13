@@ -14,8 +14,8 @@ export class AppController {
   private event: EventController;
   private svg: HTMLElement & SVGElement & SVGSVGElement;
 
-  constructor(svgID: string, strokeProps: IStrokeProps) {
-    this.state = new AppState();
+  constructor(svgID: string, state: AppState, strokeProps: IStrokeProps) {
+    this.state = state;
     this.svg = (document.getElementById(svgID) as any) as HTMLElement & SVGElement & SVGSVGElement;
     if (!this.svg.getScreenCTM()) {
       throw new Error('getScreenCTM is not defined');
@@ -60,11 +60,12 @@ export class AppController {
     switch(action.action) {
       case ActionType.RECORD_ON:
         this.event.addEventListeners();
-        this.state.timer.start();
         this.state.state = AppStates.RECORDING;
         break;
       case ActionType.RECORD_OFF:
         this.event.removeEventListeners();
+        this.state.timer.pause();
+        this.state.timer.setLengthTime();
         this.state.state = AppStates.PLAYING;
         break;
       default:
@@ -73,6 +74,7 @@ export class AppController {
             this.playActionDispatchController(action);
             break;
           case AppStates.RECORDING:
+            this.playActionDispatchController(action);
             break;
           default:
             break;
@@ -95,6 +97,7 @@ export class AppController {
       case ActionType.STOP:
         this.player.stop();
         break;
+      case ActionType.RESET:
       default:
         break;
     }

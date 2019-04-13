@@ -1,17 +1,29 @@
 import { TimerStates } from './timerInterfaces';
 
 interface ITimeMonitor {
-  minutes: number;
-  seconds: number;
+  minutes: string;
+  seconds: string;
+  lengthMinutes: string;
+  lengthSeconds: string;
 }
 
 export default class Timer {
+  public timeMonitor: ITimeMonitor = {
+    minutes: '00',
+    seconds: '00',
+    lengthMinutes: '00',
+    lengthSeconds: '00',
+  };
   private startTime = 0;
   private stopTime = 0;
   private pauseTime = 0;
   private reverseTime = 0;
+  private lengthTime = 0;
   private state: TimerStates = TimerStates.UINIT;
-  private timeMonitorInterval!: number;
+
+  constructor() {
+    this.startTimeMonitor();
+  }
 
   public getTime(): number {
     switch (this.state) {
@@ -30,6 +42,13 @@ export default class Timer {
         } else {
           return time;
         }
+    }
+  }
+
+  public setLengthTime(): void {
+    const currentTime = this.getTime();
+    if (currentTime > this.lengthTime) {
+      this.lengthTime = currentTime;
     }
   }
 
@@ -128,12 +147,23 @@ export default class Timer {
     this.state = TimerStates.STOPPED;
   }
 
-  public bindTimeMonitor(timeObj: ITimeMonitor): void {
-    this.timeMonitorInterval = setInterval(() => {
+  public startTimeMonitor(): void {
+    setInterval(() => {
       const currentTime = this.getTime();
-      timeObj.minutes = Math.floor((currentTime % (1000 * 60 * 60)) / (1000 * 60));
-      timeObj.seconds = Math.floor((currentTime % (1000 * 60)) / 1000);
-      console.log(timeObj.seconds);
+      const minutes = Math.floor((currentTime % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((currentTime % (1000 * 60)) / 1000);
+      this.timeMonitor.minutes = this.pad(String(minutes), 2);
+      this.timeMonitor.seconds = this.pad(String(seconds), 2);
+      if (currentTime > this.lengthTime) {
+        this.timeMonitor.lengthMinutes = this.timeMonitor.minutes;
+        this.timeMonitor.lengthSeconds = this.timeMonitor.seconds;
+      }
     }, 1000);
+  }
+
+  private pad(n: string, width: number, z?: string | undefined): string {
+    z = z || '0';
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
   }
 }

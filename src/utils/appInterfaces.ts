@@ -17,8 +17,7 @@ export enum ActionType {
   STOP = 'STOP',
   PAUSE = 'PAUSE',
   REVERSE = 'REVERSE',
-  EVENT_REMOVE_LISTENER = 'EVENT_REMOVE_LISTENER',
-  EVENT_ADD_LISTENER = 'EVENT_ADD_LISTENER',
+  RESET = 'RESET',
 }
 
 export interface IAction {
