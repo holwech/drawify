@@ -1,5 +1,5 @@
 import Timer from '../timer/Timer';
-import { IEvent, EventType } from '../utils/boardInterfaces';
+import { IEvent, EventType, EventOrigin } from '../utils/boardInterfaces';
 import { AppController } from '../AppController';
 import { PlayStates } from './playInterfaces';
 import PlayState from './PlayState';
@@ -54,7 +54,7 @@ export class PlayController {
       case PlayStates.REVERSE:
         break;
       default:
-        this.app.dispatchEvent({ eventType: EventType.CLEAR });
+        this.app.dispatchEvent({ eventType: EventType.CLEAR }, EventOrigin.PLAYER);
         this.state.state = PlayStates.REVERSE;
         this.state.timer.reverse();
         this.reversePlayEvents();
@@ -71,7 +71,7 @@ export class PlayController {
   }
 
   public restart(): void {
-    this.app.dispatchEvent({ eventType: EventType.CLEAR });
+    this.app.dispatchEvent({ eventType: EventType.CLEAR }, EventOrigin.PLAYER);
     this.state.currIdx = 0;
     this.state.timer.restart();
   }
@@ -80,7 +80,7 @@ export class PlayController {
     if (this.state.currIdx !== this.state.log.length) {
       setTimeout(() => {
         if (this.state.state === PlayStates.PLAY) {
-          this.app.dispatchEvent(this.state.log[this.state.currIdx]);
+          this.app.dispatchEvent(this.state.log[this.state.currIdx], EventOrigin.PLAYER);
           this.state.currIdx++;
           this.playEvents();
         }
@@ -95,7 +95,7 @@ export class PlayController {
     if (this.state.currIdx >= 0) {
       setTimeout(() => {
         if (this.state.state === PlayStates.REVERSE) {
-          this.app.dispatchEvent(this.state.log[this.state.currIdx]);
+          this.app.dispatchEvent(this.state.log[this.state.currIdx], EventOrigin.PLAYER);
           this.state.currIdx--;
           this.reversePlayEvents();
         }

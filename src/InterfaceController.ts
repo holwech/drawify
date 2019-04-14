@@ -1,5 +1,5 @@
 import { AppController } from './AppController';
-import { IStrokeProps, EventType, BoardState, IViewBox } from './utils/boardInterfaces';
+import { IStrokeProps, EventType, BoardState, IViewBox, EventOrigin } from './utils/boardInterfaces';
 import { ActionType } from './utils/appInterfaces';
 import AppState from './AppState';
 
@@ -35,18 +35,18 @@ export class Controller {
   }
 
   public clear(): void {
-    this.app.dispatchEvent({ eventType: EventType.CLEAR });
+    this.app.dispatchEvent({ eventType: EventType.CLEAR }, EventOrigin.USER);
   }
 
   public setState(state: BoardState): void {
-    this.app.dispatchEvent({ eventType: EventType.SET_STATE, state });
+    this.app.dispatchEvent({ eventType: EventType.SET_STATE, state }, EventOrigin.USER);
   }
 
   public setStrokeProperties(strokeProps: IStrokeProps): void {
-    this.app.dispatchEvent({ eventType: EventType.SET_STROKE_PROPS, strokeProps });
+    this.app.dispatchEvent({ eventType: EventType.SET_STROKE_PROPS, strokeProps }, EventOrigin.USER);
   }
 
   public setViewBox(viewBox: IViewBox): void {
-    this.app.dispatchEvent({ eventType: EventType.SET_VIEWBOX, viewBox });
+    this.app.dispatchEvent({ eventType: EventType.SET_VIEWBOX, viewBox }, EventOrigin.USER);
   }
 }

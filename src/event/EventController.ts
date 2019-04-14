@@ -1,4 +1,4 @@
-import { EventType } from '../utils/boardInterfaces';
+import { EventType, EventOrigin } from '../utils/boardInterfaces';
 import { AppController } from '../AppController';
 
 export class EventController {
@@ -27,11 +27,11 @@ export class EventController {
   }
 
   private onWheel = (e: WheelEvent) => {
-    this.app.dispatchEvent({ eventType: EventType.ONWHEEL, e });
+    this.app.dispatchEvent({ eventType: EventType.ONWHEEL, e }, EventOrigin.USER);
   };
 
   private onPointerDown = (e: MouseEvent) => {
-    this.app.dispatchEvent({ eventType: EventType.POINTER_DOWN, e });
+    this.app.dispatchEvent({ eventType: EventType.POINTER_DOWN, e }, EventOrigin.USER);
     this.svg.removeEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
     this.svg.addEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
     this.svg.addEventListener('mouseleave', this.fnOnPointerUp); // Releasing the mouse
@@ -39,7 +39,7 @@ export class EventController {
   };
 
   private onPointerUp = (e: MouseEvent) => {
-    this.app.dispatchEvent({ eventType: EventType.POINTER_UP, e });
+    this.app.dispatchEvent({ eventType: EventType.POINTER_UP, e }, EventOrigin.USER);
     this.svg.removeEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
     this.svg.removeEventListener('mouseleave', this.fnOnPointerUp); // Releasing the mouse
     this.svg.removeEventListener('mousemove', this.fnOnPointerMove); // Mouse is moving
@@ -47,6 +47,6 @@ export class EventController {
   };
 
   private onPointerMove = (e: MouseEvent) => {
-    this.app.dispatchEvent({ eventType: EventType.POINTER_MOVE, e });
+    this.app.dispatchEvent({ eventType: EventType.POINTER_MOVE, e }, EventOrigin.USER);
   };
 }

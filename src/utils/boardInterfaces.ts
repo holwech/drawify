@@ -46,6 +46,12 @@ export enum EventType {
   CLEAR = 'CLEAR',
   SET_STATE = 'SET_STATE',
   SET_VIEWBOX = 'SET_VIEWBOX',
+  END = 'END',
+}
+
+export enum EventOrigin {
+  USER,
+  PLAYER,
 }
 
 export enum BoardState {
