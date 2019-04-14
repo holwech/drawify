@@ -137,7 +137,7 @@ export default class Timer {
       this.timeMonitor.lengthMinutes = this.timeMonitor.minutes;
       this.timeMonitor.lengthSeconds = this.timeMonitor.seconds;
     }
-  } 
+  }
 
   private now(): number {
     return Date.now() - this.startTime;

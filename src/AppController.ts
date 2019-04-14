@@ -57,7 +57,7 @@ export class AppController {
 
   public dispatchAction(action: IAction): void {
     console.log('ACTION: ' + action.action);
-    switch(action.action) {
+    switch (action.action) {
       case ActionType.RECORD_ON:
         this.event.addEventListeners();
         this.state.timer.start();

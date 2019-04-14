@@ -6,10 +6,7 @@ import PlayState from './PlayState';
 import { ActionType } from '../utils/appInterfaces';
 
 export class PlayController {
-  constructor(
-    private app: AppController,
-    private state: PlayState
-  ) {
+  constructor(private app: AppController, private state: PlayState) {
     this.state.log = [];
   }
 

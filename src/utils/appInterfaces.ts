@@ -6,7 +6,7 @@ export enum AppStates {
 export enum AppSubState {
   START = 'START',
   PAUSE = 'PAUSED',
-  REVERSE = 'REVERSE'
+  REVERSE = 'REVERSE',
 }
 
 export enum ActionType {

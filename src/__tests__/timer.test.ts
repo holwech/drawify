@@ -33,7 +33,6 @@ describe('Core functions', () => {
     expect(timer.getLengthTime()).toBe(250);
     expect(timer.getTime()).toBe(250);
   });
-
 });
 
 describe('Base timer functions', () => {
@@ -113,7 +112,6 @@ describe('Base timer functions', () => {
     moveTimeTo(10000);
     expect(timer.getTime()).toBe(1000);
   });
-
 
   it('show correct time when reverse reaches time 0', () => {
     const timer = new Timer();

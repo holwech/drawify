@@ -9,7 +9,7 @@ export class Controller {
   constructor(svgID: string, state: AppState, strokeProps: IStrokeProps) {
     this.app = new AppController(svgID, state, strokeProps);
   }
-  
+
   public start(): void {
     this.app.dispatchAction({ action: ActionType.START });
   }
@@ -17,7 +17,7 @@ export class Controller {
   public pause(): void {
     this.app.dispatchAction({ action: ActionType.PAUSE });
   }
-  
+
   public reverse(): void {
     this.app.dispatchAction({ action: ActionType.REVERSE });
   }
@@ -27,11 +27,11 @@ export class Controller {
   }
 
   public recordOn(): void {
-    this.app.dispatchAction({ action: ActionType.RECORD_ON })
+    this.app.dispatchAction({ action: ActionType.RECORD_ON });
   }
 
   public recordOff(): void {
-    this.app.dispatchAction({ action: ActionType.RECORD_OFF })
+    this.app.dispatchAction({ action: ActionType.RECORD_OFF });
   }
 
   public clear(): void {
