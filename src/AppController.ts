@@ -73,7 +73,7 @@ export class AppController {
         this.state.timer.pause();
         this.state.timer.setLengthTime();
         if (this.state.timer.atEndTime()) {
-          this.dispatchEvent({ eventType: EventType.END }, EventOrigin.USER )
+          this.dispatchEvent({ eventType: EventType.END }, EventOrigin.USER);
         }
         this.player.setEventLog(this.recorder.getEventLog());
         this.dispatchAction({ action: ActionType.PAUSE });
@@ -82,7 +82,7 @@ export class AppController {
       default:
         switch (this.state.state) {
           case AppStates.RECORDING:
-            this.dispatchRecordAction(action); 
+            this.dispatchRecordAction(action);
             break;
           case AppStates.PLAYING:
             this.dispatchPlayAction(action);

@@ -7,6 +7,6 @@ export default class AppState {
     public state = AppStates.PLAYING,
     public subState = AppSubState.PAUSE,
     public timer = new Timer(),
-    public playState = new PlayState(timer)
+    public playState = new PlayState(timer),
   ) {}
 }

@@ -1,4 +1,3 @@
-
 export enum AppStates {
   RECORDING = 'RECORDING',
   PLAYING = 'PLAYING',
