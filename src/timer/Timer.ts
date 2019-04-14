@@ -14,26 +14,25 @@ export default class Timer {
     lengthMinutes: '00',
     lengthSeconds: '00',
   };
-  private startTime = 0;
+  private startTime: number;
   private pauseTime = 0;
   private reverseTime = 0;
   private lengthTime = 0;
-  private state: TimerStates = TimerStates.UINIT;
+  private state: TimerStates = TimerStates.PAUSED;
 
   constructor() {
     this.startTimeMonitor();
+    this.startTime = Date.now();
   }
 
   public getTime(): number {
     switch (this.state) {
-      case TimerStates.UINIT:
-        return 0;
       case TimerStates.STARTED:
-        return Date.now() - this.startTime;
+        return this.now();
       case TimerStates.PAUSED:
-        return this.pauseTime - this.startTime;
+        return this.pauseTime;
       case TimerStates.REVERSE:
-        const time = 2 * this.reverseTime - this.startTime - Date.now();
+        const time = 2 * this.reverseTime - this.now();
         if (time < 0) {
           return 0;
         } else {
@@ -49,37 +48,34 @@ export default class Timer {
     }
   }
 
+  public getLengthTime(): number {
+    this.setLengthTime();
+    return this.lengthTime;
+  }
+
   public getState(): TimerStates {
     return this.state;
-  }
-  
-  public getLengthTime(): number {
-    return this.lengthTime - this.startTime;
   }
 
   public restart(): void {
     this.setLengthTime();
-    const currentTime = Date.now();
-    this.lengthTime = currentTime + this.lengthTime - this.startTime
-    this.startTime = currentTime;
-    this.pauseTime = this.startTime;
+    this.startTime = Date.now();
+    this.pauseTime = 0;
+    this.updateTimeMonitor();
   }
 
   public reset(): void {
     this.restart();
-    this.lengthTime = this.startTime;
+    this.lengthTime = 0;
   }
 
   public start(): void {
     switch (this.state) {
-      case TimerStates.UINIT:
-        this.startTime = Date.now();
-        break;
       case TimerStates.PAUSED:
-        this.startTime += Date.now() - this.pauseTime;
+        this.startTime += this.now() - this.pauseTime;
         break;
       case TimerStates.REVERSE:
-        this.startTime = Date.now() - this.getTime();
+        this.startTime += 2 * (this.now() - this.reverseTime);
         break;
       default:
         break;
@@ -89,17 +85,14 @@ export default class Timer {
 
   public reverse(): void {
     switch (this.state) {
-      case TimerStates.UINIT:
-        this.reverseTime = this.startTime;
-        break;
       case TimerStates.STARTED:
         this.setLengthTime();
-        this.reverseTime = Date.now();
+        this.reverseTime = this.now();
         break;
       case TimerStates.PAUSED:
-        const currentTime = Date.now();
-        this.startTime += currentTime - this.pauseTime;
-        this.reverseTime = currentTime;
+        const now = this.now();
+        this.startTime += now - this.pauseTime;
+        this.reverseTime = this.now();
         break;
       default:
         break;
@@ -109,16 +102,14 @@ export default class Timer {
 
   public pause(): void {
     switch (this.state) {
-      case TimerStates.UINIT:
-        break;
       case TimerStates.STARTED:
         this.setLengthTime();
-        this.pauseTime = Date.now();
+        this.pauseTime = this.now();
         break;
       case TimerStates.REVERSE:
-        const currentTime = Date.now();
-        this.startTime = currentTime - this.getTime();
-        this.pauseTime = currentTime;
+        const now = this.now();
+        this.startTime += 2 * (now - this.reverseTime);
+        this.pauseTime = this.now();
         break;
       default:
         break;
@@ -126,24 +117,25 @@ export default class Timer {
     this.state = TimerStates.PAUSED;
   }
 
-  public startTimeMonitor(): void {
+  private startTimeMonitor(): void {
     setInterval(() => {
-      const currentTime = this.getTime();
-      const minutes = Math.floor((currentTime % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((currentTime % (1000 * 60)) / 1000);
-      this.timeMonitor.minutes = this.pad(String(minutes), 2);
-      this.timeMonitor.seconds = this.pad(String(seconds), 2);
-      if (currentTime > this.lengthTime) {
-        this.timeMonitor.lengthMinutes = this.timeMonitor.minutes;
-        this.timeMonitor.lengthSeconds = this.timeMonitor.seconds;
-      }
+      this.updateTimeMonitor();
     }, 1000);
   }
 
-  private now(): number {
-    if (!this.startTime) {
-      this.startTime = Date.now();
+  private updateTimeMonitor(): void {
+    const currentTime = this.getTime();
+    const minutes = Math.floor((currentTime % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((currentTime % (1000 * 60)) / 1000);
+    this.timeMonitor.minutes = this.pad(String(minutes), 2);
+    this.timeMonitor.seconds = this.pad(String(seconds), 2);
+    if (currentTime > this.lengthTime) {
+      this.timeMonitor.lengthMinutes = this.timeMonitor.minutes;
+      this.timeMonitor.lengthSeconds = this.timeMonitor.seconds;
     }
+  } 
+
+  private now(): number {
     return Date.now() - this.startTime;
   }
 
