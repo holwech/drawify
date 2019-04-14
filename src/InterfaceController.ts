@@ -22,8 +22,8 @@ export class Controller {
     this.app.dispatchAction({ action: ActionType.REVERSE });
   }
 
-  public reset(): void {
-    this.app.dispatchAction({ action: ActionType.RESET });
+  public restart(): void {
+    this.app.dispatchAction({ action: ActionType.RESTART });
   }
 
   public recordOn(): void {

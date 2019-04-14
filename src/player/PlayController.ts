@@ -18,6 +18,9 @@ export class PlayController {
       case PlayStates.PLAY:
         break;
       case PlayStates.PAUSE:
+        if (this.state.currIdx === this.state.log.length) {
+          this.restart();
+        }
         this.state.timer.start();
         this.state.state = PlayStates.PLAY;
         this.playEvents();
@@ -70,10 +73,10 @@ export class PlayController {
     this.state.log = [];
   }
 
-  public reset(): void {
+  public restart(): void {
     this.app.dispatchEvent({ eventType: EventType.CLEAR });
     this.state.currIdx = 0;
-    this.state.timer.pause();
+    this.state.timer.restart();
   }
 
   private playEvents(): void {
@@ -86,7 +89,7 @@ export class PlayController {
         }
       }, this.state.log[this.state.currIdx].time! - this.state.timer.getTime());
     } else {
-      this.pause();
+      this.app.dispatchAction({ action: ActionType.PAUSE });
     }
   }
 
@@ -101,7 +104,7 @@ export class PlayController {
         }
       }, this.state.timer.getTime() - this.state.log[this.state.currIdx].time!);
     } else {
-      this.pause();
+      this.app.dispatchAction({ action: ActionType.PAUSE });
     }
   }
 }

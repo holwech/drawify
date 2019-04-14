@@ -16,6 +16,7 @@ export enum ActionType {
   PAUSE = 'PAUSE',
   REVERSE = 'REVERSE',
   RESET = 'RESET',
+  RESTART = 'RESTART',
 }
 
 export interface IAction {

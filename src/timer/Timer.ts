@@ -70,6 +70,8 @@ export default class Timer {
   }
 
   public start(): void {
+    console.log('started');
+    console.log(this.getLengthTime());
     switch (this.state) {
       case TimerStates.PAUSED:
         this.startTime += this.now() - this.pauseTime;
@@ -84,6 +86,7 @@ export default class Timer {
   }
 
   public reverse(): void {
+    console.log('reverse');
     switch (this.state) {
       case TimerStates.STARTED:
         this.setLengthTime();
@@ -101,6 +104,7 @@ export default class Timer {
   }
 
   public pause(): void {
+    console.log('paused');
     switch (this.state) {
       case TimerStates.STARTED:
         this.setLengthTime();
