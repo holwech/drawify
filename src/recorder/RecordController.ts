@@ -20,6 +20,10 @@ export class RecordController {
   }
 
   public getEventLog(): IEvent[] {
+    this.log = this.log.sort((before: IEvent, after: IEvent) => {
+      return Number(before.time! > after.time!);
+    });
+    console.log(this.log);
     return this.log;
   }
 }
