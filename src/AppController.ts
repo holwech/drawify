@@ -1,17 +1,16 @@
 import { IEvent, EventType, EventOrigin, IStrokeProps } from './utils/boardInterfaces';
 import { BoardController } from './board/BoardController';
-import { PlayController } from './player/PlayController';
+import { PlayBaseController } from './player/PlayBaseController';
 import { RecordController } from './recorder/RecordController';
 import { EventController } from './event/EventController';
 import { IAction, ActionType, AppStates, AppSubState } from './utils/appInterfaces';
 import AppState from './AppState';
-import Timer from './timer/Timer';
 
 export class AppController {
   public state: AppState;
   private board: BoardController;
   private playBoard: BoardController;
-  private player: PlayController;
+  private player: PlayBaseController;
   private recorder: RecordController;
   private event: EventController;
   private svg: HTMLElement & SVGElement & SVGSVGElement;
@@ -30,15 +29,16 @@ export class AppController {
     } else {
       throw new Error('The SVG element requires the view box attribute to be set.');
     }
-
+    
+    // These are missing timestamps?
     const initialState = [
-      { eventType: EventType.SET_STROKE_PROPS, strokeProps },
-      { eventType: EventType.SET_VIEWBOX, viewBox },
+      { eventType: EventType.SET_STROKE_PROPS, strokeProps, time: 0 },
+      { eventType: EventType.SET_VIEWBOX, viewBox, time: 0 },
     ];
     this.board = new BoardController(this.svg, this, initialState);
     this.playBoard = new BoardController(this.svg, this, initialState);
     this.recorder = new RecordController(this, initialState);
-    this.player = new PlayController(this, this.state.playState);
+    this.player = new PlayBaseController(this, this.state.playState);
     this.event = new EventController(this.svg, this);
   }
 
@@ -77,7 +77,7 @@ export class AppController {
         }
         this.dispatchAction({ action: ActionType.PAUSE });
         this.player.setEventLog(this.recorder.getEventLog());
-        this.state.state = AppStates.PLAYING;
+        // this.state.state = AppStates.PLAYING;
         break;
       default:
         switch (this.state.state) {
@@ -85,7 +85,7 @@ export class AppController {
             this.dispatchRecordAction(action);
             break;
           case AppStates.PLAYING:
-            this.dispatchPlayAction(action);
+            // this.dispatchPlayAction(action);
             break;
           default:
             break;
@@ -97,7 +97,7 @@ export class AppController {
     switch (action.action) {
       case ActionType.START:
         if (this.state.timer.atStart()) {
-          this.player.start();
+          this.player.playFromTime(0);
         }
         this.state.timer.start();
         this.state.subState = AppSubState.START;
@@ -111,36 +111,41 @@ export class AppController {
         this.state.subState = AppSubState.REVERSE;
         break;
       case ActionType.RESTART:
-        this.state.timer.restart();
-        this.dispatchAction({ action: ActionType.RECORD_OFF });
-        break;
-      default:
-        break;
-    }
-  }
-
-  private dispatchPlayAction(action: IAction): void {
-    switch (action.action) {
-      case ActionType.START:
+        this.state.timer.pause();
         if (this.state.timer.atEnd()) {
-          this.dispatchAction({ action: ActionType.RESTART });
+          this.dispatchEvent({ eventType: EventType.END }, EventOrigin.USER);
         }
-        this.player.start();
-        this.state.subState = AppSubState.START;
-        break;
-      case ActionType.PAUSE:
-        this.player.pause();
-        this.state.subState = AppSubState.PAUSE;
-        break;
-      case ActionType.REVERSE:
-        this.player.reverse();
-        this.state.subState = AppSubState.REVERSE;
-        break;
-      case ActionType.RESTART:
+        this.player.setEventLog(this.recorder.getEventLog());
+        this.state.timer.restart();
         this.player.restart();
         break;
       default:
         break;
     }
   }
+
+  // private dispatchPlayAction(action: IAction): void {
+  //   switch (action.action) {
+  //     case ActionType.START:
+  //       if (this.state.timer.atEnd()) {
+  //         this.dispatchAction({ action: ActionType.RESTART });
+  //       }
+  //       this.player.start();
+  //       this.state.subState = AppSubState.START;
+  //       break;
+  //     case ActionType.PAUSE:
+  //       this.player.pause();
+  //       this.state.subState = AppSubState.PAUSE;
+  //       break;
+  //     case ActionType.REVERSE:
+  //       this.player.reverse();
+  //       this.state.subState = AppSubState.REVERSE;
+  //       break;
+  //     case ActionType.RESTART:
+  //       this.player.restart();
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }
 }
