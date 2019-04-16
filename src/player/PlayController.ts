@@ -10,14 +10,12 @@ export class PlayController {
     this.state.log = [];
   }
 
-  public play(): void {
+  public start(): void {
     switch (this.state.state) {
       case PlayStates.PLAY:
         break;
       case PlayStates.PAUSE:
-        if (this.state.currIdx === this.state.log.length) {
-          this.restart();
-        }
+        console.log('hello');
         this.state.timer.start();
         this.state.state = PlayStates.PLAY;
         this.playEvents();

@@ -5,6 +5,7 @@ import { RecordController } from './recorder/RecordController';
 import { EventController } from './event/EventController';
 import { IAction, ActionType, AppStates, AppSubState } from './utils/appInterfaces';
 import AppState from './AppState';
+import Timer from './timer/Timer';
 
 export class AppController {
   public state: AppState;
@@ -71,12 +72,11 @@ export class AppController {
       case ActionType.RECORD_OFF:
         this.event.removeEventListeners();
         this.state.timer.pause();
-        this.state.timer.setLengthTime();
-        if (this.state.timer.atEndTime()) {
+        if (this.state.timer.atEnd()) {
           this.dispatchEvent({ eventType: EventType.END }, EventOrigin.USER);
         }
-        this.player.setEventLog(this.recorder.getEventLog());
         this.dispatchAction({ action: ActionType.PAUSE });
+        this.player.setEventLog(this.recorder.getEventLog());
         this.state.state = AppStates.PLAYING;
         break;
       default:
@@ -96,6 +96,9 @@ export class AppController {
   private dispatchRecordAction(action: IAction): void {
     switch (action.action) {
       case ActionType.START:
+        if (this.state.timer.atStart()) {
+          this.player.start();
+        }
         this.state.timer.start();
         this.state.subState = AppSubState.START;
         break;
@@ -119,10 +122,10 @@ export class AppController {
   private dispatchPlayAction(action: IAction): void {
     switch (action.action) {
       case ActionType.START:
-        if (this.state.timer.atEndTime()) {
+        if (this.state.timer.atEnd()) {
           this.dispatchAction({ action: ActionType.RESTART });
         }
-        this.player.play();
+        this.player.start();
         this.state.subState = AppSubState.START;
         break;
       case ActionType.PAUSE:
