@@ -1,9 +1,4 @@
 export enum AppStates {
-  RECORDING = 'RECORDING',
-  PLAYING = 'PLAYING',
-}
-
-export enum AppSubState {
   START = 'START',
   PAUSE = 'PAUSED',
   REVERSE = 'REVERSE',

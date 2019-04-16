@@ -1,5 +1,4 @@
-import { IEvent, ILogEvent } from '../utils/boardInterfaces';
-import Timer from '../timer/Timer';
+import { IEvent } from '../utils/boardInterfaces';
 import { AppController } from '../AppController';
 
 export class RecordController {
