@@ -2,17 +2,19 @@ import { IEvent, EventType, EventOrigin, IStrokeProps } from './utils/boardInter
 import { BoardController } from './board/BoardController';
 import { PlayBaseController } from './player/PlayBaseController';
 import { RecordController } from './recorder/RecordController';
-import { EventController } from './event/EventController';
+import { EventListenerController } from './eventListener/EventListenerController';
 import { IAction, ActionType, AppStates } from './utils/appInterfaces';
 import AppState from './AppState';
+import EventController from './event/EventController';
 
 export class AppController {
   public state: AppState;
+  public event: EventController;
   private board: BoardController;
   private playBoard: BoardController;
   private player: PlayBaseController;
   private recorder: RecordController;
-  private event: EventController;
+  private eventListeners: EventListenerController;
   private svg: HTMLElement & SVGElement & SVGSVGElement;
 
   constructor(svgID: string, state: AppState, strokeProps: IStrokeProps) {
@@ -38,20 +40,17 @@ export class AppController {
     this.board = new BoardController(this.svg, this, initialState);
     this.playBoard = new BoardController(this.svg, this, initialState);
     this.recorder = new RecordController(this, initialState);
-    this.player = new PlayBaseController(this, this.state.playState);
-    this.event = new EventController(this.svg, this);
-    this.event.addEventListeners();
-  }
-
-  public dispatchEvent(event: IEvent, origin: EventOrigin): void {
-    console.log('EVENT: ' + event.eventType);
-    if (origin === EventOrigin.USER) {
-      event.time = this.state.timer.getTime();
-      this.board.execute(event);
-      this.recorder.record(event);
-    } else {
-      this.playBoard.execute(event);
-    }
+    this.player = new PlayBaseController(this, this.state.timer, this.state.playState);
+    this.event = new EventController(
+      this.state.eventState,
+      this.state.timer,
+      this.playBoard,
+      this.board,
+      this.player,
+      this.recorder,
+    )
+    this.eventListeners = new EventListenerController(this.svg, this);
+    this.eventListeners.addEventListeners();
   }
 
   public dispatchAction(action: IAction): void {
@@ -75,7 +74,7 @@ export class AppController {
       case ActionType.RESTART:
         this.state.timer.pause();
         if (this.state.timer.atEnd()) {
-          this.dispatchEvent({ eventType: EventType.END }, EventOrigin.USER);
+          this.event.dispatch({ eventType: EventType.END }, EventOrigin.USER);
         }
         this.player.setEventLog(this.recorder.getEventLog());
         this.state.timer.restart();

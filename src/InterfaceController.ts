@@ -35,18 +35,18 @@ export class Controller {
   }
 
   public clear(): void {
-    this.app.dispatchEvent({ eventType: EventType.CLEAR }, EventOrigin.USER);
+    this.app.event.dispatch({ eventType: EventType.CLEAR }, EventOrigin.USER);
   }
 
   public setState(state: BoardState): void {
-    this.app.dispatchEvent({ eventType: EventType.SET_STATE, state }, EventOrigin.USER);
+    this.app.event.dispatch({ eventType: EventType.SET_STATE, state }, EventOrigin.USER);
   }
 
   public setStrokeProperties(strokeProps: IStrokeProps): void {
-    this.app.dispatchEvent({ eventType: EventType.SET_STROKE_PROPS, strokeProps }, EventOrigin.USER);
+    this.app.event.dispatch({ eventType: EventType.SET_STROKE_PROPS, strokeProps }, EventOrigin.USER);
   }
 
   public setViewBox(viewBox: IViewBox): void {
-    this.app.dispatchEvent({ eventType: EventType.SET_VIEWBOX, viewBox }, EventOrigin.USER);
+    this.app.event.dispatch({ eventType: EventType.SET_VIEWBOX, viewBox }, EventOrigin.USER);
   }
 }

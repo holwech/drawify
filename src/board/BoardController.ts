@@ -24,6 +24,7 @@ export class BoardController {
 
   private svg: HTMLElement & SVGElement & SVGSVGElement;
   private draw: SVGDraw;
+  private drawers: any = {};
   private transform: Transform;
 
   constructor(svgElement: HTMLElement & SVGElement & SVGSVGElement, app: AppController, initialState: IEvent[] = []) {
@@ -39,19 +40,19 @@ export class BoardController {
   public execute(event: IEvent): void {
     switch (event.eventType) {
       case EventType.POINTER_MOVE:
-        this.onPointerMove(event.e!);
+        this.onPointerMove(event);
         break;
       case EventType.POINTER_DOWN:
-        this.onPointerDown(event.e!);
+        this.onPointerDown(event);
         break;
       case EventType.POINTER_UP:
-        this.onPointerUp();
+        this.onPointerUp(event);
         break;
       case EventType.SET_STROKE_PROPS:
         this.setStrokeProperties(event.strokeProps!);
         break;
       case EventType.ONWHEEL:
-        this.onWheel(event.e as WheelEvent);
+        this.onWheel(event);
         break;
       case EventType.CLEAR:
         this.clear();
@@ -85,7 +86,8 @@ export class BoardController {
     this.viewBox = viexBox;
   }
 
-  private onWheel(e: WheelEvent): void {
+  private onWheel(event: IEvent): void {
+    const e = event.e! as WheelEvent;
     e.preventDefault();
     if (this.state === BoardState.PAN) {
       const scale = e.deltaY > 0 ? 1 + SCALE_FACTOR : 1 - SCALE_FACTOR;
@@ -96,12 +98,15 @@ export class BoardController {
     }
   }
 
-  private onPointerDown(e: MouseEvent): void {
+  private onPointerDown(event: IEvent): void {
+    const e = event.e! as MouseEvent;
     e.preventDefault();
     const point = this.getPointerPosition(e);
     switch (this.state) {
       case BoardState.DRAW:
-        this.draw.onPointerDown(point, this.strokeProps);
+        console.log('hi');
+        this.drawers[event.id!] = new SVGDraw(this.svg);
+        this.drawers[event.id!].onPointerDown(point, this.strokeProps);
         break;
       case BoardState.PAN:
         this.transform.onPointerDown(point);
@@ -111,12 +116,13 @@ export class BoardController {
     }
   }
 
-  private onPointerMove(e: MouseEvent): void {
+  private onPointerMove(event: IEvent): void {
+    const e = event.e as MouseEvent;
     e.preventDefault();
     const point = this.getPointerPosition(e);
     switch (this.state) {
       case BoardState.DRAW:
-        this.draw.onPointerMove(point, this.strokeProps.bufferSize);
+        this.drawers[event.id!].onPointerMove(point, this.strokeProps.bufferSize);
         break;
       case BoardState.PAN:
         this.transform.onPointerMove(point, this.viewBox);
@@ -126,10 +132,11 @@ export class BoardController {
     }
   }
 
-  private onPointerUp(): void {
+  private onPointerUp(event: IEvent): void {
     switch (this.state) {
       case BoardState.DRAW:
-        this.draw.onPointerUp();
+        this.drawers[event.id!].onPointerUp();
+        delete this.drawers[event.id!];
         break;
       case BoardState.PAN:
         this.transform.onPointerUp();

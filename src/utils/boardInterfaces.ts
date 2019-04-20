@@ -25,6 +25,7 @@ export interface IViewBox {
 export interface IEvent {
   eventType: EventType;
   time?: number;
+  id?: number;
   e?: MouseEvent | WheelEvent;
   strokeProps?: IStrokeProps;
   state?: BoardState;
