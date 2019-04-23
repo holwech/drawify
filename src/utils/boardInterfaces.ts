@@ -13,6 +13,7 @@ export interface IStrokeProps {
   color: string;
   width: number;
   bufferSize: number;
+  fill: string | undefined;
 }
 
 export interface IViewBox {

@@ -14,7 +14,6 @@ export class EventListenerController {
     this.fnOnPointerDown = this.onPointerDown;
     this.fnOnPointerMove = this.onPointerMove;
     this.fnOnPointerUp = this.onPointerUp;
-    this.svg.addEventListener('mousedown', () => console.log('mouse down'));
   }
 
   public addEventListeners(): void {

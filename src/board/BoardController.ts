@@ -14,6 +14,7 @@ export class BoardController {
     color: 'green',
     width: 50,
     bufferSize: 20,
+    fill: undefined,
   };
   private viewBox: IViewBox = {
     x: 0,
@@ -80,6 +81,7 @@ export class BoardController {
     this.strokeProps.bufferSize = strokeProps.bufferSize;
     this.strokeProps.color = strokeProps.color;
     this.strokeProps.width = strokeProps.width * this.scale;
+    this.strokeProps.fill = strokeProps.fill;
   }
 
   private setViexBox(viexBox: IViewBox): void {
@@ -104,7 +106,6 @@ export class BoardController {
     const point = this.getPointerPosition(e);
     switch (this.state) {
       case BoardState.DRAW:
-        console.log('hi');
         this.drawers[event.id!] = new SVGDraw(this.svg);
         this.drawers[event.id!].onPointerDown(point, this.strokeProps);
         break;

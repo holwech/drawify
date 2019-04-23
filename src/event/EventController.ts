@@ -23,7 +23,6 @@ export default class EventController {
     if (origin === EventOrigin.USER) {
       event.time = this.timer.getTime();
       event.id = this.getId(event);
-      console.log(event.id);
       this.board.execute(event);
       this.recorder.record(event);
     } else {
