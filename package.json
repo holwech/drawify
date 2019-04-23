@@ -1,6 +1,6 @@
 {
   "name": "draw-ts",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Stateful drawing tool with zero dependencies",
   "main": "lib/InterfaceController.js",
   "types": "lib/InterfaceController.d.ts",

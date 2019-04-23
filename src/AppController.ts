@@ -31,7 +31,7 @@ export class AppController {
     } else {
       throw new Error('The SVG element requires the view box attribute to be set.');
     }
-    
+
     // These are missing timestamps?
     const initialState = [
       { eventType: EventType.SET_STROKE_PROPS, strokeProps, time: 0 },
@@ -48,7 +48,7 @@ export class AppController {
       this.board,
       this.player,
       this.recorder,
-    )
+    );
     this.eventListeners = new EventListenerController(this.svg, this);
     this.eventListeners.addEventListeners();
   }

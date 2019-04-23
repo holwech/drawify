@@ -6,11 +6,7 @@ import { ActionType } from '../utils/appInterfaces';
 import Timer from '../timer/Timer';
 
 export class PlayBaseController {
-  constructor(
-    private app: AppController,
-    private timer: Timer,
-    private state: PlayState
-  ) {
+  constructor(private app: AppController, private timer: Timer, private state: PlayState) {
     this.state.log = [];
   }
 
@@ -28,14 +24,14 @@ export class PlayBaseController {
   }
 
   public playFromIndex(index: number): void {
-    this.state.currIdx = index; 
+    this.state.currIdx = index;
     this.playEvents();
   }
 
   public playFromTime(time: number): void {
     const log = this.state.log;
     if (log.length === 0) {
-      return
+      return;
     }
     this.app.event.dispatch({ eventType: EventType.CLEAR }, EventOrigin.PLAYER);
     for (let i = 0; i <= log.length; i++) {

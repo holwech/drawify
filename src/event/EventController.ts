@@ -5,7 +5,6 @@ import { IEvent, EventOrigin, EventType } from '../utils/boardInterfaces';
 import { BoardController } from '../board/BoardController';
 import Timer from '../timer/Timer';
 
-
 export default class EventController {
   constructor(
     private state: EventState,
@@ -14,10 +13,8 @@ export default class EventController {
     private board: BoardController,
     private player: PlayBaseController,
     private recorder: RecordController,
-  ) {
-    
-  }
-  
+  ) {}
+
   public dispatch(event: IEvent, origin: EventOrigin): void {
     console.log('EVENT: ' + event.eventType);
     if (origin === EventOrigin.USER) {

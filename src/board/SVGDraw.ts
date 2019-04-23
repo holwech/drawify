@@ -25,7 +25,7 @@ export class SVGDraw {
     this.path.setAttribute('fill', 'none');
     this.path.setAttribute('stroke', style.color);
     this.path.setAttribute('stroke-width', String(style.width));
-    console.log('in svg draw')
+    console.log('in svg draw');
     console.log(style.fill);
     if (style.fill) {
       this.path.setAttribute('fill', style.fill);
