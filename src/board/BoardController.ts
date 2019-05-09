@@ -1,7 +1,7 @@
 import { SVGDraw } from './SVGDraw';
 import { Transform } from './Transform';
 import { IStrokeProps, IViewBox, BoardState, IEvent, EventType } from '../utils/boardInterfaces';
-import { AppController } from '../AppController';
+import { Board } from './Board';
 
 const SCALE_FACTOR = 0.05;
 
@@ -9,7 +9,6 @@ export class BoardController {
   // State properties
   private scale = 1;
   private state = BoardState.DRAW;
-  private app: AppController;
   private strokeProps: IStrokeProps = {
     color: 'green',
     width: 50,
@@ -22,16 +21,15 @@ export class BoardController {
     width: 1200,
     height: 800,
   };
-
-  private svg: HTMLElement & SVGElement & SVGSVGElement;
-  private draw: SVGDraw;
   private drawers: any = {};
   private transform: Transform;
+  private board: Board;
 
-  constructor(svgElement: HTMLElement & SVGElement & SVGSVGElement, app: AppController, initialState: IEvent[] = []) {
-    this.svg = svgElement;
-    this.app = app;
-    this.draw = new SVGDraw(this.svg);
+  constructor(
+    private svg: HTMLElement & SVGElement & SVGSVGElement,
+    initialState: IEvent[] = []
+  ) {
+    this.board = new Board(this.svg);
     this.transform = new Transform(this.svg);
     initialState.forEach(event => {
       this.execute(event);
@@ -55,14 +53,24 @@ export class BoardController {
       case EventType.ONWHEEL:
         this.onWheel(event);
         break;
+      case EventType.CLICK:
+        this.onClick(event);
+        break;
       case EventType.CLEAR:
-        this.clear();
+        // Temp fix for now
+        // How should scale be set for different viewboxes?
+        this.scale = 1;
+        this.board.clear();
         break;
       case EventType.SET_STATE:
         this.setState(event.state!);
         break;
       case EventType.SET_VIEWBOX:
         this.setViexBox(event.viewBox!);
+        break;
+      case EventType.RESET:
+        this.scale = 1;
+        this.board.clear();
         break;
       default:
         break;
@@ -71,10 +79,6 @@ export class BoardController {
 
   private setState(state: BoardState): void {
     this.state = state;
-  }
-
-  private clear(): void {
-    this.draw.clear();
   }
 
   private setStrokeProperties(strokeProps: IStrokeProps): void {
@@ -86,6 +90,19 @@ export class BoardController {
 
   private setViexBox(viexBox: IViewBox): void {
     this.viewBox = viexBox;
+  }
+
+  private onClick(event: IEvent): void {
+    const e = event.e! as MouseEvent;
+    e.preventDefault();
+    if (this.state === BoardState.PAN) {
+      console.log('onClick in BoardController: ', event.time! / 1000);
+      const ids = (e.target as Element).id;
+      const id = Number(ids);
+      if (id) {
+        this.board.removeElement(id);
+      }
+    }
   }
 
   private onWheel(event: IEvent): void {
@@ -106,7 +123,7 @@ export class BoardController {
     const point = this.getPointerPosition(e);
     switch (this.state) {
       case BoardState.DRAW:
-        this.drawers[event.id!] = new SVGDraw(this.svg);
+        this.drawers[event.id!] = new SVGDraw(this.svg, event.id!);
         this.drawers[event.id!].onPointerDown(point, this.strokeProps);
         break;
       case BoardState.PAN:

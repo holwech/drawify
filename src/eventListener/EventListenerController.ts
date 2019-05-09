@@ -7,6 +7,7 @@ export class EventListenerController {
   private fnOnPointerDown: (e: MouseEvent) => void;
   private fnOnPointerMove: (e: MouseEvent) => void;
   private fnOnPointerUp: (e: MouseEvent) => void;
+  private fnOnClick: (e: MouseEvent) => void;
 
   constructor(private svg: HTMLElement & SVGElement & SVGSVGElement, private app: AppController) {
     // Event Listeners
@@ -14,9 +15,11 @@ export class EventListenerController {
     this.fnOnPointerDown = this.onPointerDown;
     this.fnOnPointerMove = this.onPointerMove;
     this.fnOnPointerUp = this.onPointerUp;
+    this.fnOnClick = this.onClick;
   }
 
   public addEventListeners(): void {
+    this.svg.addEventListener('click', this.fnOnClick);
     this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
     this.svg.addEventListener('wheel', this.fnOnWheel);
   }
@@ -51,4 +54,8 @@ export class EventListenerController {
   private onPointerMove = (e: MouseEvent) => {
     this.app.event.dispatch({ eventType: EventType.POINTER_MOVE, e }, EventOrigin.USER);
   };
+
+  private onClick = (e: MouseEvent) => {
+    this.app.event.dispatch({ eventType: EventType.CLICK, e }, EventOrigin.USER);
+  }
 }

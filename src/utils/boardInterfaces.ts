@@ -44,8 +44,10 @@ export enum EventType {
   POINTER_DOWN = 'POINTER_DOWN',
   POINTER_MOVE = 'POINTER_MOVE',
   POINTER_UP = 'POINTER_UP',
+  CLICK = 'CLICK',
   SET_STROKE_PROPS = 'SET_STROKE_PROPS',
   CLEAR = 'CLEAR',
+  RESET = 'RESET',
   SET_STATE = 'SET_STATE',
   SET_VIEWBOX = 'SET_VIEWBOX',
   END = 'END',
@@ -59,4 +61,8 @@ export enum EventOrigin {
 export enum BoardState {
   DRAW = 'DRAW',
   PAN = 'PAN',
+}
+
+export enum ElementType {
+  PATH = 'path'
 }

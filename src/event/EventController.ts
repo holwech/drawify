@@ -1,5 +1,4 @@
 import EventState from './EventState';
-import { PlayBaseController } from '../player/PlayBaseController';
 import { RecordController } from '../recorder/RecordController';
 import { IEvent, EventOrigin, EventType } from '../utils/boardInterfaces';
 import { BoardController } from '../board/BoardController';
@@ -11,7 +10,6 @@ export default class EventController {
     private timer: Timer,
     private playBoard: BoardController,
     private board: BoardController,
-    private player: PlayBaseController,
     private recorder: RecordController,
   ) {}
 

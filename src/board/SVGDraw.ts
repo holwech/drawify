@@ -1,22 +1,17 @@
-import { IStrokeProps } from '../utils/boardInterfaces';
+import { IStrokeProps, ElementType } from '../utils/boardInterfaces';
 
 export class SVGDraw {
-  private svg: HTMLElement & SVGElement & SVGSVGElement;
   private path: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   private pathStarted = false;
   private strPath!: string;
   private buffer: DOMPoint[] = [];
+  private id: string;
 
-  constructor(svgElement: HTMLElement & SVGElement & SVGSVGElement) {
-    this.svg = svgElement;
-  }
-
-  public clear(): void {
-    let lastChild = this.svg.lastChild;
-    while (lastChild) {
-      this.svg.removeChild(lastChild);
-      lastChild = this.svg.lastChild;
-    }
+  constructor(
+    private svg: HTMLElement & SVGElement & SVGSVGElement,
+    id: number,
+  ) {
+    this.id = String(id);
   }
 
   public onPointerDown(point: DOMPoint, style: IStrokeProps): void {
@@ -25,8 +20,8 @@ export class SVGDraw {
     this.path.setAttribute('fill', 'none');
     this.path.setAttribute('stroke', style.color);
     this.path.setAttribute('stroke-width', String(style.width));
-    console.log('in svg draw');
-    console.log(style.fill);
+    this.path.setAttribute('id', this.id);
+    this.path.setAttribute('class', 'svgElement ' + ElementType.PATH);
     if (style.fill) {
       this.path.setAttribute('fill', style.fill);
     }
@@ -47,6 +42,12 @@ export class SVGDraw {
   }
 
   public onPointerUp(): void {
+    // const els = document.getElementsByClassName('svgElement');
+    // Array.from(els).forEach((el) => {
+    //   el.addEventListener('click', () => {
+    //     console.log('click');
+    //   });
+    // });
     if (this.pathStarted) {
       this.pathStarted = false;
     }

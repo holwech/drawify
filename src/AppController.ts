@@ -14,6 +14,7 @@ export class AppController {
   private playBoard: BoardController;
   private player: PlayBaseController;
   private recorder: RecordController;
+  // private editor: EditController;
   private eventListeners: EventListenerController;
   private svg: HTMLElement & SVGElement & SVGSVGElement;
 
@@ -37,16 +38,16 @@ export class AppController {
       { eventType: EventType.SET_STROKE_PROPS, strokeProps, time: 0 },
       { eventType: EventType.SET_VIEWBOX, viewBox, time: 0 },
     ];
-    this.board = new BoardController(this.svg, this, initialState);
-    this.playBoard = new BoardController(this.svg, this, initialState);
+    this.board = new BoardController(this.svg, initialState);
+    this.playBoard = new BoardController(this.svg, initialState);
     this.recorder = new RecordController(this, initialState);
     this.player = new PlayBaseController(this, this.state.timer, this.state.playState);
+    // this.editor = new EditController(this.svg);
     this.event = new EventController(
       this.state.eventState,
       this.state.timer,
       this.playBoard,
       this.board,
-      this.player,
       this.recorder,
     );
     this.eventListeners = new EventListenerController(this.svg, this);
@@ -79,6 +80,7 @@ export class AppController {
         this.player.setEventLog(this.recorder.getEventLog());
         this.state.timer.restart();
         this.player.restart();
+        this.event.dispatch({ eventType: EventType.RESET }, EventOrigin.PLAYER );
         break;
       default:
         break;
