@@ -1,3 +1,5 @@
+import { EventType } from './appInterfaces';
+
 export interface IRecordPoint {
   time: number;
   x: number;
@@ -25,6 +27,7 @@ export interface IViewBox {
 
 export interface IEvent {
   eventType: EventType;
+  isEdit?: boolean;
   time?: number;
   id?: number;
   e?: MouseEvent | WheelEvent;
@@ -37,20 +40,6 @@ export interface ILogEvent {
   event: IEvent;
   time: number;
   id: number;
-}
-
-export enum EventType {
-  ONWHEEL = 'ONWHEEL',
-  POINTER_DOWN = 'POINTER_DOWN',
-  POINTER_MOVE = 'POINTER_MOVE',
-  POINTER_UP = 'POINTER_UP',
-  CLICK = 'CLICK',
-  SET_STROKE_PROPS = 'SET_STROKE_PROPS',
-  CLEAR = 'CLEAR',
-  RESET = 'RESET',
-  SET_STATE = 'SET_STATE',
-  SET_VIEWBOX = 'SET_VIEWBOX',
-  END = 'END',
 }
 
 export enum EventOrigin {

@@ -4,7 +4,7 @@ export enum AppStates {
   REVERSE = 'REVERSE',
 }
 
-export enum ActionType {
+export enum UserActionType {
   RECORD_ON = 'RECORD_ON',
   RECORD_OFF = 'RECORD_OFF',
   START = 'START',
@@ -14,7 +14,21 @@ export enum ActionType {
   RESTART = 'RESTART',
 }
 
+export enum EventType {
+  ONWHEEL = 'ONWHEEL',
+  POINTER_DOWN = 'POINTER_DOWN',
+  POINTER_MOVE = 'POINTER_MOVE',
+  POINTER_UP = 'POINTER_UP',
+  CLICK = 'CLICK',
+  SET_STROKE_PROPS = 'SET_STROKE_PROPS',
+  CLEAR = 'CLEAR',
+  RESET = 'RESET',
+  SET_STATE = 'SET_STATE',
+  SET_VIEWBOX = 'SET_VIEWBOX',
+  END = 'END',
+}
+
 export interface IAction {
-  action: ActionType;
+  action: UserActionType;
   option?: string;
 }

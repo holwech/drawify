@@ -1,8 +1,9 @@
-import { IEvent, EventOrigin, EventType } from '../utils/boardInterfaces';
+import { IEvent, EventOrigin } from '../utils/boardInterfaces';
+import { EventType } from '../utils/appInterfaces';
 import { AppController } from '../AppController';
 import { PlayStates } from './playInterfaces';
 import PlayState from './PlayState';
-import { ActionType } from '../utils/appInterfaces';
+import { UserActionType } from '../utils/appInterfaces';
 import Timer from '../timer/Timer';
 
 export class PlayBaseController {
@@ -56,7 +57,7 @@ export class PlayBaseController {
         this.playEvents();
       }, this.state.log[this.state.currIdx].time! - this.timer.getTime());
     } else {
-      this.app.dispatchAction({ action: ActionType.PAUSE });
+      this.app.dispatchAction({ action: UserActionType.PAUSE });
     }
   }
 
@@ -71,7 +72,7 @@ export class PlayBaseController {
         }
       }, this.timer.getTime() - this.state.log[this.state.currIdx].time!);
     } else {
-      this.app.dispatchAction({ action: ActionType.PAUSE });
+      this.app.dispatchAction({ action: UserActionType.PAUSE });
     }
   }
 }

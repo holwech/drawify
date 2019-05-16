@@ -1,16 +1,18 @@
 import { IEvent } from '../utils/boardInterfaces';
-import { AppController } from '../AppController';
 
 export class RecordController {
   private log: IEvent[] = [];
 
-  constructor(app: AppController, initialState: IEvent[] = []) {
+  constructor(initialState: IEvent[] = []) {
     initialState.forEach(event => {
       this.record(event);
     });
   }
 
   public record(event: IEvent): void {
+    if (event.isEdit) {
+      console.log('is edit');
+    }
     this.log.push(event);
   }
 

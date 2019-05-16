@@ -1,6 +1,7 @@
 import { AppController } from './AppController';
-import { IStrokeProps, EventType, BoardState, IViewBox, EventOrigin } from './utils/boardInterfaces';
-import { ActionType } from './utils/appInterfaces';
+import { IStrokeProps, BoardState, IViewBox, EventOrigin } from './utils/boardInterfaces';
+import { EventType } from './utils/appInterfaces';
+import { UserActionType } from './utils/appInterfaces';
 import AppState from './AppState';
 
 export class Controller {
@@ -11,27 +12,27 @@ export class Controller {
   }
 
   public start(): void {
-    this.app.dispatchAction({ action: ActionType.START });
+    this.app.dispatchAction({ action: UserActionType.START });
   }
 
   public pause(): void {
-    this.app.dispatchAction({ action: ActionType.PAUSE });
+    this.app.dispatchAction({ action: UserActionType.PAUSE });
   }
 
   public reverse(): void {
-    this.app.dispatchAction({ action: ActionType.REVERSE });
+    this.app.dispatchAction({ action: UserActionType.REVERSE });
   }
 
   public restart(): void {
-    this.app.dispatchAction({ action: ActionType.RESTART });
+    this.app.dispatchAction({ action: UserActionType.RESTART });
   }
 
   public recordOn(): void {
-    this.app.dispatchAction({ action: ActionType.RECORD_ON });
+    this.app.dispatchAction({ action: UserActionType.RECORD_ON });
   }
 
   public recordOff(): void {
-    this.app.dispatchAction({ action: ActionType.RECORD_OFF });
+    this.app.dispatchAction({ action: UserActionType.RECORD_OFF });
   }
 
   public clear(): void {

@@ -1,9 +1,10 @@
 import Timer from '../timer/Timer';
-import { IEvent, EventType, EventOrigin } from '../utils/boardInterfaces';
+import { IEvent, EventOrigin } from '../utils/boardInterfaces';
+import { EventType } from '../utils/appInterfaces';
 import { AppController } from '../AppController';
 import { PlayStates } from './playInterfaces';
 import PlayState from './PlayState';
-import { ActionType } from '../utils/appInterfaces';
+import { UserActionType } from '../utils/appInterfaces';
 
 export class PlayController {
   constructor(private app: AppController, private timer: Timer, private state: PlayState) {
@@ -84,7 +85,7 @@ export class PlayController {
         }
       }, this.state.log[this.state.currIdx].time! - this.timer.getTime());
     } else {
-      this.app.dispatchAction({ action: ActionType.PAUSE });
+      this.app.dispatchAction({ action: UserActionType.PAUSE });
     }
   }
 
@@ -99,7 +100,7 @@ export class PlayController {
         }
       }, this.timer.getTime() - this.state.log[this.state.currIdx].time!);
     } else {
-      this.app.dispatchAction({ action: ActionType.PAUSE });
+      this.app.dispatchAction({ action: UserActionType.PAUSE });
     }
   }
 }

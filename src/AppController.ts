@@ -1,9 +1,10 @@
-import { IEvent, EventType, EventOrigin, IStrokeProps } from './utils/boardInterfaces';
+import { EventOrigin, IStrokeProps } from './utils/boardInterfaces';
+import { EventType } from './utils/appInterfaces';
 import { BoardController } from './board/BoardController';
 import { PlayBaseController } from './player/PlayBaseController';
 import { RecordController } from './recorder/RecordController';
 import { EventListenerController } from './eventListener/EventListenerController';
-import { IAction, ActionType, AppStates } from './utils/appInterfaces';
+import { IAction, UserActionType, AppStates } from './utils/appInterfaces';
 import AppState from './AppState';
 import EventController from './event/EventController';
 
@@ -40,7 +41,7 @@ export class AppController {
     ];
     this.board = new BoardController(this.svg, initialState);
     this.playBoard = new BoardController(this.svg, initialState);
-    this.recorder = new RecordController(this, initialState);
+    this.recorder = new RecordController(initialState);
     this.player = new PlayBaseController(this, this.state.timer, this.state.playState);
     // this.editor = new EditController(this.svg);
     this.event = new EventController(
@@ -57,22 +58,22 @@ export class AppController {
   public dispatchAction(action: IAction): void {
     console.log('ACTION: ' + action.action);
     switch (action.action) {
-      case ActionType.START:
+      case UserActionType.START:
         if (this.state.timer.atStart()) {
           this.player.playFromTime(0);
         }
         this.state.timer.start();
         this.state.state = AppStates.START;
         break;
-      case ActionType.PAUSE:
+      case UserActionType.PAUSE:
         this.state.timer.pause();
         this.state.state = AppStates.PAUSE;
         break;
-      case ActionType.REVERSE:
+      case UserActionType.REVERSE:
         this.state.timer.reverse();
         this.state.state = AppStates.REVERSE;
         break;
-      case ActionType.RESTART:
+      case UserActionType.RESTART:
         this.state.timer.pause();
         if (this.state.timer.atEnd()) {
           this.event.dispatch({ eventType: EventType.END }, EventOrigin.USER);

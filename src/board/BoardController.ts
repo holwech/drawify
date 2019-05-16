@@ -1,6 +1,7 @@
 import { SVGDraw } from './SVGDraw';
 import { Transform } from './Transform';
-import { IStrokeProps, IViewBox, BoardState, IEvent, EventType } from '../utils/boardInterfaces';
+import { IStrokeProps, IViewBox, BoardState, IEvent } from '../utils/boardInterfaces';
+import { EventType } from '../utils/appInterfaces';
 import { Board } from './Board';
 
 const SCALE_FACTOR = 0.05;
