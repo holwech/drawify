@@ -1,17 +1,18 @@
-import { IEvent, EventOrigin } from '../utils/boardInterfaces';
+import { EventOrigin } from '../utils/boardInterfaces';
 import { EventType } from '../utils/appInterfaces';
 import { AppController } from '../AppController';
 import { PlayStates } from './playInterfaces';
 import PlayState from './PlayState';
 import { UserActionType } from '../utils/appInterfaces';
 import Timer from '../timer/Timer';
+import { IAction } from '../event/eventInterfaces';
 
 export class PlayBaseController {
   constructor(private app: AppController, private timer: Timer, private state: PlayState) {
     this.state.log = [];
   }
 
-  public setEventLog(log: IEvent[]): void {
+  public setEventLog(log: IAction[]): void {
     this.state.log = log;
   }
 
@@ -52,12 +53,12 @@ export class PlayBaseController {
   private playEvents(): void {
     if (this.state.currIdx !== this.state.log.length) {
       setTimeout(() => {
-        this.app.event.dispatch(this.state.log[this.state.currIdx], EventOrigin.PLAYER);
+        this.app.event.dispatchAction(this.state.log[this.state.currIdx]);
         this.state.currIdx++;
         this.playEvents();
       }, this.state.log[this.state.currIdx].time! - this.timer.getTime());
     } else {
-      this.app.dispatchAction({ action: UserActionType.PAUSE });
+      this.app.dispatchUserAction({ action: UserActionType.PAUSE });
     }
   }
 
@@ -66,13 +67,13 @@ export class PlayBaseController {
     if (this.state.currIdx >= 0) {
       setTimeout(() => {
         if (this.state.state === PlayStates.REVERSE) {
-          this.app.event.dispatch(this.state.log[this.state.currIdx], EventOrigin.PLAYER);
+          this.app.event.dispatchAction(this.state.log[this.state.currIdx]);
           this.state.currIdx--;
           this.reversePlayEvents();
         }
       }, this.timer.getTime() - this.state.log[this.state.currIdx].time!);
     } else {
-      this.app.dispatchAction({ action: UserActionType.PAUSE });
+      this.app.dispatchUserAction({ action: UserActionType.PAUSE });
     }
   }
 }

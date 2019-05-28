@@ -28,7 +28,7 @@ export enum EventType {
   END = 'END',
 }
 
-export interface IAction {
+export interface IUserAction {
   action: UserActionType;
   option?: string;
 }

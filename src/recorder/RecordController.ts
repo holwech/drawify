@@ -1,18 +1,9 @@
-import { IEvent } from '../utils/boardInterfaces';
+import { IAction } from '../event/eventInterfaces';
 
 export class RecordController {
-  private log: IEvent[] = [];
+  private log: IAction[] = [];
 
-  constructor(initialState: IEvent[] = []) {
-    initialState.forEach(event => {
-      this.record(event);
-    });
-  }
-
-  public record(event: IEvent): void {
-    if (event.isEdit) {
-      console.log('is edit');
-    }
+  public record(event: IAction): void {
     this.log.push(event);
   }
 
@@ -20,8 +11,8 @@ export class RecordController {
     console.log(this.log);
   }
 
-  public getEventLog(): IEvent[] {
-    this.log = this.log.sort((before: IEvent, after: IEvent) => {
+  public getEventLog(): IAction[] {
+    this.log = this.log.sort((before: IAction, after: IAction) => {
       return Number(before.time! > after.time!);
     });
     console.log(this.log);

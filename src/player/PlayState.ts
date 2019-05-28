@@ -1,7 +1,10 @@
-import Timer from '../timer/Timer';
 import { PlayStates } from './playInterfaces';
-import { IEvent } from '../utils/boardInterfaces';
+import { IAction } from '../event/eventInterfaces';
 
 export default class PlayState {
-  constructor(public log: IEvent[] = [], public currIdx = 0, public state = PlayStates.PAUSE) {}
+  constructor(
+    public log: IAction[] = [],
+    public currIdx = 0,
+    public state = PlayStates.PAUSE
+  ) {}
 }

@@ -1,4 +1,5 @@
 import { EventType } from './appInterfaces';
+import { IStrokePropOptions } from '../event/eventInterfaces';
 
 export interface IRecordPoint {
   time: number;
@@ -31,7 +32,7 @@ export interface IEvent {
   time?: number;
   id?: number;
   e?: MouseEvent | WheelEvent;
-  strokeProps?: IStrokeProps;
+  strokeProps?: IStrokePropOptions;
   state?: BoardState;
   viewBox?: IViewBox;
 }

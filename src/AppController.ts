@@ -1,10 +1,10 @@
-import { EventOrigin, IStrokeProps } from './utils/boardInterfaces';
+import { EventOrigin, IStrokeProps, IEvent } from './utils/boardInterfaces';
 import { EventType } from './utils/appInterfaces';
 import { BoardController } from './board/BoardController';
 import { PlayBaseController } from './player/PlayBaseController';
 import { RecordController } from './recorder/RecordController';
 import { EventListenerController } from './eventListener/EventListenerController';
-import { IAction, UserActionType, AppStates } from './utils/appInterfaces';
+import { IUserAction, UserActionType, AppStates } from './utils/appInterfaces';
 import AppState from './AppState';
 import EventController from './event/EventController';
 
@@ -19,7 +19,7 @@ export class AppController {
   private eventListeners: EventListenerController;
   private svg: HTMLElement & SVGElement & SVGSVGElement;
 
-  constructor(svgID: string, state: AppState, strokeProps: IStrokeProps) {
+  constructor(svgID: string, state: AppState) {
     this.state = state;
     this.svg = (document.getElementById(svgID) as any) as HTMLElement & SVGElement & SVGSVGElement;
     if (!this.svg.getScreenCTM()) {
@@ -35,13 +35,9 @@ export class AppController {
     }
 
     // These are missing timestamps?
-    const initialState = [
-      { eventType: EventType.SET_STROKE_PROPS, strokeProps, time: 0 },
-      { eventType: EventType.SET_VIEWBOX, viewBox, time: 0 },
-    ];
-    this.board = new BoardController(this.svg, initialState);
-    this.playBoard = new BoardController(this.svg, initialState);
-    this.recorder = new RecordController(initialState);
+    this.board = new BoardController(this.svg);
+    this.playBoard = new BoardController(this.svg);
+    this.recorder = new RecordController();
     this.player = new PlayBaseController(this, this.state.timer, this.state.playState);
     // this.editor = new EditController(this.svg);
     this.event = new EventController(
@@ -53,9 +49,16 @@ export class AppController {
     );
     this.eventListeners = new EventListenerController(this.svg, this);
     this.eventListeners.addEventListeners();
+
+    const initialState: IEvent[] = [
+      { eventType: EventType.SET_VIEWBOX, viewBox },
+    ];
+    initialState.forEach(event => {
+      this.event.dispatch(event, EventOrigin.USER);
+    });
   }
 
-  public dispatchAction(action: IAction): void {
+  public dispatchUserAction(action: IUserAction): void {
     console.log('ACTION: ' + action.action);
     switch (action.action) {
       case UserActionType.START:

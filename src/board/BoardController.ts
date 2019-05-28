@@ -1,8 +1,8 @@
 import { SVGDraw } from './SVGDraw';
 import { Transform } from './Transform';
 import { IStrokeProps, IViewBox, BoardState, IEvent } from '../utils/boardInterfaces';
-import { EventType } from '../utils/appInterfaces';
 import { Board } from './Board';
+import { IAction, Targets, IDrawOptions, PointerActionType } from '../event/eventInterfaces';
 
 const SCALE_FACTOR = 0.05;
 
@@ -28,55 +28,85 @@ export class BoardController {
 
   constructor(
     private svg: HTMLElement & SVGElement & SVGSVGElement,
-    initialState: IEvent[] = []
   ) {
     this.board = new Board(this.svg);
     this.transform = new Transform(this.svg);
-    initialState.forEach(event => {
-      this.execute(event);
-    });
   }
 
-  public execute(event: IEvent): void {
-    switch (event.eventType) {
-      case EventType.POINTER_MOVE:
-        this.onPointerMove(event);
+  public execute(action: IAction): void {
+    switch (action.target) {
+      case Targets.DRAW:
+        this.onDrawAction(action, action.options as IDrawOptions);
         break;
-      case EventType.POINTER_DOWN:
-        this.onPointerDown(event);
-        break;
-      case EventType.POINTER_UP:
-        this.onPointerUp(event);
-        break;
-      case EventType.SET_STROKE_PROPS:
-        this.setStrokeProperties(event.strokeProps!);
-        break;
-      case EventType.ONWHEEL:
-        this.onWheel(event);
-        break;
-      case EventType.CLICK:
-        this.onClick(event);
-        break;
-      case EventType.CLEAR:
-        // Temp fix for now
-        // How should scale be set for different viewboxes?
-        this.scale = 1;
-        this.board.clear();
-        break;
-      case EventType.SET_STATE:
-        this.setState(event.state!);
-        break;
-      case EventType.SET_VIEWBOX:
-        this.setViexBox(event.viewBox!);
-        break;
-      case EventType.RESET:
-        this.scale = 1;
-        this.board.clear();
+      case Targets.VIEW_BOX:
+        this.setViexBox()
         break;
       default:
         break;
     }
   }
+
+  private onDrawAction(action: IAction, options: IDrawOptions): void {
+    const e = options.event;
+    e.preventDefault();
+    const point = this.getPointerPosition(e);
+    switch (options.type) {
+      case PointerActionType.START:
+        this.drawers[action.id] = new SVGDraw(this.svg, action.id);
+        this.drawers[action.id].onPointerDown(point, this.strokeProps);
+        break;
+      case PointerActionType.MOVE:
+        this.drawers[action.id].onPointerMove(point, this.strokeProps.bufferSize);
+        break;
+      case PointerActionType.STOP:
+        this.drawers[action.id].onPointerUp();
+        delete this.drawers[action.id];
+        break;
+      default:
+        break;
+    }
+  }
+
+  // public execute(event: IEvent): void {
+  //   switch (event.eventType) {
+  //     case EventType.POINTER_MOVE:
+  //       this.onPointerMove(event);
+  //       break;
+  //     case EventType.POINTER_DOWN:
+  //       this.onPointerDown(event);
+  //       break;
+  //     case EventType.POINTER_UP:
+  //       this.onPointerUp(event);
+  //       break;
+  //     case EventType.SET_STROKE_PROPS:
+  //       this.setStrokeProperties(event.strokeProps!);
+  //       break;
+  //     case EventType.ONWHEEL:
+  //       this.onWheel(event);
+  //       break;
+  //     case EventType.CLICK:
+  //       this.onClick(event);
+  //       break;
+  //     case EventType.CLEAR:
+  //       // Temp fix for now
+  //       // How should scale be set for different viewboxes?
+  //       this.scale = 1;
+  //       this.board.clear();
+  //       break;
+  //     case EventType.SET_STATE:
+  //       this.setState(event.state!);
+  //       break;
+  //     case EventType.SET_VIEWBOX:
+  //       this.setViexBox(event.viewBox!);
+  //       break;
+  //     case EventType.RESET:
+  //       this.scale = 1;
+  //       this.board.clear();
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }
 
   private setState(state: BoardState): void {
     this.state = state;
