@@ -1,4 +1,4 @@
-import { IAction } from '../event/eventInterfaces';
+import { IAction } from '../action/ActionInterfaces';
 
 export class RecordController {
   private log: IAction[] = [];

@@ -17,6 +17,7 @@
     "object-literal-sort-keys": false,
     "no-consecutive-blank-lines": false,
     "no-console": false,
+    "no-string-literal": false,
     "no-switch-case-fall-through": true,
     "typedef": [true, "call-signature"]
   }

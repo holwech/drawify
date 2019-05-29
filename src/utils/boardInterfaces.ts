@@ -1,5 +1,4 @@
-import { EventType } from './appInterfaces';
-import { IStrokePropOptions } from '../event/eventInterfaces';
+import { IEvent } from './appInterfaces';
 
 export interface IRecordPoint {
   time: number;
@@ -13,10 +12,10 @@ export interface IPoint {
 }
 
 export interface IStrokeProps {
-  color: string;
-  width: number;
-  bufferSize: number;
-  fill: string | undefined;
+  'stroke': string;
+  'stroke-width': number;
+  'buffer-size': number;
+  'fill': string | undefined;
 }
 
 export interface IViewBox {
@@ -26,16 +25,6 @@ export interface IViewBox {
   height: number;
 }
 
-export interface IEvent {
-  eventType: EventType;
-  isEdit?: boolean;
-  time?: number;
-  id?: number;
-  e?: MouseEvent | WheelEvent;
-  strokeProps?: IStrokePropOptions;
-  state?: BoardState;
-  viewBox?: IViewBox;
-}
 
 export interface ILogEvent {
   event: IEvent;

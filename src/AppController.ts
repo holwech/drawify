@@ -1,16 +1,16 @@
-import { EventOrigin, IStrokeProps, IEvent } from './utils/boardInterfaces';
-import { EventType } from './utils/appInterfaces';
+import { EventOrigin } from './utils/boardInterfaces';
+import { EventType, IEvent } from './utils/appInterfaces';
 import { BoardController } from './board/BoardController';
 import { PlayBaseController } from './player/PlayBaseController';
 import { RecordController } from './recorder/RecordController';
 import { EventListenerController } from './eventListener/EventListenerController';
 import { IUserAction, UserActionType, AppStates } from './utils/appInterfaces';
 import AppState from './AppState';
-import EventController from './event/EventController';
+import ActionController from './action/ActionController';
 
 export class AppController {
   public state: AppState;
-  public event: EventController;
+  public action: ActionController;
   private board: BoardController;
   private playBoard: BoardController;
   private player: PlayBaseController;
@@ -40,7 +40,7 @@ export class AppController {
     this.recorder = new RecordController();
     this.player = new PlayBaseController(this, this.state.timer, this.state.playState);
     // this.editor = new EditController(this.svg);
-    this.event = new EventController(
+    this.action = new ActionController(
       this.state.eventState,
       this.state.timer,
       this.playBoard,
@@ -54,7 +54,7 @@ export class AppController {
       { eventType: EventType.SET_VIEWBOX, viewBox },
     ];
     initialState.forEach(event => {
-      this.event.dispatch(event, EventOrigin.USER);
+      this.action.dispatch(event, EventOrigin.USER);
     });
   }
 
@@ -79,12 +79,12 @@ export class AppController {
       case UserActionType.RESTART:
         this.state.timer.pause();
         if (this.state.timer.atEnd()) {
-          this.event.dispatch({ eventType: EventType.END }, EventOrigin.USER);
+          this.action.dispatch({ eventType: EventType.END }, EventOrigin.USER);
         }
         this.player.setEventLog(this.recorder.getEventLog());
         this.state.timer.restart();
         this.player.restart();
-        this.event.dispatch({ eventType: EventType.RESET }, EventOrigin.PLAYER );
+        this.action.dispatch({ eventType: EventType.RESET }, EventOrigin.PLAYER );
         break;
       default:
         break;

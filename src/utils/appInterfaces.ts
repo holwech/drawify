@@ -1,3 +1,6 @@
+import { IStrokePropOptions } from "../action/ActionInterfaces";
+import { IViewBox } from "./boardInterfaces";
+
 export enum AppStates {
   START = 'START',
   PAUSE = 'PAUSED',
@@ -15,20 +18,31 @@ export enum UserActionType {
 }
 
 export enum EventType {
-  ONWHEEL = 'ONWHEEL',
-  POINTER_DOWN = 'POINTER_DOWN',
-  POINTER_MOVE = 'POINTER_MOVE',
-  POINTER_UP = 'POINTER_UP',
-  CLICK = 'CLICK',
-  SET_STROKE_PROPS = 'SET_STROKE_PROPS',
-  CLEAR = 'CLEAR',
-  RESET = 'RESET',
-  SET_STATE = 'SET_STATE',
-  SET_VIEWBOX = 'SET_VIEWBOX',
-  END = 'END',
+  ONWHEEL,
+  POINTER_DOWN,
+  POINTER_MOVE,
+  POINTER_UP,
+  CLICK,
+  SET_STROKE_PROPS,
+  CLEAR,
+  RESET,
+  STATE_TOGGLE,
+  SET_VIEWBOX,
+  END,
 }
 
 export interface IUserAction {
   action: UserActionType;
   option?: string;
+}
+
+export interface IEvent {
+  eventType: EventType;
+  isEdit?: boolean;
+  time?: number;
+  id?: number;
+  e?: MouseEvent | WheelEvent;
+  strokeProps?: IStrokePropOptions;
+  state?: boolean;
+  viewBox?: IViewBox;
 }

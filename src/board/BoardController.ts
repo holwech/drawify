@@ -1,8 +1,9 @@
 import { SVGDraw } from './SVGDraw';
 import { Transform } from './Transform';
-import { IStrokeProps, IViewBox, BoardState, IEvent } from '../utils/boardInterfaces';
+import { IStrokeProps, IViewBox, BoardState } from '../utils/boardInterfaces';
 import { Board } from './Board';
-import { IAction, Targets, IDrawOptions, PointerActionType } from '../event/eventInterfaces';
+import { IAction, Targets, IDrawOptions, PointerActionType, IStrokePropOptions, IPanOptions, IZoomOptions } from '../action/ActionInterfaces';
+import { IEvent } from '../utils/appInterfaces';
 
 const SCALE_FACTOR = 0.05;
 
@@ -11,10 +12,10 @@ export class BoardController {
   private scale = 1;
   private state = BoardState.DRAW;
   private strokeProps: IStrokeProps = {
-    color: 'green',
-    width: 50,
-    bufferSize: 20,
-    fill: undefined,
+    'stroke': 'green',
+    'stroke-width': 50,
+    'buffer-size': 20,
+    'fill': undefined,
   };
   private viewBox: IViewBox = {
     x: 0,
@@ -36,27 +37,46 @@ export class BoardController {
   public execute(action: IAction): void {
     switch (action.target) {
       case Targets.DRAW:
-        this.onDrawAction(action, action.options as IDrawOptions);
+        this.draw(action, action.options as IDrawOptions);
+        break;
+      case Targets.PAN:
+        this.pan(action.options as IPanOptions);
+        break;
+      case Targets.ZOOM:
+        this.zoom(action.options as IZoomOptions);
+        break;
+      case Targets.STROKE_PROP:
+        this.setStrokeProperties(action.options as IStrokePropOptions);
         break;
       case Targets.VIEW_BOX:
-        this.setViexBox()
+        this.setViexBox(action.options as IViewBox);
         break;
       default:
         break;
     }
   }
 
-  private onDrawAction(action: IAction, options: IDrawOptions): void {
+  private zoom(options: IZoomOptions): void {
+    const e = options.event;
+    e.preventDefault();
+    const scale = e.deltaY > 0 ? 1 + SCALE_FACTOR : 1 - SCALE_FACTOR;
+    this.strokeProps['stroke-width'] = this.strokeProps['stroke-width'] * scale;
+    const point = this.getPointerPosition(e);
+    this.transform.onWheel(point, this.viewBox, scale);
+    this.scale *= scale;
+  }
+
+  private draw(action: IAction, options: IDrawOptions): void {
     const e = options.event;
     e.preventDefault();
     const point = this.getPointerPosition(e);
     switch (options.type) {
+      case PointerActionType.MOVE:
+        this.drawers[action.id].onPointerMove(point, this.strokeProps['buffer-size']);
+        break;
       case PointerActionType.START:
         this.drawers[action.id] = new SVGDraw(this.svg, action.id);
         this.drawers[action.id].onPointerDown(point, this.strokeProps);
-        break;
-      case PointerActionType.MOVE:
-        this.drawers[action.id].onPointerMove(point, this.strokeProps.bufferSize);
         break;
       case PointerActionType.STOP:
         this.drawers[action.id].onPointerUp();
@@ -65,6 +85,29 @@ export class BoardController {
       default:
         break;
     }
+  }
+
+  private pan(options: IPanOptions): void {
+    const e = options.event;
+    e.preventDefault();
+    const point = this.getPointerPosition(e);
+    switch (options.type) {
+      case PointerActionType.MOVE:
+        this.transform.onPointerMove(point, this.viewBox);
+        break;
+      case PointerActionType.START:
+        this.transform.onPointerDown(point);
+        break;
+      case PointerActionType.STOP:
+        this.transform.onPointerUp();
+        break;
+      default:
+        break;
+    }
+  }
+
+  private setStrokeProperties(strokeProps: IStrokePropOptions): void {
+    this.strokeProps[strokeProps.targetAttr] = strokeProps.value;
   }
 
   // public execute(event: IEvent): void {
@@ -112,13 +155,6 @@ export class BoardController {
     this.state = state;
   }
 
-  private setStrokeProperties(strokeProps: IStrokeProps): void {
-    this.strokeProps.bufferSize = strokeProps.bufferSize;
-    this.strokeProps.color = strokeProps.color;
-    this.strokeProps.width = strokeProps.width * this.scale;
-    this.strokeProps.fill = strokeProps.fill;
-  }
-
   private setViexBox(viexBox: IViewBox): void {
     this.viewBox = viexBox;
   }
@@ -141,7 +177,7 @@ export class BoardController {
     e.preventDefault();
     if (this.state === BoardState.PAN) {
       const scale = e.deltaY > 0 ? 1 + SCALE_FACTOR : 1 - SCALE_FACTOR;
-      this.strokeProps.width = this.strokeProps.width * scale;
+      this.strokeProps['stroke-width'] = this.strokeProps['stroke-width'] * scale;
       const point = this.getPointerPosition(e);
       this.transform.onWheel(point, this.viewBox, scale);
       this.scale *= scale;
@@ -171,7 +207,7 @@ export class BoardController {
     const point = this.getPointerPosition(e);
     switch (this.state) {
       case BoardState.DRAW:
-        this.drawers[event.id!].onPointerMove(point, this.strokeProps.bufferSize);
+        this.drawers[event.id!].onPointerMove(point, this.strokeProps['buffer-size']);
         break;
       case BoardState.PAN:
         this.transform.onPointerMove(point, this.viewBox);

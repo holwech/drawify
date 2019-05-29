@@ -1,5 +1,5 @@
 import { PlayStates } from './playInterfaces';
-import { IAction } from '../event/eventInterfaces';
+import { IAction } from '../action/ActionInterfaces';
 
 export default class PlayState {
   constructor(

@@ -1,9 +1,9 @@
 import { AppController } from './AppController';
-import { IStrokeProps, BoardState, IViewBox, EventOrigin } from './utils/boardInterfaces';
+import { IViewBox, EventOrigin } from './utils/boardInterfaces';
 import { EventType } from './utils/appInterfaces';
 import { UserActionType } from './utils/appInterfaces';
 import AppState from './AppState';
-import { IStrokePropOptions } from './event/eventInterfaces';
+import { IStrokePropOptions } from './action/ActionInterfaces';
 
 export class Controller {
   public app: AppController;
@@ -11,7 +11,7 @@ export class Controller {
   constructor(svgID: string, state: AppState, strokeProps: IStrokePropOptions[]) {
     this.app = new AppController(svgID, state);
     strokeProps.forEach((strokeProp) => {
-      this.app.event.dispatch({ eventType: EventType.SET_STROKE_PROPS, strokeProps: strokeProp }, EventOrigin.USER);
+      this.app.action.dispatch({ eventType: EventType.SET_STROKE_PROPS, strokeProps: strokeProp }, EventOrigin.USER);
     });
   }
 
@@ -40,18 +40,18 @@ export class Controller {
   }
 
   public clear(): void {
-    this.app.event.dispatch({ eventType: EventType.CLEAR }, EventOrigin.USER);
+    this.app.action.dispatch({ eventType: EventType.CLEAR }, EventOrigin.USER);
   }
 
-  public setState(state: BoardState): void {
-    this.app.event.dispatch({ eventType: EventType.SET_STATE, state }, EventOrigin.USER);
+  public stateToggle(flag: boolean): void {
+    this.app.action.dispatch({ eventType: EventType.STATE_TOGGLE, state: flag }, EventOrigin.USER);
   }
 
   public setStrokeProperties(strokeProps: IStrokePropOptions): void {
-    this.app.event.dispatch({ eventType: EventType.SET_STROKE_PROPS, strokeProps }, EventOrigin.USER);
+    this.app.action.dispatch({ eventType: EventType.SET_STROKE_PROPS, strokeProps }, EventOrigin.USER);
   }
 
   public setViewBox(viewBox: IViewBox): void {
-    this.app.event.dispatch({ eventType: EventType.SET_VIEWBOX, viewBox }, EventOrigin.USER);
+    this.app.action.dispatch({ eventType: EventType.SET_VIEWBOX, viewBox }, EventOrigin.USER);
   }
 }

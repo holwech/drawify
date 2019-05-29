@@ -18,17 +18,17 @@ export class SVGDraw {
     this.pathStarted = true;
     this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     this.path.setAttribute('fill', 'none');
-    this.path.setAttribute('stroke', style.color);
-    this.path.setAttribute('stroke-width', String(style.width));
+    this.path.setAttribute('stroke', style['stroke']);
+    this.path.setAttribute('stroke-width', String(style['stroke-width']));
     this.path.setAttribute('id', this.id);
     this.path.setAttribute('class', 'svgElement ' + ElementType.PATH);
     if (style.fill) {
-      this.path.setAttribute('fill', style.fill);
+      this.path.setAttribute('fill', style['fill']);
     }
     // Keeps stroke width constant, regardless of zoom
     // this.path.setAttribute('vector-effect', 'non-scaling-stroke');
     this.buffer = [];
-    this.appendToBuffer(point, style.bufferSize);
+    this.appendToBuffer(point, style['buffer-size']);
     this.strPath = 'M' + point.x + ' ' + point.y;
     this.path.setAttribute('d', this.strPath);
     this.svg.appendChild(this.path);

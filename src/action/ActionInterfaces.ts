@@ -1,4 +1,4 @@
-import { IViewBox } from "../utils/boardInterfaces";
+import { IViewBox } from '../utils/boardInterfaces';
 
 export enum PointerActionType {
   START,
@@ -7,14 +7,15 @@ export enum PointerActionType {
 }
 
 export enum Targets {
-  DRAW = 'DRAW',
-  PAN = 'PAN',
-  ZOOM = 'ZOOM',
-  REMOVE = 'REMOVE',
-  STROKE_PROP = 'STROKE_PROPS',
-  BOARD_PROP = 'BOARD_PROPS',
-  CLEAR = 'CLEAR',
-  VIEW_BOX = 'VIEW_BOX',
+  DRAW ,
+  PAN,
+  ZOOM,
+  BOARD_STATE,
+  REMOVE,
+  STROKE_PROP,
+  BOARD_PROP,
+  CLEAR,
+  VIEW_BOX,
 }
 
 export enum StrokeAttributes {
@@ -34,7 +35,7 @@ export interface IPanOptions {
   event: MouseEvent;
 }
 
-export interface IZoom {
+export interface IZoomOptions {
   event: WheelEvent;
 }
 
@@ -43,11 +44,7 @@ export interface IStrokePropOptions {
   value: any;
 };
 
-export interface IViewBoxOptions {
-  viewBox: IViewBox;
-}
-
-export type optionTypes = IDrawOptions | IPanOptions | IZoom | IStrokePropOptions | IViewBoxOptions;
+export type optionTypes = IDrawOptions | IPanOptions | IZoomOptions | IStrokePropOptions | IViewBox;
 
 export interface IAction {
   id: number;

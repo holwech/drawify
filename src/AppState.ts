@@ -1,7 +1,7 @@
 import Timer from './timer/Timer';
 import { AppStates } from './utils/appInterfaces';
 import PlayState from './player/PlayState';
-import EventState from './event/EventState';
+import EventState from './action/ActionState';
 
 export default class AppState {
   constructor(
