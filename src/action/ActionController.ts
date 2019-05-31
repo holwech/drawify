@@ -16,53 +16,45 @@ export default class ActionController {
   ) {
   }
 
-  public dispatch(event: IEvent, origin: EventOrigin): void {
-    console.log('EVENT: ' + EventType[event.eventType]);
-    const action = this.getAction(event);
-    this.dispatchAction(action);
-    this.recorder.record(action);
-    // this.playBoard.execute(this.getAction(event));
-  }
-
-  public dispatchAction(action: IAction): void {
-    this.board.execute(action);
-  }
-
-  private getAction(event: IEvent): IAction {
-    let options: optionTypes | undefined;
+  public dispatchEvent(event: IEvent, origin: EventOrigin): void {
+    // console.log('EVENT: ' + EventType[event.eventType]);
     const action: IAction = {
       id: this.getId(event),
       time: this.timer.getTime(),
       target: Targets.DRAW,
-      options,
+      options: undefined,
     };
     switch (event.eventType) {
       case EventType.POINTER_MOVE:
         action.target = this.state.panState ? Targets.PAN : Targets.DRAW;
-        options = {
+        action.options = {
           type: PointerActionType.MOVE,
           event: event.e!,
-        } as IDrawOptions;
+        };
+        this.commitAction(action);
         break;
       case EventType.POINTER_DOWN:
         action.target = this.state.panState ? Targets.PAN : Targets.DRAW;
-        options = {
+        action.options = {
           type: PointerActionType.START,
           event: event.e!,
-        } as IDrawOptions;
+        };
+        this.commitAction(action);
         break;
       case EventType.POINTER_UP:
         action.target = this.state.panState ? Targets.DRAW : Targets.PAN;
-        options = {
+        action.options = {
           type: PointerActionType.STOP,
           event: event.e!,
-        } as IDrawOptions;
+        };
+        this.commitAction(action);
         break;
       case EventType.ONWHEEL:
         action.target = Targets.ZOOM;
-        options = {
+        action.options = {
           event: event.e!,
         } as IZoomOptions;
+        this.commitAction(action);
         break;
       case EventType.STATE_TOGGLE:
         action.target = Targets.BOARD_STATE;
@@ -70,18 +62,38 @@ export default class ActionController {
         break;
       case EventType.SET_STROKE_PROPS:
         action.target = Targets.STROKE_PROP;
-        options = event.strokeProps!;
+        action.options = event.strokeProps!;
+        this.commitAction(action);
         break;
       case EventType.SET_VIEWBOX:
         action.target = Targets.VIEW_BOX;
-        options = event.viewBox;
+        action.options = event.viewBox;
+        this.commitAction(action);
+        break;
+      case EventType.CLEAR:
+        action.target = Targets.CLEAR;
+        this.commitAction(action);
+        break;
+      case EventType.END:
+        action.target = Targets.END;
         break;
       default:
-        options = undefined;
-        throw new Error('Event type ' + event.eventType + ' does not have a case in get Action in Event Controller');
+        console.warn('Event type ' + EventType[event.eventType] + ' does not have a case in get Action in Event Controller');
     }
-    action.options = options;
-    return action;
+    this.recorder.record(action);
+    // this.playBoard.commitAction(this.getAction(event));
+  }
+
+  public dispatchAction(action: IAction, record = true): void {
+    console.log('Action: ' + Targets[action.target]);
+    if (record) {
+      this.recorder.record(action);
+    }
+    this.commitAction(action);
+  }
+
+  private commitAction(action: IAction): void {
+    this.board.execute(action);
   }
 
   // private prepareUserEvent(event: IEvent): void {

@@ -2,7 +2,7 @@ import { SVGDraw } from './SVGDraw';
 import { Transform } from './Transform';
 import { IStrokeProps, IViewBox, BoardState } from '../utils/boardInterfaces';
 import { Board } from './Board';
-import { IAction, Targets, IDrawOptions, PointerActionType, IStrokePropOptions, IPanOptions, IZoomOptions } from '../action/ActionInterfaces';
+import { IAction, Targets, IDrawOptions, PointerActionType, IStrokePropOptions, IPanOptions, IZoomOptions, StrokeAttributes } from '../action/ActionInterfaces';
 import { IEvent } from '../utils/appInterfaces';
 
 const SCALE_FACTOR = 0.05;
@@ -51,6 +51,9 @@ export class BoardController {
       case Targets.VIEW_BOX:
         this.setViexBox(action.options as IViewBox);
         break;
+      case Targets.CLEAR:
+        this.board.clear();
+        break;
       default:
         break;
     }
@@ -72,15 +75,15 @@ export class BoardController {
     const point = this.getPointerPosition(e);
     switch (options.type) {
       case PointerActionType.MOVE:
-        this.drawers[action.id].onPointerMove(point, this.strokeProps['buffer-size']);
+        this.drawers[action.id!].onPointerMove(point, this.strokeProps['buffer-size']);
         break;
       case PointerActionType.START:
-        this.drawers[action.id] = new SVGDraw(this.svg, action.id);
-        this.drawers[action.id].onPointerDown(point, this.strokeProps);
+        this.drawers[action.id!] = new SVGDraw(this.svg, action.id!);
+        this.drawers[action.id!].onPointerDown(point, this.strokeProps);
         break;
       case PointerActionType.STOP:
-        this.drawers[action.id].onPointerUp();
-        delete this.drawers[action.id];
+        this.drawers[action.id!].onPointerUp();
+        delete this.drawers[action.id!];
         break;
       default:
         break;

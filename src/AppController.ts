@@ -7,6 +7,7 @@ import { EventListenerController } from './eventListener/EventListenerController
 import { IUserAction, UserActionType, AppStates } from './utils/appInterfaces';
 import AppState from './AppState';
 import ActionController from './action/ActionController';
+import { Targets, IAction } from './action/ActionInterfaces';
 
 export class AppController {
   public state: AppState;
@@ -50,11 +51,11 @@ export class AppController {
     this.eventListeners = new EventListenerController(this.svg, this);
     this.eventListeners.addEventListeners();
 
-    const initialState: IEvent[] = [
-      { eventType: EventType.SET_VIEWBOX, viewBox },
+    const initialState: IAction[] = [
+      { target: Targets.VIEW_BOX, options: viewBox },
     ];
     initialState.forEach(event => {
-      this.action.dispatch(event, EventOrigin.USER);
+      this.action.dispatchAction(event);
     });
   }
 
@@ -79,12 +80,12 @@ export class AppController {
       case UserActionType.RESTART:
         this.state.timer.pause();
         if (this.state.timer.atEnd()) {
-          this.action.dispatch({ eventType: EventType.END }, EventOrigin.USER);
+          this.action.dispatchAction({ target: Targets.END });
         }
         this.player.setEventLog(this.recorder.getEventLog());
         this.state.timer.restart();
         this.player.restart();
-        this.action.dispatch({ eventType: EventType.RESET }, EventOrigin.PLAYER );
+        // this.action.dispatchAction({ target: Targets.RESET }, false);
         break;
       default:
         break;

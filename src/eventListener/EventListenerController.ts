@@ -32,12 +32,12 @@ export class EventListenerController {
   }
 
   private onWheel = (e: WheelEvent) => {
-    this.app.action.dispatch({ eventType: EventType.ONWHEEL, e }, EventOrigin.USER);
+    this.app.action.dispatchEvent({ eventType: EventType.ONWHEEL, e }, EventOrigin.USER);
   };
 
   private onPointerDown = (e: MouseEvent) => {
     // console.log('POINTER DOWN ADDING EVENT LISTENER');
-    this.app.action.dispatch({ eventType: EventType.POINTER_DOWN, e }, EventOrigin.USER);
+    this.app.action.dispatchEvent({ eventType: EventType.POINTER_DOWN, e }, EventOrigin.USER);
     this.svg.removeEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
     this.svg.addEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
     this.svg.addEventListener('mouseleave', this.fnOnPointerUp); // Releasing the mouse
@@ -47,9 +47,9 @@ export class EventListenerController {
   private onPointerUp = (e: MouseEvent) => {
     // console.log('POINTER UP REMOVING EVENT LISTENER');
     if (this.isClick) {
-      this.app.action.dispatch({ eventType: EventType.CLICK, e }, EventOrigin.USER);
+      this.app.action.dispatchEvent({ eventType: EventType.CLICK, e }, EventOrigin.USER);
     } else {
-      this.app.action.dispatch({ eventType: EventType.POINTER_UP, e }, EventOrigin.USER);
+      this.app.action.dispatchEvent({ eventType: EventType.POINTER_UP, e }, EventOrigin.USER);
     }
     this.isClick = true;
     this.svg.removeEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
@@ -60,10 +60,10 @@ export class EventListenerController {
 
   private onPointerMove = (e: MouseEvent) => {
     this.isClick = false;
-    this.app.action.dispatch({ eventType: EventType.POINTER_MOVE, e }, EventOrigin.USER);
+    this.app.action.dispatchEvent({ eventType: EventType.POINTER_MOVE, e }, EventOrigin.USER);
   };
 
   // private onClick = (e: MouseEvent) => {
-  //   this.app.action.dispatch({ eventType: EventType.CLICK, e }, EventOrigin.USER);
+  //   this.app.action.dispatchEvent({ eventType: EventType.CLICK, e }, EventOrigin.USER);
   // }
 }

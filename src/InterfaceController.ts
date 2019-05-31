@@ -3,7 +3,7 @@ import { IViewBox, EventOrigin } from './utils/boardInterfaces';
 import { EventType } from './utils/appInterfaces';
 import { UserActionType } from './utils/appInterfaces';
 import AppState from './AppState';
-import { IStrokePropOptions } from './action/ActionInterfaces';
+import { IStrokePropOptions, Targets, IStateOptions } from './action/ActionInterfaces';
 
 export class Controller {
   public app: AppController;
@@ -11,7 +11,7 @@ export class Controller {
   constructor(svgID: string, state: AppState, strokeProps: IStrokePropOptions[]) {
     this.app = new AppController(svgID, state);
     strokeProps.forEach((strokeProp) => {
-      this.app.action.dispatch({ eventType: EventType.SET_STROKE_PROPS, strokeProps: strokeProp }, EventOrigin.USER);
+      this.app.action.dispatchAction({ target: Targets.STROKE_PROP, options: strokeProp });
     });
   }
 
@@ -40,18 +40,21 @@ export class Controller {
   }
 
   public clear(): void {
-    this.app.action.dispatch({ eventType: EventType.CLEAR }, EventOrigin.USER);
+    this.app.action.dispatchAction({ target: Targets.CLEAR });
   }
 
   public stateToggle(flag: boolean): void {
-    this.app.action.dispatch({ eventType: EventType.STATE_TOGGLE, state: flag }, EventOrigin.USER);
+    this.app.action.dispatchAction({
+      target: Targets.BOARD_STATE,
+      options: { flag, } as IStateOptions,
+    });
   }
 
   public setStrokeProperties(strokeProps: IStrokePropOptions): void {
-    this.app.action.dispatch({ eventType: EventType.SET_STROKE_PROPS, strokeProps }, EventOrigin.USER);
+    this.app.action.dispatchAction({ target: Targets.STROKE_PROP, options: strokeProps });
   }
 
   public setViewBox(viewBox: IViewBox): void {
-    this.app.action.dispatch({ eventType: EventType.SET_VIEWBOX, viewBox }, EventOrigin.USER);
+    this.app.action.dispatchAction({ target: Targets.VIEW_BOX, options: viewBox });
   }
 }

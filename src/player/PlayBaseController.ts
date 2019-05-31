@@ -5,10 +5,10 @@ import { PlayStates } from './playInterfaces';
 import PlayState from './PlayState';
 import { UserActionType } from '../utils/appInterfaces';
 import Timer from '../timer/Timer';
-import { IAction } from '../action/ActionInterfaces';
+import { IAction, Targets } from '../action/ActionInterfaces';
 
 export class PlayBaseController {
-  constructor(private app: AppController, private timer: Timer, private state: PlayState) {
+  constructor(protected app: AppController, protected timer: Timer, protected state: PlayState) {
     this.state.log = [];
   }
 
@@ -21,7 +21,7 @@ export class PlayBaseController {
   }
 
   public restart(): void {
-    this.app.action.dispatch({ eventType: EventType.CLEAR }, EventOrigin.PLAYER);
+    this.app.action.dispatchAction({ target: Targets.CLEAR }, false);
     this.state.currIdx = 0;
   }
 
@@ -35,7 +35,7 @@ export class PlayBaseController {
     if (log.length === 0) {
       return;
     }
-    this.app.action.dispatch({ eventType: EventType.CLEAR }, EventOrigin.PLAYER);
+    this.app.action.dispatchAction({ target: Targets.CLEAR }, false);
     for (let i = 0; i <= log.length; i++) {
       if (log[i].time! >= time) {
         if (i === 0) {
@@ -50,10 +50,10 @@ export class PlayBaseController {
     this.playEvents();
   }
 
-  private playEvents(): void {
+  protected playEvents(): void {
     if (this.state.currIdx !== this.state.log.length) {
       setTimeout(() => {
-        this.app.action.dispatchAction(this.state.log[this.state.currIdx]);
+        this.app.action.dispatchAction(this.state.log[this.state.currIdx], false);
         this.state.currIdx++;
         this.playEvents();
       }, this.state.log[this.state.currIdx].time! - this.timer.getTime());
@@ -62,12 +62,12 @@ export class PlayBaseController {
     }
   }
 
-  private reversePlayEvents(): void {
+  protected reversePlayEvents(): void {
     console.log('playing reverse');
     if (this.state.currIdx >= 0) {
       setTimeout(() => {
         if (this.state.state === PlayStates.REVERSE) {
-          this.app.action.dispatchAction(this.state.log[this.state.currIdx]);
+          this.app.action.dispatchAction(this.state.log[this.state.currIdx], false);
           this.state.currIdx--;
           this.reversePlayEvents();
         }

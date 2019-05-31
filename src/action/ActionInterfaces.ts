@@ -16,6 +16,7 @@ export enum Targets {
   BOARD_PROP,
   CLEAR,
   VIEW_BOX,
+  END,
 }
 
 export enum StrokeAttributes {
@@ -44,11 +45,17 @@ export interface IStrokePropOptions {
   value: any;
 };
 
-export type optionTypes = IDrawOptions | IPanOptions | IZoomOptions | IStrokePropOptions | IViewBox;
+export interface IStateOptions {
+  flag: boolean;
+};
+
+export type optionTypes = 
+  IDrawOptions | IPanOptions | IZoomOptions |
+  IStrokePropOptions | IViewBox | IStateOptions;
 
 export interface IAction {
-  id: number;
-  time: number;
+  id?: number;
+  time?: number;
   target: Targets;
   options?: optionTypes;
 }
