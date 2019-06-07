@@ -21,7 +21,7 @@ export class PlayBaseController {
   }
 
   public restart(): void {
-    this.app.action.dispatchAction({ target: Targets.CLEAR }, false);
+    this.app.action.commitAction({ target: Targets.CLEAR });
     this.state.currIdx = 0;
   }
 
@@ -35,7 +35,7 @@ export class PlayBaseController {
     if (log.length === 0) {
       return;
     }
-    this.app.action.dispatchAction({ target: Targets.CLEAR }, false);
+    this.app.action.commitAction({ target: Targets.CLEAR });
     for (let i = 0; i <= log.length; i++) {
       if (log[i].time! >= time) {
         if (i === 0) {
@@ -53,7 +53,7 @@ export class PlayBaseController {
   protected playEvents(): void {
     if (this.state.currIdx !== this.state.log.length) {
       setTimeout(() => {
-        this.app.action.dispatchAction(this.state.log[this.state.currIdx], false);
+        this.app.action.commitAction(this.state.log[this.state.currIdx]);
         this.state.currIdx++;
         this.playEvents();
       }, this.state.log[this.state.currIdx].time! - this.timer.getTime());
@@ -67,7 +67,7 @@ export class PlayBaseController {
     if (this.state.currIdx >= 0) {
       setTimeout(() => {
         if (this.state.state === PlayStates.REVERSE) {
-          this.app.action.dispatchAction(this.state.log[this.state.currIdx], false);
+          this.app.action.commitAction(this.state.log[this.state.currIdx]);
           this.state.currIdx--;
           this.reversePlayEvents();
         }
