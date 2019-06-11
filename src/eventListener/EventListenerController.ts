@@ -9,19 +9,15 @@ export class EventListenerController {
   private fnOnPointerDown: (e: MouseEvent) => void;
   private fnOnPointerMove: (e: MouseEvent) => void;
   private fnOnPointerUp: (e: MouseEvent) => void;
-  // private fnOnClick: (e: MouseEvent) => void;
 
   constructor(private svg: HTMLElement & SVGElement & SVGSVGElement, private app: AppController) {
-    // Event Listeners
     this.fnOnWheel = this.onWheel;
     this.fnOnPointerDown = this.onPointerDown;
     this.fnOnPointerMove = this.onPointerMove;
     this.fnOnPointerUp = this.onPointerUp;
-    // this.fnOnClick = this.onClick;
   }
 
   public addEventListeners(): void {
-    // this.svg.addEventListener('click', this.fnOnClick);
     this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
     this.svg.addEventListener('wheel', this.fnOnWheel);
   }
@@ -36,8 +32,7 @@ export class EventListenerController {
   };
 
   private onPointerDown = (e: MouseEvent) => {
-    // console.log('POINTER DOWN ADDING EVENT LISTENER');
-    this.app.action.dispatchEvent({ eventType: EventType.POINTER_DOWN, e }, EventOrigin.USER);
+    this.isClick = true;
     this.svg.removeEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
     this.svg.addEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
     this.svg.addEventListener('mouseleave', this.fnOnPointerUp); // Releasing the mouse
@@ -45,13 +40,12 @@ export class EventListenerController {
   };
 
   private onPointerUp = (e: MouseEvent) => {
-    // console.log('POINTER UP REMOVING EVENT LISTENER');
     if (this.isClick) {
       this.app.action.dispatchEvent({ eventType: EventType.CLICK, e }, EventOrigin.USER);
     } else {
       this.app.action.dispatchEvent({ eventType: EventType.POINTER_UP, e }, EventOrigin.USER);
     }
-    this.isClick = true;
+    this.isClick = false;
     this.svg.removeEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
     this.svg.removeEventListener('mouseleave', this.fnOnPointerUp); // Releasing the mouse
     this.svg.removeEventListener('mousemove', this.fnOnPointerMove);
@@ -59,11 +53,10 @@ export class EventListenerController {
   };
 
   private onPointerMove = (e: MouseEvent) => {
-    this.isClick = false;
+    if (this.isClick) {
+      this.app.action.dispatchEvent({ eventType: EventType.POINTER_DOWN, e }, EventOrigin.USER);
+      this.isClick = false;
+    }
     this.app.action.dispatchEvent({ eventType: EventType.POINTER_MOVE, e }, EventOrigin.USER);
   };
-
-  // private onClick = (e: MouseEvent) => {
-  //   this.app.action.dispatchEvent({ eventType: EventType.CLICK, e }, EventOrigin.USER);
-  // }
 }

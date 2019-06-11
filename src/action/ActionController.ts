@@ -4,13 +4,12 @@ import { EventOrigin } from '../utils/boardInterfaces';
 import { EventType, IEvent } from '../utils/appInterfaces';
 import { BoardController } from '../board/BoardController';
 import Timer from '../timer/Timer';
-import { IAction, Targets, IDrawOptions, PointerActionType, optionTypes, IZoomOptions, IStateOptions } from './ActionInterfaces';
+import { IAction, Targets, PointerActionType, IZoomOptions, IStateOptions } from './ActionInterfaces';
 
 export default class ActionController {
   constructor(
     private state: EventState,
     private timer: Timer,
-    private playBoard: BoardController,
     private board: BoardController,
     private recorder: RecordController,
   ) {
@@ -56,6 +55,14 @@ export default class ActionController {
         } as IZoomOptions;
         this.commitAction(action);
         break;
+      case EventType.CLICK:
+        action.target = Targets.CLICK;
+        action.options = {
+          type: this.state.clickTarget,
+          event: event.e!,
+        };
+        this.commitAction(action);
+        break;
       default:
         console.warn('Event type ' + EventType[event.eventType] + ' does not have a case in get Action in Event Controller');
     }
@@ -64,22 +71,22 @@ export default class ActionController {
   }
 
   public dispatchAction(action: IAction): void {
-    action.id = this.getId();
-    action.time = this.timer.getTime();
-    this.recorder.record(action);
-    this.commitAction(action);
+    if (action.target === Targets.BOARD_STATE) {
+      this.state.panState = (action.options as IStateOptions).flag!;
+    } else {
+      if (action.target === Targets.END) {
+        this.state.panState = false;
+      }
+      action.id = this.getId();
+      action.time = this.timer.getTime();
+      this.recorder.record(action);
+      this.commitAction(action);
+    }
   }
 
   public commitAction(action: IAction): void {
-    switch (action.target) {
-      case Targets.BOARD_STATE:
-        action.target = Targets.BOARD_STATE;
-        this.state.panState = (action.options as IStateOptions).flag!;
-        break;
-      default:
-        this.board.execute(action);
-        break;
-    }
+    console.log('Action: ' + Targets[action.target]);
+    this.board.execute(action);
   }
 
   // private prepareUserEvent(event: IEvent): void {

@@ -1,5 +1,3 @@
-import { EventOrigin } from './utils/boardInterfaces';
-import { EventType, IEvent } from './utils/appInterfaces';
 import { BoardController } from './board/BoardController';
 import { PlayBaseController } from './player/PlayBaseController';
 import { RecordController } from './recorder/RecordController';
@@ -13,7 +11,6 @@ export class AppController {
   public state: AppState;
   public action: ActionController;
   private board: BoardController;
-  private playBoard: BoardController;
   private player: PlayBaseController;
   private recorder: RecordController;
   // private editor: EditController;
@@ -37,14 +34,12 @@ export class AppController {
 
     // These are missing timestamps?
     this.board = new BoardController(this.svg);
-    this.playBoard = new BoardController(this.svg);
     this.recorder = new RecordController();
     this.player = new PlayBaseController(this, this.state.timer, this.state.playState);
     // this.editor = new EditController(this.svg);
     this.action = new ActionController(
       this.state.eventState,
       this.state.timer,
-      this.playBoard,
       this.board,
       this.recorder,
     );

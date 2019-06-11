@@ -2,7 +2,7 @@ import { SVGDraw } from './SVGDraw';
 import { Transform } from './Transform';
 import { IStrokeProps, IViewBox, BoardState } from '../utils/boardInterfaces';
 import { Board } from './Board';
-import { IAction, Targets, IDrawOptions, PointerActionType, IStrokePropOptions, IPanOptions, IZoomOptions, StrokeAttributes } from '../action/ActionInterfaces';
+import { IAction, Targets, IDrawOptions, PointerActionType, IStrokePropOptions, IPanOptions, IZoomOptions, StrokeAttributes, IClickOptions, ElementClickACtionType } from '../action/ActionInterfaces';
 import { IEvent } from '../utils/appInterfaces';
 
 const SCALE_FACTOR = 0.05;
@@ -45,6 +45,9 @@ export class BoardController {
       case Targets.ZOOM:
         this.zoom(action.options as IZoomOptions);
         break;
+      case Targets.CLICK:
+        this.click(action.options as IClickOptions);
+        break;
       case Targets.STROKE_PROP:
         this.setStrokeProperties(action.options as IStrokePropOptions);
         break;
@@ -53,6 +56,22 @@ export class BoardController {
         break;
       case Targets.CLEAR:
         this.board.clear();
+        break;
+      default:
+        break;
+    }
+  }
+
+  private click(options: IClickOptions): void {
+    const e = options.event! as MouseEvent;
+    e.preventDefault();
+    switch (options.type) {
+      case ElementClickACtionType.REMOVE:
+        const ids = (e.target as Element).id;
+        const id = Number(ids);
+        if (id) {
+          this.board.removeElement(id);
+        }
         break;
       default:
         break;

@@ -6,12 +6,16 @@ export enum PointerActionType {
   MOVE,
 }
 
+export enum ElementClickACtionType {
+  REMOVE,
+}
+
 export enum Targets {
   DRAW ,
   PAN,
   ZOOM,
+  CLICK,
   BOARD_STATE,
-  REMOVE,
   STROKE_PROP,
   BOARD_PROP,
   CLEAR,
@@ -36,6 +40,11 @@ export interface IPanOptions {
   event: MouseEvent;
 }
 
+export interface IClickOptions {
+  type: ElementClickACtionType;
+  event: MouseEvent;
+}
+
 export interface IZoomOptions {
   event: WheelEvent;
 }
@@ -51,7 +60,8 @@ export interface IStateOptions {
 
 export type optionTypes = 
   IDrawOptions | IPanOptions | IZoomOptions |
-  IStrokePropOptions | IViewBox | IStateOptions;
+  IStrokePropOptions | IViewBox | IStateOptions |
+  IClickOptions;
 
 export interface IAction {
   id?: number;
