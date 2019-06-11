@@ -12,8 +12,7 @@ export default class ActionController {
     private timer: Timer,
     private board: BoardController,
     private recorder: RecordController,
-  ) {
-  }
+  ) {}
 
   public dispatchEvent(event: IEvent, origin: EventOrigin): void {
     // console.log('EVENT: ' + EventType[event.eventType]);
@@ -64,7 +63,9 @@ export default class ActionController {
         this.commitAction(action);
         break;
       default:
-        console.warn('Event type ' + EventType[event.eventType] + ' does not have a case in get Action in Event Controller');
+        console.warn(
+          'Event type ' + EventType[event.eventType] + ' does not have a case in get Action in Event Controller',
+        );
     }
     this.recorder.record(action);
     // this.playBoard.commitAction(this.getAction(event));
@@ -94,7 +95,7 @@ export default class ActionController {
   //   event.id = this.getId(event);
   //   switch (event.eventType) {
   //     case EventType.CLICK:
-  //       event.isEdit = true;        
+  //       event.isEdit = true;
   //       break;
   //     default:
   //       break;
@@ -102,10 +103,7 @@ export default class ActionController {
   // }
 
   private getIdForEvent(event: IEvent): number {
-    if (
-      event.eventType !== EventType.POINTER_MOVE &&
-      event.eventType !== EventType.POINTER_UP
-    ) {
+    if (event.eventType !== EventType.POINTER_MOVE && event.eventType !== EventType.POINTER_UP) {
       this.state.idCount++;
     }
     return this.state.idCount;

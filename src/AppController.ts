@@ -37,18 +37,11 @@ export class AppController {
     this.recorder = new RecordController();
     this.player = new PlayBaseController(this, this.state.timer, this.state.playState);
     // this.editor = new EditController(this.svg);
-    this.action = new ActionController(
-      this.state.eventState,
-      this.state.timer,
-      this.board,
-      this.recorder,
-    );
+    this.action = new ActionController(this.state.eventState, this.state.timer, this.board, this.recorder);
     this.eventListeners = new EventListenerController(this.svg, this);
     this.eventListeners.addEventListeners();
 
-    const initialState: IAction[] = [
-      { target: Targets.VIEW_BOX, options: viewBox },
-    ];
+    const initialState: IAction[] = [{ target: Targets.VIEW_BOX, options: viewBox }];
     initialState.forEach(event => {
       this.action.dispatchAction(event);
     });

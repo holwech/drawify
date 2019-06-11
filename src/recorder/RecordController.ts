@@ -8,7 +8,7 @@ export class RecordController {
     if (action.target !== Targets.END) {
       this.buffer.push(action);
     } else {
-      this.buffer.forEach((el) => {
+      this.buffer.forEach(el => {
         this.log.push(el);
       });
       this.log = this.log.sort((before: IAction, after: IAction) => {
@@ -30,7 +30,7 @@ export class RecordController {
 
   private flushActionType(action: IAction): void {
     if (action.time! > this.log[this.log.length - 1].time!) {
-      this.log.filter((el) => el.target !== Targets.END);
+      this.log.filter(el => el.target !== Targets.END);
     }
   }
 }

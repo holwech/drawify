@@ -1,8 +1,5 @@
 export class Board {
-  constructor(
-    private svg: HTMLElement & SVGElement & SVGSVGElement,
-  ) {
-  }
+  constructor(private svg: HTMLElement & SVGElement & SVGSVGElement) {}
 
   public clear(): void {
     let lastChild = this.svg.lastChild;

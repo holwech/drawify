@@ -7,10 +7,7 @@ export class SVGDraw {
   private buffer: DOMPoint[] = [];
   private id: string;
 
-  constructor(
-    private svg: HTMLElement & SVGElement & SVGSVGElement,
-    id: number,
-  ) {
+  constructor(private svg: HTMLElement & SVGElement & SVGSVGElement, id: number) {
     this.id = String(id);
   }
 

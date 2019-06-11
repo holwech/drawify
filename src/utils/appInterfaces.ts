@@ -1,5 +1,5 @@
-import { IStrokePropOptions } from "../action/ActionInterfaces";
-import { IViewBox } from "./boardInterfaces";
+import { IStrokePropOptions } from '../action/ActionInterfaces';
+import { IViewBox } from './boardInterfaces';
 
 export enum AppStates {
   START = 'START',

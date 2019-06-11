@@ -12,10 +12,10 @@ export interface IPoint {
 }
 
 export interface IStrokeProps {
-  'stroke': string;
+  stroke: string;
   'stroke-width': number;
   'buffer-size': number;
-  'fill': string | undefined;
+  fill: string | undefined;
 }
 
 export interface IViewBox {
@@ -24,7 +24,6 @@ export interface IViewBox {
   width: number;
   height: number;
 }
-
 
 export interface ILogEvent {
   event: IEvent;
@@ -43,5 +42,5 @@ export enum BoardState {
 }
 
 export enum ElementType {
-  PATH = 'path'
+  PATH = 'path',
 }

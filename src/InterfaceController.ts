@@ -10,7 +10,7 @@ export class Controller {
 
   constructor(svgID: string, state: AppState, strokeProps: IStrokePropOptions[]) {
     this.app = new AppController(svgID, state);
-    strokeProps.forEach((strokeProp) => {
+    strokeProps.forEach(strokeProp => {
       this.app.action.dispatchAction({ target: Targets.STROKE_PROP, options: strokeProp });
     });
   }
@@ -46,7 +46,7 @@ export class Controller {
   public stateToggle(flag: boolean): void {
     this.app.action.dispatchAction({
       target: Targets.BOARD_STATE,
-      options: { flag, } as IStateOptions,
+      options: { flag } as IStateOptions,
     });
   }
 

@@ -11,7 +11,7 @@ export enum ElementClickACtionType {
 }
 
 export enum Targets {
-  DRAW ,
+  DRAW,
   PAN,
   ZOOM,
   CLICK,
@@ -50,18 +50,22 @@ export interface IZoomOptions {
 }
 
 export interface IStrokePropOptions {
-  targetAttr: StrokeAttributes,
+  targetAttr: StrokeAttributes;
   value: any;
-};
+}
 
 export interface IStateOptions {
   flag: boolean;
-};
+}
 
-export type optionTypes = 
-  IDrawOptions | IPanOptions | IZoomOptions |
-  IStrokePropOptions | IViewBox | IStateOptions |
-  IClickOptions;
+export type optionTypes =
+  | IDrawOptions
+  | IPanOptions
+  | IZoomOptions
+  | IStrokePropOptions
+  | IViewBox
+  | IStateOptions
+  | IClickOptions;
 
 export interface IAction {
   id?: number;

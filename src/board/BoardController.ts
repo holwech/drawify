@@ -2,7 +2,18 @@ import { SVGDraw } from './SVGDraw';
 import { Transform } from './Transform';
 import { IStrokeProps, IViewBox, BoardState } from '../utils/boardInterfaces';
 import { Board } from './Board';
-import { IAction, Targets, IDrawOptions, PointerActionType, IStrokePropOptions, IPanOptions, IZoomOptions, StrokeAttributes, IClickOptions, ElementClickACtionType } from '../action/ActionInterfaces';
+import {
+  IAction,
+  Targets,
+  IDrawOptions,
+  PointerActionType,
+  IStrokePropOptions,
+  IPanOptions,
+  IZoomOptions,
+  StrokeAttributes,
+  IClickOptions,
+  ElementClickACtionType,
+} from '../action/ActionInterfaces';
 import { IEvent } from '../utils/appInterfaces';
 
 const SCALE_FACTOR = 0.05;
@@ -12,10 +23,10 @@ export class BoardController {
   private scale = 1;
   private state = BoardState.DRAW;
   private strokeProps: IStrokeProps = {
-    'stroke': 'green',
+    stroke: 'green',
     'stroke-width': 50,
     'buffer-size': 20,
-    'fill': undefined,
+    fill: undefined,
   };
   private viewBox: IViewBox = {
     x: 0,
@@ -27,9 +38,7 @@ export class BoardController {
   private transform: Transform;
   private board: Board;
 
-  constructor(
-    private svg: HTMLElement & SVGElement & SVGSVGElement,
-  ) {
+  constructor(private svg: HTMLElement & SVGElement & SVGSVGElement) {
     this.board = new Board(this.svg);
     this.transform = new Transform(this.svg);
   }

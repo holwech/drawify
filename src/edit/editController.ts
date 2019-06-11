@@ -1,7 +1,5 @@
 export default class EditController {
-  constructor(
-    private svg: HTMLElement & SVGElement & SVGSVGElement,
-  ) {
+  constructor(private svg: HTMLElement & SVGElement & SVGSVGElement) {
     this.svg.addEventListener('click', this.removeElement);
   }
 
