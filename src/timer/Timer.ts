@@ -41,18 +41,6 @@ export default class Timer {
     }
   }
 
-  public setLengthTime(): void {
-    const currentTime = this.getTime();
-    if (currentTime > this.lengthTime) {
-      this.lengthTime = currentTime;
-    }
-  }
-
-  public getLengthTime(): number {
-    this.setLengthTime();
-    return this.lengthTime;
-  }
-
   public getState(): TimerStates {
     return this.state;
   }
@@ -70,8 +58,6 @@ export default class Timer {
   }
 
   public start(): void {
-    console.log('started');
-    console.log(this.getLengthTime());
     switch (this.state) {
       case TimerStates.PAUSED:
         this.startTime += this.now() - this.pauseTime;
@@ -86,7 +72,7 @@ export default class Timer {
   }
 
   public reverse(): void {
-    console.log('reverse');
+    this.setLengthTime();
     switch (this.state) {
       case TimerStates.STARTED:
         this.setLengthTime();
@@ -104,7 +90,6 @@ export default class Timer {
   }
 
   public pause(): void {
-    console.log('paused');
     switch (this.state) {
       case TimerStates.STARTED:
         this.setLengthTime();
@@ -119,6 +104,30 @@ export default class Timer {
         break;
     }
     this.state = TimerStates.PAUSED;
+  }
+
+  // These functions handle the "length time", which is the furtherst
+  // the timer has gone in time. Ex. running the timer for 30 seconds
+  // and the moving the timer back a given amount, the "length time"
+  // will still be 30 seconds.
+  public setLengthTime(): void {
+    const currentTime = this.getTime();
+    if (currentTime > this.lengthTime) {
+      this.lengthTime = currentTime;
+    }
+  }
+
+  public getLengthTime(): number {
+    this.setLengthTime();
+    return this.lengthTime;
+  }
+
+  public atStart(): boolean {
+    return this.getTime() === 0;
+  }
+
+  public atEnd(): boolean {
+    return this.getLengthTime() === this.getTime();
   }
 
   private startTimeMonitor(): void {

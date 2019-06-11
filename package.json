@@ -1,6 +1,6 @@
 {
   "name": "draw-ts",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "description": "Stateful drawing tool with zero dependencies",
   "main": "lib/InterfaceController.js",
   "types": "lib/InterfaceController.d.ts",
@@ -17,7 +17,6 @@
     "typescript": "^3.4.2"
   },
   "scripts": {
-    "dev": "webpack-dev-server --mode development",
     "build": "tsc",
     "build:watch": "tsc -w",
     "test": "jest",

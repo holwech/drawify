@@ -1,3 +1,5 @@
+import { IEvent } from './appInterfaces';
+
 export interface IRecordPoint {
   time: number;
   x: number;
@@ -10,9 +12,10 @@ export interface IPoint {
 }
 
 export interface IStrokeProps {
-  color: string;
-  width: number;
-  bufferSize: number;
+  'stroke': string;
+  'stroke-width': number;
+  'buffer-size': number;
+  'fill': string | undefined;
 }
 
 export interface IViewBox {
@@ -22,14 +25,6 @@ export interface IViewBox {
   height: number;
 }
 
-export interface IEvent {
-  eventType: EventType;
-  time?: number;
-  e?: MouseEvent | WheelEvent;
-  strokeProps?: IStrokeProps;
-  state?: BoardState;
-  viewBox?: IViewBox;
-}
 
 export interface ILogEvent {
   event: IEvent;
@@ -37,18 +32,16 @@ export interface ILogEvent {
   id: number;
 }
 
-export enum EventType {
-  ONWHEEL = 'ONWHEEL',
-  POINTER_DOWN = 'POINTER_DOWN',
-  POINTER_MOVE = 'POINTER_MOVE',
-  POINTER_UP = 'POINTER_UP',
-  SET_STROKE_PROPS = 'SET_STROKE_PROPS',
-  CLEAR = 'CLEAR',
-  SET_STATE = 'SET_STATE',
-  SET_VIEWBOX = 'SET_VIEWBOX',
+export enum EventOrigin {
+  USER,
+  PLAYER,
 }
 
 export enum BoardState {
   DRAW = 'DRAW',
   PAN = 'PAN',
+}
+
+export enum ElementType {
+  PATH = 'path'
 }

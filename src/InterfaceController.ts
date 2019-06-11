@@ -1,52 +1,60 @@
 import { AppController } from './AppController';
-import { IStrokeProps, EventType, BoardState, IViewBox } from './utils/boardInterfaces';
-import { ActionType } from './utils/appInterfaces';
+import { IViewBox, EventOrigin } from './utils/boardInterfaces';
+import { EventType } from './utils/appInterfaces';
+import { UserActionType } from './utils/appInterfaces';
 import AppState from './AppState';
+import { IStrokePropOptions, Targets, IStateOptions } from './action/ActionInterfaces';
 
 export class Controller {
   public app: AppController;
 
-  constructor(svgID: string, state: AppState, strokeProps: IStrokeProps) {
-    this.app = new AppController(svgID, state, strokeProps);
+  constructor(svgID: string, state: AppState, strokeProps: IStrokePropOptions[]) {
+    this.app = new AppController(svgID, state);
+    strokeProps.forEach((strokeProp) => {
+      this.app.action.dispatchAction({ target: Targets.STROKE_PROP, options: strokeProp });
+    });
   }
 
   public start(): void {
-    this.app.dispatchAction({ action: ActionType.START });
+    this.app.dispatchUserAction({ action: UserActionType.START });
   }
 
   public pause(): void {
-    this.app.dispatchAction({ action: ActionType.PAUSE });
+    this.app.dispatchUserAction({ action: UserActionType.PAUSE });
   }
 
   public reverse(): void {
-    this.app.dispatchAction({ action: ActionType.REVERSE });
+    this.app.dispatchUserAction({ action: UserActionType.REVERSE });
   }
 
   public restart(): void {
-    this.app.dispatchAction({ action: ActionType.RESTART });
+    this.app.dispatchUserAction({ action: UserActionType.RESTART });
   }
 
   public recordOn(): void {
-    this.app.dispatchAction({ action: ActionType.RECORD_ON });
+    this.app.dispatchUserAction({ action: UserActionType.RECORD_ON });
   }
 
   public recordOff(): void {
-    this.app.dispatchAction({ action: ActionType.RECORD_OFF });
+    this.app.dispatchUserAction({ action: UserActionType.RECORD_OFF });
   }
 
   public clear(): void {
-    this.app.dispatchEvent({ eventType: EventType.CLEAR });
+    this.app.action.dispatchAction({ target: Targets.CLEAR });
   }
 
-  public setState(state: BoardState): void {
-    this.app.dispatchEvent({ eventType: EventType.SET_STATE, state });
+  public stateToggle(flag: boolean): void {
+    this.app.action.dispatchAction({
+      target: Targets.BOARD_STATE,
+      options: { flag, } as IStateOptions,
+    });
   }
 
-  public setStrokeProperties(strokeProps: IStrokeProps): void {
-    this.app.dispatchEvent({ eventType: EventType.SET_STROKE_PROPS, strokeProps });
+  public setStrokeProperties(strokeProps: IStrokePropOptions): void {
+    this.app.action.dispatchAction({ target: Targets.STROKE_PROP, options: strokeProps });
   }
 
   public setViewBox(viewBox: IViewBox): void {
-    this.app.dispatchEvent({ eventType: EventType.SET_VIEWBOX, viewBox });
+    this.app.action.dispatchAction({ target: Targets.VIEW_BOX, options: viewBox });
   }
 }

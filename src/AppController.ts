@@ -1,20 +1,23 @@
-import { IEvent, EventType, IStrokeProps } from './utils/boardInterfaces';
 import { BoardController } from './board/BoardController';
-import { PlayController } from './player/PlayController';
+import { PlayBaseController } from './player/PlayBaseController';
 import { RecordController } from './recorder/RecordController';
-import { EventController } from './event/EventController';
-import { IAction, ActionType, AppStates } from './utils/appInterfaces';
+import { EventListenerController } from './eventListener/EventListenerController';
+import { IUserAction, UserActionType, AppStates } from './utils/appInterfaces';
 import AppState from './AppState';
+import ActionController from './action/ActionController';
+import { Targets, IAction } from './action/ActionInterfaces';
 
 export class AppController {
   public state: AppState;
+  public action: ActionController;
   private board: BoardController;
-  private player: PlayController;
+  private player: PlayBaseController;
   private recorder: RecordController;
-  private event: EventController;
+  // private editor: EditController;
+  private eventListeners: EventListenerController;
   private svg: HTMLElement & SVGElement & SVGSVGElement;
 
-  constructor(svgID: string, state: AppState, strokeProps: IStrokeProps) {
+  constructor(svgID: string, state: AppState) {
     this.state = state;
     this.svg = (document.getElementById(svgID) as any) as HTMLElement & SVGElement & SVGSVGElement;
     if (!this.svg.getScreenCTM()) {
@@ -29,111 +32,58 @@ export class AppController {
       throw new Error('The SVG element requires the view box attribute to be set.');
     }
 
-    const initialState = [
-      { eventType: EventType.SET_STROKE_PROPS, strokeProps },
-      { eventType: EventType.SET_VIEWBOX, viewBox },
+    // These are missing timestamps?
+    this.board = new BoardController(this.svg);
+    this.recorder = new RecordController();
+    this.player = new PlayBaseController(this, this.state.timer, this.state.playState);
+    // this.editor = new EditController(this.svg);
+    this.action = new ActionController(
+      this.state.eventState,
+      this.state.timer,
+      this.board,
+      this.recorder,
+    );
+    this.eventListeners = new EventListenerController(this.svg, this);
+    this.eventListeners.addEventListeners();
+
+    const initialState: IAction[] = [
+      { target: Targets.VIEW_BOX, options: viewBox },
     ];
-    this.board = new BoardController(this.svg, this, initialState);
-    this.recorder = new RecordController(this, initialState);
-    this.player = new PlayController(this, this.state.playState);
-    this.event = new EventController(this.svg, this);
+    initialState.forEach(event => {
+      this.action.dispatchAction(event);
+    });
   }
 
-  public dispatchEvent(event: IEvent): void {
-    console.log('EVENT: ' + event.eventType);
-    switch (this.state.state) {
-      case AppStates.RECORDING:
-        event.time = this.state.timer.getTime();
-        this.board.execute(event);
-        this.recorder.record(event);
-        break;
-      case AppStates.PLAYING:
-        this.board.execute(event);
-        break;
-      default:
-        throw new Error('No case for appState ' + this.state.state);
-    }
-  }
-
-  public dispatchAction(action: IAction): void {
+  public dispatchUserAction(action: IUserAction): void {
     console.log('ACTION: ' + action.action);
     switch (action.action) {
-      case ActionType.RECORD_ON:
-        this.event.addEventListeners();
+      case UserActionType.START:
+        if (this.state.timer.atStart()) {
+          this.player.playFromTime(0);
+        }
         this.state.timer.start();
-        this.state.state = AppStates.RECORDING;
+        this.state.state = AppStates.START;
         break;
-      case ActionType.RECORD_OFF:
-        this.event.removeEventListeners();
+      case UserActionType.PAUSE:
         this.state.timer.pause();
-        this.state.timer.setLengthTime();
+        this.state.state = AppStates.PAUSE;
+        break;
+      case UserActionType.REVERSE:
+        this.state.timer.reverse();
+        this.state.state = AppStates.REVERSE;
+        break;
+      case UserActionType.RESTART:
+        this.state.timer.pause();
+        if (this.state.timer.atEnd()) {
+          this.action.dispatchAction({ target: Targets.END });
+        }
         this.player.setEventLog(this.recorder.getEventLog());
-        this.state.state = AppStates.PLAYING;
-        break;
-      case ActionType.START:
-        this.dispatchAction({ action: ActionType.RECORD_OFF });
-        this.dispatchAction({ action: ActionType.RESTART });
-        this.player.play();
-        break;
-      case ActionType.PAUSE:
-        this.player.pause();
-        break;
-      case ActionType.REVERSE:
-        this.player.reverse();
-        break;
-      case ActionType.RESTART:
-        this.dispatchAction({ action: ActionType.RECORD_OFF });
+        this.state.timer.restart();
         this.player.restart();
+        // this.action.dispatchAction({ target: Targets.RESET }, false);
         break;
       default:
         break;
     }
   }
 }
-
-//   public dispatchAction(action: IAction): void {
-//     console.log('ACTION: ' + action.action);
-//     switch (action.action) {
-//       case ActionType.RECORD_START:
-//         this.state.state = AppStates.RECORDING;
-//         this.state.timer.start();
-//         this.event.executeAction(action);
-//         break;
-//       case ActionType.RECORD_STOP:
-//         this.state.state = AppStates.RECORDING;
-//         this.state.timer.stop();
-//         this.event.executeAction(action);
-//         break;
-//       case ActionType.RECORD_PAUSE:
-//         this.state.state = AppStates.RECORDING;
-//         this.state.timer.pause();
-//         this.event.executeAction(action);
-//         break;
-//       case ActionType.PLAY_START:
-//         if (this.state.state === AppStates.RECORDING || this.state.state === AppStates.UINIT) {
-//           this.player.setEventLog(this.recorder.getEventLog());
-//         }
-//         this.state.state = AppStates.PLAYING;
-//         this.state.timer.start();
-//         this.player.play();
-//         break;
-//       case ActionType.PLAY_STOP:
-//         this.player.stop();
-//         this.state.timer.stop();
-//         this.state.state = AppStates.PLAYING;
-//         break;
-//       case ActionType.PLAY_PAUSE:
-//         this.player.pause();
-//         this.state.timer.pause();
-//         this.state.state = AppStates.PLAYING;
-//         break;
-//       case ActionType.PLAY_REVERSE:
-//         this.player.reverse();
-//         this.state.timer.reverse();
-//         this.state.state = AppStates.PLAYING;
-//         break;
-//       default:
-//         throw new Error('No case for action ' + action.action);
-//     }
-//   }
-// }
