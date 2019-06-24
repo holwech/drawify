@@ -21,6 +21,7 @@ export enum Targets {
   CLEAR,
   VIEW_BOX,
   END,
+  PREDRAW,
 }
 
 export enum StrokeAttributes {

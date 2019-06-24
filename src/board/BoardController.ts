@@ -24,6 +24,7 @@ export class BoardController {
     height: 800,
   };
   private drawers: any = {};
+  private elementBuffer: any[] = [];
   private transform: Transform;
   private board: Board;
 
@@ -62,6 +63,13 @@ export class BoardController {
     }
   }
 
+  public predraw(): void {
+    this.elementBuffer.forEach((el) => {
+      this.svg.appendChild(el);
+    });
+    this.elementBuffer = [];
+  }
+
   private click(options: IClickOptions): void {
     const e = options.event! as MouseEvent;
     e.preventDefault();
@@ -98,7 +106,11 @@ export class BoardController {
         break;
       case PointerActionType.START:
         this.drawers[action.id!] = new SVGDraw(this.svg, action.id!);
-        this.drawers[action.id!].onPointerDown(point, this.strokeProps);
+        const path = this.drawers[action.id!].onPointerDown(point, this.strokeProps);
+        this.svg.appendChild(path);
+        if (action.time === 0) {
+          this.elementBuffer.push(path);
+        }
         break;
       case PointerActionType.STOP:
         this.drawers[action.id!].onPointerUp();

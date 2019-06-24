@@ -14,7 +14,7 @@ export class SVGDraw {
     this.id = String(id);
   }
 
-  public onPointerDown(point: DOMPoint, style: IStrokeProps): void {
+  public onPointerDown(point: DOMPoint, style: IStrokeProps): SVGPathElement {
     this.pathStarted = true;
     this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     this.path.setAttribute('fill', 'none');
@@ -31,7 +31,8 @@ export class SVGDraw {
     this.appendToBuffer(point, style['buffer-size']);
     this.strPath = 'M' + point.x + ' ' + point.y;
     this.path.setAttribute('d', this.strPath);
-    this.svg.appendChild(this.path);
+    // this.svg.appendChild(this.path);
+    return this.path;
   }
 
   public onPointerMove(point: DOMPoint, bufferSize: number): void {
