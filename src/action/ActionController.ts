@@ -61,6 +61,10 @@ export default class ActionController {
           type: this.state.clickTarget,
           event: event.e!,
         };
+        if (this.timer.atEnd()) {
+          this.recorder.filterLogById(action.id!);
+          console.log('filtered')
+        }
         this.commitAction(action);
         break;
       default:

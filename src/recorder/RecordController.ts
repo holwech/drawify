@@ -28,6 +28,10 @@ export class RecordController {
     return this.log;
   }
 
+  public filterLogById(id: number): void {
+    this.log.filter((el) => el.id !== id);
+  }
+
   private flushActionType(action: IAction): void {
     if (action.time! > this.log[this.log.length - 1].time!) {
       this.log.filter((el) => el.target !== Targets.END);
