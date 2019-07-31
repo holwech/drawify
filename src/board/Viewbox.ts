@@ -1,8 +1,8 @@
 export default class Viewbox {
-  private xMod;
-  private xMod;
-  private xMod;
-  private xMod;
+  // private xMod;
+  // private yMod;
+  // private widthMod;
+  // private heightMod;
 
   constructor(
     private xOrg: number,
