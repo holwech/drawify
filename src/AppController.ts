@@ -10,9 +10,9 @@ import { Targets, IAction } from './action/ActionInterfaces';
 export class AppController {
   public state: AppState;
   public action: ActionController;
-  private board: BoardController;
-  private player: PlayBaseController;
-  private recorder: RecordController;
+  public board: BoardController;
+  public player: PlayBaseController;
+  public recorder: RecordController;
   // private editor: EditController;
   private eventListeners: EventListenerController;
   private svg: HTMLElement & SVGElement & SVGSVGElement;
