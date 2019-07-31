@@ -60,6 +60,10 @@ export default class ActionController {
           type: this.state.clickTarget,
           event: event.e!,
         };
+        if (this.timer.atEnd()) {
+          this.recorder.filterLogById(action.id!);
+          console.log('filtered')
+        }
         this.commitAction(action);
         break;
       default:
@@ -72,16 +76,22 @@ export default class ActionController {
   }
 
   public dispatchAction(action: IAction): void {
-    if (action.target === Targets.BOARD_STATE) {
-      this.state.panState = (action.options as IStateOptions).flag!;
-    } else {
-      if (action.target === Targets.END) {
-        this.state.panState = false;
-      }
-      action.id = this.getId();
-      action.time = this.timer.getTime();
-      this.recorder.record(action);
-      this.commitAction(action);
+    switch (action.target) {
+      case Targets.BOARD_STATE:
+        this.state.panState = (action.options as IStateOptions).flag!;
+        break;
+      case Targets.PREDRAW:
+        this.board.predraw();
+        break;
+      default:
+        if (action.target === Targets.END) {
+          this.state.panState = false;
+        }
+        action.id = this.getId();
+        action.time = this.timer.getTime();
+        this.recorder.record(action);
+        this.commitAction(action);
+        break;
     }
   }
 

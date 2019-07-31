@@ -9,7 +9,7 @@ export class Transform {
     this.svg = svgElement;
   }
 
-  public onWheel(point: DOMPoint, viewBox: IViewBox, scale: number): void {
+  public zoom(point: DOMPoint, viewBox: IViewBox, scale: number): void {
     viewBox.x = point.x + (viewBox.x - point.x) * scale;
     viewBox.y = point.y + (viewBox.y - point.y) * scale;
     viewBox.width = viewBox.width * scale;

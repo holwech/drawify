@@ -23,6 +23,12 @@ export class PlayBaseController {
   public restart(): void {
     this.app.action.commitAction({ target: Targets.CLEAR });
     this.state.currIdx = 0;
+    this.state.log.forEach((action) => {
+      if (action.time! === 0) {
+        this.playNext();
+      }
+    });
+    this.app.action.commitAction({ target: Targets.PREDRAW });
   }
 
   public playFromIndex(index: number): void {
@@ -50,11 +56,15 @@ export class PlayBaseController {
     this.playEvents();
   }
 
+  protected playNext(): void {
+    this.app.action.commitAction(this.state.log[this.state.currIdx]);
+    this.state.currIdx++;
+  }
+
   protected playEvents(): void {
     if (this.state.currIdx !== this.state.log.length) {
       setTimeout(() => {
-        this.app.action.commitAction(this.state.log[this.state.currIdx]);
-        this.state.currIdx++;
+        this.playNext();
         this.playEvents();
       }, this.state.log[this.state.currIdx].time! - this.timer.getTime());
     } else {
