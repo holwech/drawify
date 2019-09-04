@@ -67,6 +67,9 @@ export class AppController {
       case UserActionType.PAUSE:
         this.state.timer.pause();
         this.state.state = AppStates.PAUSE;
+        if (this.state.timer.atEnd()) {
+          this.action.dispatchAction({ target: Targets.END });
+        }
         break;
       case UserActionType.REVERSE:
         this.state.timer.reverse();
