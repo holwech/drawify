@@ -12,6 +12,7 @@ export interface IPoint {
 }
 
 export interface IStrokeProps {
+  [key:string]: any;
   'stroke': string;
   'stroke-width': number;
   'buffer-size': number;

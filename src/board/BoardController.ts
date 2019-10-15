@@ -3,7 +3,6 @@ import { Transform } from './Transform';
 import { IStrokeProps, IViewBox, BoardState } from '../utils/boardInterfaces';
 import { Board } from './Board';
 import { IAction, Targets, IDrawOptions, PointerActionType, IStrokePropOptions, IPanOptions, IZoomOptions, StrokeAttributes, IClickOptions, ElementClickACtionType } from '../action/ActionInterfaces';
-import { IEvent } from '../utils/appInterfaces';
 
 const SCALE_FACTOR = 0.05;
 
@@ -142,7 +141,7 @@ export class BoardController {
   }
 
   private setStrokeProperties(strokeProps: IStrokePropOptions): void {
-    this.strokeProps[strokeProps.targetAttr] = strokeProps.value;
+    this.strokeProps[strokeProps.targetAttr as string] = strokeProps.value;
   }
 
   private setViexBox(viexBox: IViewBox): void {
