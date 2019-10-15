@@ -1,5 +1,3 @@
-import { EventOrigin } from '../utils/boardInterfaces';
-import { EventType } from '../utils/appInterfaces';
 import { AppController } from '../AppController';
 import { PlayStates } from './playInterfaces';
 import PlayState from './PlayState';

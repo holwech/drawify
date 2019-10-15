@@ -151,7 +151,7 @@ export class BoardController {
   }
 
   private setStrokeProperties(strokeProps: IStrokePropOptions): void {
-    this.strokeProps[strokeProps.targetAttr] = strokeProps.value;
+    this.strokeProps[strokeProps.targetAttr as string] = strokeProps.value;
   }
 
   private setViexBox(viexBox: IViewBox): void {
