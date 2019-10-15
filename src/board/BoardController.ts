@@ -74,7 +74,7 @@ export class BoardController {
   }
 
   public predraw(): void {
-    this.elementBuffer.forEach((el) => {
+    this.elementBuffer.forEach(el => {
       this.svg.appendChild(el);
     });
     this.elementBuffer = [];

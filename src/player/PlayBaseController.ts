@@ -21,7 +21,7 @@ export class PlayBaseController {
   public restart(): void {
     this.app.action.commitAction({ target: Targets.CLEAR });
     this.state.currIdx = 0;
-    this.state.log.forEach((action) => {
+    this.state.log.forEach(action => {
       if (action.time! === 0) {
         this.playNext();
       }

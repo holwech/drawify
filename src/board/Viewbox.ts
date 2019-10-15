@@ -4,12 +4,5 @@ export default class Viewbox {
   // private widthMod;
   // private heightMod;
 
-  constructor(
-    private xOrg: number,
-    private yOrg: number,
-    private widthOrg: number,
-    private heightOrg: number,
-  ) {
-
-  }
+  constructor(private xOrg: number, private yOrg: number, private widthOrg: number, private heightOrg: number) {}
 }

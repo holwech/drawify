@@ -62,7 +62,7 @@ export default class ActionController {
         };
         if (this.timer.atEnd()) {
           this.recorder.filterLogById(action.id!);
-          console.log('filtered')
+          console.log('filtered');
         }
         this.commitAction(action);
         break;
