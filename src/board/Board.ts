@@ -1,5 +1,9 @@
 export class Board {
-  constructor(private svg: HTMLElement & SVGElement & SVGSVGElement) {}
+  private svg!: HTMLElement & SVGElement & SVGSVGElement;
+
+  public init(svg: HTMLElement & SVGElement & SVGSVGElement) {
+    this.svg = svg;
+  }
 
   public clear(): void {
     let lastChild = this.svg.lastChild;
@@ -7,6 +11,10 @@ export class Board {
       this.svg.removeChild(lastChild);
       lastChild = this.svg.lastChild;
     }
+  }
+
+  public test(): void {
+    console.log(this.svg);
   }
 
   public removeElement(id: number): void {

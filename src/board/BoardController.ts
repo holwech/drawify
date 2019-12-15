@@ -15,9 +15,11 @@ import {
   ElementClickACtionType,
 } from '../action/ActionInterfaces';
 import { IEvent } from '../utils/appInterfaces';
+import { injectable } from 'tsyringe';
 
 const SCALE_FACTOR = 0.05;
 
+@injectable()
 export class BoardController {
   // State properties
   private scale = 1;
@@ -37,12 +39,14 @@ export class BoardController {
   private viewBox: IViewBox = this.viewBoxInit;
   private drawers: any = {};
   private elementBuffer: any[] = [];
-  private transform: Transform;
-  private board: Board;
+  private transform!: Transform;
+  private board!: Board;
+  private svg!: HTMLElement & SVGElement & SVGSVGElement;
 
-  constructor(private svg: HTMLElement & SVGElement & SVGSVGElement) {
-    this.board = new Board(this.svg);
-    this.transform = new Transform(this.svg);
+  public init(svg: HTMLElement & SVGElement & SVGSVGElement) {
+    this.svg = svg;
+    this.board.init(svg);
+    this.transform.init(svg);
   }
 
   public execute(action: IAction): void {

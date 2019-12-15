@@ -1,12 +1,13 @@
 import { IViewBox } from '../utils/boardInterfaces';
+import { injectable } from 'tsyringe';
 
 export class Transform {
-  private svg: SVGElement & SVGElement & SVGSVGElement;
   private isPointerDown = false;
   private pointerOrigin: DOMPoint = new DOMPoint();
+  private svg!: HTMLElement & SVGElement & SVGSVGElement;
 
-  constructor(svgElement: SVGElement & SVGElement & SVGSVGElement) {
-    this.svg = svgElement;
+  public init(svg: HTMLElement & SVGElement & SVGSVGElement) {
+    this.svg = svg;
   }
 
   public zoom(point: DOMPoint, viewBox: IViewBox, scale: number): void {

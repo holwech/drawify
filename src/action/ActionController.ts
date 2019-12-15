@@ -5,7 +5,9 @@ import { EventType, IEvent } from '../utils/appInterfaces';
 import { BoardController } from '../board/BoardController';
 import Timer from '../timer/Timer';
 import { IAction, Targets, PointerActionType, IZoomOptions, IStateOptions } from './ActionInterfaces';
+import { singleton } from 'tsyringe';
 
+@singleton()
 export default class ActionController {
   constructor(
     private state: EventState,

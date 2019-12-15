@@ -1,7 +1,9 @@
 import { EventOrigin } from '../utils/boardInterfaces';
 import { EventType } from '../utils/appInterfaces';
 import { AppController } from '../AppController';
+import { injectable } from 'tsyringe';
 
+@injectable()
 export class EventListenerController {
   // Event functions
   private isClick = true;
@@ -10,7 +12,13 @@ export class EventListenerController {
   private fnOnPointerMove: (e: MouseEvent) => void;
   private fnOnPointerUp: (e: MouseEvent) => void;
 
-  constructor(private svg: HTMLElement & SVGElement & SVGSVGElement, private app: AppController) {
+  private svg!: HTMLElement & SVGElement & SVGSVGElement;
+
+  public init(svg: HTMLElement & SVGElement & SVGSVGElement) {
+    this.svg = svg;
+  }
+
+  constructor(private app: AppController) {
     this.fnOnWheel = this.onWheel;
     this.fnOnPointerDown = this.onPointerDown;
     this.fnOnPointerMove = this.onPointerMove;

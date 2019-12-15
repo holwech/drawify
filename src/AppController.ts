@@ -6,18 +6,22 @@ import { IUserAction, UserActionType, AppStates } from './utils/appInterfaces';
 import AppState from './AppState';
 import ActionController from './action/ActionController';
 import { Targets, IAction } from './action/ActionInterfaces';
+import { injectable } from 'tsyringe';
 
+@injectable()
 export class AppController {
-  public state: AppState;
-  public action: ActionController;
-  public board: BoardController;
-  public player: PlayBaseController;
-  public recorder: RecordController;
-  // private editor: EditController;
-  private eventListeners: EventListenerController;
-  private svg: HTMLElement & SVGElement & SVGSVGElement;
+  private svg!: HTMLElement & SVGElement & SVGSVGElement;
 
-  constructor(svgID: string, state: AppState) {
+  constructor(
+    private board: BoardController,
+    private action: ActionController,
+    private player: PlayBaseController,
+    private recorder: RecordController,
+    private eventListeners: EventListenerController,
+    private state: AppState) {
+  }
+
+  public init(svgID: string, state: AppState) {
     this.state = state;
     this.svg = (document.getElementById(svgID) as any) as HTMLElement & SVGElement & SVGSVGElement;
     if (!this.svg.getScreenCTM()) {
@@ -33,12 +37,8 @@ export class AppController {
     }
 
     // These are missing timestamps?
-    this.board = new BoardController(this.svg);
-    this.recorder = new RecordController();
-    this.player = new PlayBaseController(this, this.state.timer, this.state.playState);
-    // this.editor = new EditController(this.svg);
-    this.action = new ActionController(this.state.eventState, this.state.timer, this.board, this.recorder);
-    this.eventListeners = new EventListenerController(this.svg, this);
+    this.board.init(this.svg);
+    this.eventListeners.init(this.svg);
     this.eventListeners.addEventListeners();
 
     const initialState: IAction[] = [{ target: Targets.VIEW_BOX, options: viewBox }];

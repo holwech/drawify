@@ -4,9 +4,13 @@ import PlayState from './PlayState';
 import { UserActionType } from '../utils/appInterfaces';
 import Timer from '../timer/Timer';
 import { IAction, Targets } from '../action/ActionInterfaces';
+import { injectable } from 'tsyringe';
+import ActionController from '../action/ActionController';
 
+@injectable()
 export class PlayBaseController {
-  constructor(protected app: AppController, protected timer: Timer, protected state: PlayState) {
+  // TODO: Change protected to private?
+  constructor(protected app: AppController, private action: ActionController, protected timer: Timer, protected state: PlayState) {
     this.state.log = [];
   }
 
@@ -19,14 +23,14 @@ export class PlayBaseController {
   }
 
   public restart(): void {
-    this.app.action.commitAction({ target: Targets.CLEAR });
+    this.action.commitAction({ target: Targets.CLEAR });
     this.state.currIdx = 0;
     this.state.log.forEach((action) => {
       if (action.time! === 0) {
         this.playNext();
       }
     });
-    this.app.action.commitAction({ target: Targets.PREDRAW });
+    this.action.commitAction({ target: Targets.PREDRAW });
   }
 
   public playFromIndex(index: number): void {
@@ -39,7 +43,7 @@ export class PlayBaseController {
     if (log.length === 0) {
       return;
     }
-    this.app.action.commitAction({ target: Targets.CLEAR });
+    this.action.commitAction({ target: Targets.CLEAR });
     for (let i = 0; i <= log.length; i++) {
       if (log[i].time! >= time) {
         if (i === 0) {
@@ -55,7 +59,7 @@ export class PlayBaseController {
   }
 
   protected playNext(): void {
-    this.app.action.commitAction(this.state.log[this.state.currIdx]);
+    this.action.commitAction(this.state.log[this.state.currIdx]);
     this.state.currIdx++;
   }
 
@@ -75,7 +79,7 @@ export class PlayBaseController {
     if (this.state.currIdx >= 0) {
       setTimeout(() => {
         if (this.state.state === PlayStates.REVERSE) {
-          this.app.action.commitAction(this.state.log[this.state.currIdx]);
+          this.action.commitAction(this.state.log[this.state.currIdx]);
           this.state.currIdx--;
           this.reversePlayEvents();
         }
