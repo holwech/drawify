@@ -1,4 +1,4 @@
-import { IStrokeProps, ElementType } from '../utils/boardInterfaces';
+import { IStrokeProps, ElementType } from '../interfaces/boardInterfaces';
 
 export class SVGDraw {
   private path: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');

@@ -1,16 +1,20 @@
-import { AppController } from '../AppController';
-import { PlayStates } from './playInterfaces';
-import PlayState from './PlayState';
-import { UserActionType } from '../utils/appInterfaces';
+import { AppController } from './AppController';
+import { PlayStates } from '../Interfaces/PlayInterfaces';
+import PlayState from '../State/PlayState';
+import { UserActionType } from '../Interfaces/appInterfaces';
 import Timer from '../timer/Timer';
-import { IAction, Targets } from '../action/ActionInterfaces';
+import { IAction, Targets } from '../Interfaces/ActionInterfaces';
 import { injectable } from 'tsyringe';
-import ActionController from '../action/ActionController';
+import ActionController from './ActionController';
 
 @injectable()
 export class PlayBaseController {
   // TODO: Change protected to private?
-  constructor(protected app: AppController, private action: ActionController, protected timer: Timer, protected state: PlayState) {
+  constructor(
+    protected app: AppController,
+    private action: ActionController,
+    protected timer: Timer,
+    protected state: PlayState) {
     this.state.log = [];
   }
 

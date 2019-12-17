@@ -1,10 +1,10 @@
-import EventState from './ActionState';
-import { RecordController } from '../recorder/RecordController';
-import { EventOrigin } from '../utils/boardInterfaces';
-import { EventType, IEvent } from '../utils/appInterfaces';
-import { BoardController } from '../board/BoardController';
+import EventState from '../State/ActionState';
+import { RecordController } from './RecordController';
+import { EventOrigin } from '../Interfaces/boardInterfaces';
+import { EventType, IEvent } from '../Interfaces/appInterfaces';
+import { BoardController } from './BoardController';
 import Timer from '../timer/Timer';
-import { IAction, Targets, PointerActionType, IZoomOptions, IStateOptions } from './ActionInterfaces';
+import { IAction, Targets, PointerActionType, IZoomOptions, IStateOptions } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
 
 @singleton()

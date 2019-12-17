@@ -1,4 +1,4 @@
-import { IAction, Targets } from '../action/ActionInterfaces';
+import { IAction, Targets } from '../Interfaces/ActionInterfaces';
 
 export class RecordController {
   private log: IAction[] = [];

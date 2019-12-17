@@ -1,5 +1,5 @@
-import { IStrokePropOptions } from '../action/ActionInterfaces';
-import { IViewBox } from './boardInterfaces';
+import { IStrokePropOptions } from '../Interfaces/ActionInterfaces';
+import { IViewBox } from '../Interfaces/boardInterfaces';
 
 export enum AppStates {
   START = 'START',
@@ -46,3 +46,5 @@ export interface IEvent {
   state?: boolean;
   viewBox?: IViewBox;
 }
+
+export type SVG = HTMLElement & SVGElement & SVGSVGElement;

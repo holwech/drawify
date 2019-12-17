@@ -1,7 +1,7 @@
-import { SVGDraw } from './SVGDraw';
-import { Transform } from './Transform';
-import { IStrokeProps, IViewBox, BoardState } from '../utils/boardInterfaces';
-import { Board } from './Board';
+import { SVGDraw } from '../board/SVGDraw';
+import { Transform } from '../board/Transform';
+import { IStrokeProps, IViewBox, BoardState } from '../Interfaces/boardInterfaces';
+import { Board } from '../board/Board';
 import {
   IAction,
   Targets,
@@ -10,16 +10,13 @@ import {
   IStrokePropOptions,
   IPanOptions,
   IZoomOptions,
-  StrokeAttributes,
   IClickOptions,
   ElementClickACtionType,
-} from '../action/ActionInterfaces';
-import { IEvent } from '../utils/appInterfaces';
-import { injectable } from 'tsyringe';
+} from '../Interfaces/ActionInterfaces';
+import { SVG } from '../Interfaces/appInterfaces';
 
 const SCALE_FACTOR = 0.05;
 
-@injectable()
 export class BoardController {
   // State properties
   private scale = 1;
@@ -41,9 +38,9 @@ export class BoardController {
   private elementBuffer: any[] = [];
   private transform!: Transform;
   private board!: Board;
-  private svg!: HTMLElement & SVGElement & SVGSVGElement;
+  private svg!: SVG;
 
-  public init(svg: HTMLElement & SVGElement & SVGSVGElement) {
+  public init(svg: SVG) {
     this.svg = svg;
     this.board.init(svg);
     this.transform.init(svg);

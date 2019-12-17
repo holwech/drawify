@@ -1,5 +1,4 @@
-import { IViewBox } from '../utils/boardInterfaces';
-import { injectable } from 'tsyringe';
+import { IViewBox } from '../Interfaces/BoardInterfaces';
 
 export class Transform {
   private isPointerDown = false;

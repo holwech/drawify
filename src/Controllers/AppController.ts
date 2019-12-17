@@ -1,16 +1,16 @@
-import { BoardController } from './board/BoardController';
-import { PlayBaseController } from './player/PlayBaseController';
-import { RecordController } from './recorder/RecordController';
-import { EventListenerController } from './eventListener/EventListenerController';
-import { IUserAction, UserActionType, AppStates } from './utils/appInterfaces';
-import AppState from './AppState';
-import ActionController from './action/ActionController';
-import { Targets, IAction } from './action/ActionInterfaces';
+import { BoardController } from './BoardController';
+import { PlayBaseController } from './PlayBaseController';
+import { RecordController } from './RecordController';
+import { EventListenerController } from './EventListenerController';
+import { IUserAction, UserActionType, AppStates, SVG } from '../Interfaces/appInterfaces';
+import AppState from '../State/AppState';
+import ActionController from './ActionController';
+import { Targets, IAction } from '../Interfaces/ActionInterfaces';
 import { injectable } from 'tsyringe';
 
 @injectable()
 export class AppController {
-  private svg!: HTMLElement & SVGElement & SVGSVGElement;
+  private svg!: SVG;
 
   constructor(
     private board: BoardController,
@@ -21,9 +21,8 @@ export class AppController {
     private state: AppState) {
   }
 
-  public init(svgID: string, state: AppState) {
-    this.state = state;
-    this.svg = (document.getElementById(svgID) as any) as HTMLElement & SVGElement & SVGSVGElement;
+  public init(svgID: string) {
+    this.svg = (document.getElementById(svgID) as any) as SVG;
     if (!this.svg.getScreenCTM()) {
       throw new Error('getScreenCTM is not defined');
     }

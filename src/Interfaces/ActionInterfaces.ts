@@ -1,4 +1,4 @@
-import { IViewBox } from '../utils/boardInterfaces';
+import { IViewBox } from '../Interfaces/BoardInterfaces';
 
 export enum PointerActionType {
   START,

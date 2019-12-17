@@ -1,4 +1,4 @@
-import { IEvent } from './appInterfaces';
+import { IEvent } from '../Interfaces/AppInterfaces';
 
 export interface IRecordPoint {
   time: number;

@@ -1,18 +1,21 @@
 import { AppController } from './AppController';
-import { IViewBox, EventOrigin } from './utils/boardInterfaces';
-import { UserActionType } from './utils/appInterfaces';
-import AppState from './AppState';
-import { IStrokePropOptions, Targets, IStateOptions } from './action/ActionInterfaces';
+import { IViewBox, EventOrigin } from '../Interfaces/BoardInterfaces';
+import { UserActionType } from '../Interfaces/appInterfaces';
+import AppState from '../State/AppState';
+import { IStrokePropOptions, Targets, IStateOptions } from '../Interfaces/ActionInterfaces';
 import { injectable } from 'tsyringe';
-import ActionController from './action/ActionController';
+import ActionController from './ActionController';
 
 @injectable()
 export class Controller {
-  constructor(private app: AppController, private action: ActionController, private state: AppState) {
-  }
+  constructor(
+    private app: AppController,
+    private action: ActionController,
+    private state: AppState
+  ) {}
 
   public init(svgID: string, strokeProps: IStrokePropOptions[]) {
-    this.app.init(svgID, this.state);
+    this.app.init(svgID);
     strokeProps.forEach(strokeProp => {
       this.action.dispatchAction({ target: Targets.STROKE_PROP, options: strokeProp });
     });
