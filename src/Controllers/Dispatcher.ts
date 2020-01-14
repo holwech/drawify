@@ -6,15 +6,20 @@ import { BoardController } from './BoardController';
 import Timer from '../timer/Timer';
 import { IAction, Targets, PointerActionType, IZoomOptions, IStateOptions } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
+import { PlayBaseController } from './PlayBaseController';
 
 @singleton()
-export default class ActionController {
+export default class Dispatcher {
   constructor(
     private state: EventState,
     private timer: Timer,
     private board: BoardController,
     private recorder: RecordController,
-  ) {}
+    player: PlayBaseController
+  ) {
+    // Required so that there is not circular references
+    player.Subscribe(this.dispatchAction);
+  }
 
   public dispatchEvent(event: IEvent, origin: EventOrigin): void {
     // console.log('EVENT: ' + EventType[event.eventType]);

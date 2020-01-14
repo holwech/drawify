@@ -4,9 +4,9 @@ import { RecordController } from './RecordController';
 import { EventListenerController } from './EventListenerController';
 import { IUserAction, UserActionType, AppStates, SVG } from '../Interfaces/appInterfaces';
 import AppState from '../State/AppState';
-import ActionController from './ActionController';
 import { Targets, IAction } from '../Interfaces/ActionInterfaces';
 import { injectable } from 'tsyringe';
+import Dispatcher from './Dispatcher';
 
 @injectable()
 export class AppController {
@@ -14,11 +14,13 @@ export class AppController {
 
   constructor(
     private board: BoardController,
-    private action: ActionController,
     private player: PlayBaseController,
     private recorder: RecordController,
     private eventListeners: EventListenerController,
-    private state: AppState) {
+    private state: AppState,
+    private dispatcher: Dispatcher
+  ) {
+
   }
 
   public init(svgID: string) {
@@ -42,7 +44,7 @@ export class AppController {
 
     const initialState: IAction[] = [{ target: Targets.VIEW_BOX, options: viewBox }];
     initialState.forEach(event => {
-      this.action.dispatchAction(event);
+      this.dispatcher.dispatchAction(event);
     });
   }
 
@@ -60,7 +62,7 @@ export class AppController {
         this.state.timer.pause();
         this.state.state = AppStates.PAUSE;
         if (this.state.timer.atEnd()) {
-          this.action.dispatchAction({ target: Targets.END });
+          this.dispatcher.dispatchAction({ target: Targets.END });
         }
         break;
       case UserActionType.REVERSE:
@@ -70,7 +72,7 @@ export class AppController {
       case UserActionType.RESTART:
         this.state.timer.pause();
         if (this.state.timer.atEnd()) {
-          this.action.dispatchAction({ target: Targets.END });
+          this.dispatcher.dispatchAction({ target: Targets.END });
         }
         this.player.setEventLog(this.recorder.getEventLog());
         this.state.timer.restart();

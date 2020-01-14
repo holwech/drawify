@@ -1,21 +1,25 @@
-import { AppController } from './AppController';
 import { PlayStates } from '../Interfaces/PlayInterfaces';
 import PlayState from '../State/PlayState';
-import { UserActionType } from '../Interfaces/appInterfaces';
+import { UserActionType, IUserAction } from '../Interfaces/appInterfaces';
 import Timer from '../timer/Timer';
 import { IAction, Targets } from '../Interfaces/ActionInterfaces';
 import { injectable } from 'tsyringe';
-import ActionController from './ActionController';
 
 @injectable()
 export class PlayBaseController {
-  // TODO: Change protected to private?
-  constructor(
-    protected app: AppController,
-    private action: ActionController,
-    protected timer: Timer,
-    protected state: PlayState) {
+  private commitAction!: (action: IAction) => void;
+  private dispatchUserAction!: (action: IUserAction) => void;
+
+  constructor(private timer: Timer, private state: PlayState) {
     this.state.log = [];
+  }
+
+  public Subscribe(callback: (action: IAction) => void) {
+    this.commitAction = callback;
+  }
+
+  public SubscribeUserAction(callback: (action: IUserAction) => void) {
+    this.dispatchUserAction = callback;
   }
 
   public setEventLog(log: IAction[]): void {
@@ -27,14 +31,14 @@ export class PlayBaseController {
   }
 
   public restart(): void {
-    this.action.commitAction({ target: Targets.CLEAR });
+    this.commitAction({ target: Targets.CLEAR });
     this.state.currIdx = 0;
     this.state.log.forEach((action) => {
       if (action.time! === 0) {
         this.playNext();
       }
     });
-    this.action.commitAction({ target: Targets.PREDRAW });
+    this.commitAction({ target: Targets.PREDRAW });
   }
 
   public playFromIndex(index: number): void {
@@ -47,7 +51,7 @@ export class PlayBaseController {
     if (log.length === 0) {
       return;
     }
-    this.action.commitAction({ target: Targets.CLEAR });
+    this.commitAction({ target: Targets.CLEAR });
     for (let i = 0; i <= log.length; i++) {
       if (log[i].time! >= time) {
         if (i === 0) {
@@ -63,7 +67,7 @@ export class PlayBaseController {
   }
 
   protected playNext(): void {
-    this.action.commitAction(this.state.log[this.state.currIdx]);
+    this.commitAction(this.state.log[this.state.currIdx]);
     this.state.currIdx++;
   }
 
@@ -74,7 +78,7 @@ export class PlayBaseController {
         this.playEvents();
       }, this.state.log[this.state.currIdx].time! - this.timer.getTime());
     } else {
-      this.app.dispatchUserAction({ action: UserActionType.PAUSE });
+      this.dispatchUserAction({ action: UserActionType.PAUSE });
     }
   }
 
@@ -83,13 +87,13 @@ export class PlayBaseController {
     if (this.state.currIdx >= 0) {
       setTimeout(() => {
         if (this.state.state === PlayStates.REVERSE) {
-          this.action.commitAction(this.state.log[this.state.currIdx]);
+          this.commitAction(this.state.log[this.state.currIdx]);
           this.state.currIdx--;
           this.reversePlayEvents();
         }
       }, this.timer.getTime() - this.state.log[this.state.currIdx].time!);
     } else {
-      this.app.dispatchUserAction({ action: UserActionType.PAUSE });
+      this.dispatchUserAction({ action: UserActionType.PAUSE });
     }
   }
 }

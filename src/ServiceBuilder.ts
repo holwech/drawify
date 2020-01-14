@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 import { container } from 'tsyringe';
-import AppState from './State/AppState';
+import Service from './Controllers/Service';
 
 export default class ServiceBuilder {
-    public build() {
-        let instance = container.resolve<AppState>(AppState);
-        return instance;
-    }
+  public build() {
+    let instance = container.resolve<Service>(Service);
+    return instance;
+  }
 }

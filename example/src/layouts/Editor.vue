@@ -112,7 +112,7 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import SettingsDialog from '../components/SettingsDialog.vue';
 import HelpDialog from '../components/HelpDialog.vue';
-import { Controller } from 'draw-ts';
+import Controller from 'draw-ts';
 import AppState from 'draw-ts/lib/AppState';
 import { BoardState, IStrokeProps } from 'draw-ts/lib/utils/boardInterfaces';
 import { AppStates } from 'draw-ts/lib/utils/appInterfaces';

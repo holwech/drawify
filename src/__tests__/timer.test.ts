@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import Timer from '../timer/Timer';
 import { TimerStates } from '../timer/timerInterfaces';
 
