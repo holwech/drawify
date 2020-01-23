@@ -1,9 +1,7 @@
-import { EventOrigin } from '../Interfaces/BoardInterfaces';
-import { EventType, SVG, IEvent } from '../Interfaces/appInterfaces';
-import { AppController } from './AppController';
+import { EventType, SVG } from '../Interfaces/AppInterfaces';
 import { injectable } from 'tsyringe';
-import ActionController from './Dispatcher';
 import Dispatcher from './Dispatcher';
+import { EventOrigin } from '../Interfaces/BoardInterfaces';
 
 @injectable()
 export class EventListenerController {

@@ -1,7 +1,7 @@
-import EventState from '../State/ActionState';
+import DispatcherState from '../State/DispatcherState';
 import { RecordController } from './RecordController';
-import { EventOrigin } from '../Interfaces/boardInterfaces';
-import { EventType, IEvent } from '../Interfaces/appInterfaces';
+import { EventOrigin } from '../Interfaces/BoardInterfaces';
+import { EventType, IEvent } from '../Interfaces/AppInterfaces';
 import { BoardController } from './BoardController';
 import Timer from '../timer/Timer';
 import { IAction, Targets, PointerActionType, IZoomOptions, IStateOptions } from '../Interfaces/ActionInterfaces';
@@ -11,7 +11,7 @@ import { PlayBaseController } from './PlayBaseController';
 @singleton()
 export default class Dispatcher {
   constructor(
-    private state: EventState,
+    private state: DispatcherState,
     private timer: Timer,
     private board: BoardController,
     private recorder: RecordController,

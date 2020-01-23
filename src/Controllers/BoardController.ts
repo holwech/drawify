@@ -1,6 +1,6 @@
 import { SVGDraw } from '../board/SVGDraw';
 import { Transform } from '../board/Transform';
-import { IStrokeProps, IViewBox, BoardState } from '../Interfaces/boardInterfaces';
+import { IStrokeProps, IViewBox, BoardState } from '../Interfaces/BoardInterfaces';
 import { Board } from '../board/Board';
 import {
   IAction,

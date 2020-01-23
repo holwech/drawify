@@ -1,6 +1,6 @@
 import { PlayStates } from '../Interfaces/PlayInterfaces';
 import PlayState from '../State/PlayState';
-import { UserActionType, IUserAction } from '../Interfaces/appInterfaces';
+import { UserActionType, IUserAction } from '../Interfaces/AppInterfaces';
 import Timer from '../timer/Timer';
 import { IAction, Targets } from '../Interfaces/ActionInterfaces';
 import { injectable } from 'tsyringe';

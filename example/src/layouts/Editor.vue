@@ -4,13 +4,13 @@
       <Toolbar :show-collapse-button="true">
         <v-btn text
           >{{
-            state.timer.timeMonitor.minutes +
+            timer.timeMonitor.minutes +
               ':' +
-              state.timer.timeMonitor.seconds +
+              timer.timeMonitor.seconds +
               ' / ' +
-              state.timer.timeMonitor.lengthMinutes +
+              timer.timeMonitor.lengthMinutes +
               ':' +
-              state.timer.timeMonitor.lengthSeconds
+              timer.timeMonitor.lengthSeconds
           }}
         </v-btn>
         <v-btn depressed tile text @click="controller.restart()">
@@ -110,15 +110,15 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import SettingsDialog from '../components/SettingsDialog.vue';
 import HelpDialog from '../components/HelpDialog.vue';
-import Controller from 'draw-ts';
-import AppState from 'draw-ts/lib/AppState';
-import { BoardState, IStrokeProps } from 'draw-ts/lib/utils/boardInterfaces';
-import { AppStates } from 'draw-ts/lib/utils/appInterfaces';
-import { PlayStates } from 'draw-ts/lib/player/playInterfaces';
+import SettingsDialog from '../components/SettingsDialog.vue';
+import ServiceBuilder from 'draw-ts/lib/ServiceBuilder';
+import { StrokeAttributes } from 'draw-ts/lib/Interfaces/ActionInterfaces';
+import { AppStates } from 'draw-ts/lib/Interfaces/AppInterfaces';
 import Toolbar from '../layouts/Toolbar.vue';
-import { StrokeAttributes } from 'draw-ts/lib/action/ActionInterfaces';
+import Service from 'draw-ts/lib/Controllers/Service';
+import AppState from 'draw-ts/lib/State/AppState';
+import Timer from 'draw-ts/lib/timer/Timer';
 
 @Component({
   components: {
@@ -130,9 +130,10 @@ import { StrokeAttributes } from 'draw-ts/lib/action/ActionInterfaces';
 export default class Editor extends Vue {
   @Prop(String) readonly id?: string;
 
-  private state = new AppState();
   private drawer = false;
-  private controller?: Controller = undefined;
+  private controller?: Service = undefined;
+  private state = new AppState();
+  private timer = new Timer();
   private dialog = false;
   private recordColor = 'grey';
   private recording = false;
@@ -194,8 +195,12 @@ export default class Editor extends Vue {
     }
   }
 
+  private created(): void {
+    this.controller = new ServiceBuilder().build(this.state, this.timer);
+  }
+
   private mounted(): void {
-    this.controller = new Controller('svg', this.state, [
+    this.controller!.init('svg', [
       { targetAttr: StrokeAttributes.COLOR, value: this.color.value },
       { targetAttr: StrokeAttributes.WIDTH, value: this.width.value },
       {
