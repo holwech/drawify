@@ -118,7 +118,7 @@ import { AppStates } from 'draw-ts/lib/Interfaces/AppInterfaces';
 import Toolbar from '../layouts/Toolbar.vue';
 import Service from 'draw-ts/lib/Controllers/Service';
 import AppState from 'draw-ts/lib/State/AppState';
-import Timer from 'draw-ts/lib/timer/Timer';
+import Timer from 'draw-ts/lib/Timer/Timer';
 
 @Component({
   components: {

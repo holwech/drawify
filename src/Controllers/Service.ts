@@ -2,10 +2,10 @@ import { AppController } from './AppController';
 import { IViewBox } from '../Interfaces/BoardInterfaces';
 import { UserActionType } from '../Interfaces/AppInterfaces';
 import { IStrokePropOptions, Targets, IStateOptions } from '../Interfaces/ActionInterfaces';
-import { injectable } from 'tsyringe';
+import { singleton } from 'tsyringe';
 import Dispatcher from './Dispatcher';
 
-@injectable()
+@singleton()
 export default class Service {
   constructor(
     private app: AppController,

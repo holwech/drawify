@@ -1,11 +1,11 @@
 import { PlayStates } from '../Interfaces/PlayInterfaces';
 import PlayState from '../State/PlayState';
 import { UserActionType, IUserAction } from '../Interfaces/AppInterfaces';
-import Timer from '../timer/Timer';
+import Timer from '../Timer/Timer';
 import { IAction, Targets } from '../Interfaces/ActionInterfaces';
-import { injectable } from 'tsyringe';
+import { singleton } from 'tsyringe';
 
-@injectable()
+@singleton()
 export class PlayBaseController {
   private commitAction!: (action: IAction) => void;
   private dispatchUserAction!: (action: IUserAction) => void;
@@ -16,6 +16,7 @@ export class PlayBaseController {
 
   public Subscribe(callback: (action: IAction) => void) {
     this.commitAction = callback;
+    console.log(this.commitAction);
   }
 
   public SubscribeUserAction(callback: (action: IUserAction) => void) {
@@ -31,6 +32,7 @@ export class PlayBaseController {
   }
 
   public restart(): void {
+    console.log(this.commitAction);
     this.commitAction({ target: Targets.CLEAR });
     this.state.currIdx = 0;
     this.state.log.forEach((action) => {

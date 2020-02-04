@@ -1,7 +1,7 @@
-import { SVGDraw } from '../board/SVGDraw';
-import { Transform } from '../board/Transform';
+import { SVGDraw } from '../Board/SVGDraw';
+import { Transform } from '../Board/Transform';
 import { IStrokeProps, IViewBox, BoardState } from '../Interfaces/BoardInterfaces';
-import { Board } from '../board/Board';
+import { Board } from '../Board/Board';
 import {
   IAction,
   Targets,
@@ -14,9 +14,11 @@ import {
   ElementClickACtionType,
 } from '../Interfaces/ActionInterfaces';
 import { SVG } from '../Interfaces/appInterfaces';
+import { singleton } from 'tsyringe';
 
 const SCALE_FACTOR = 0.05;
 
+@singleton()
 export class BoardController {
   // State properties
   private scale = 1;
@@ -36,9 +38,11 @@ export class BoardController {
   private viewBox: IViewBox = this.viewBoxInit;
   private drawers: any = {};
   private elementBuffer: any[] = [];
-  private transform!: Transform;
-  private board!: Board;
   private svg!: SVG;
+
+  constructor(private board: Board, private transform: Transform) {
+
+  }
 
   public init(svg: SVG) {
     this.svg = svg;

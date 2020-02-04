@@ -3,7 +3,7 @@ import { RecordController } from './RecordController';
 import { EventOrigin } from '../Interfaces/BoardInterfaces';
 import { EventType, IEvent } from '../Interfaces/AppInterfaces';
 import { BoardController } from './BoardController';
-import Timer from '../timer/Timer';
+import Timer from '../Timer/Timer';
 import { IAction, Targets, PointerActionType, IZoomOptions, IStateOptions } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
 import { PlayBaseController } from './PlayBaseController';
@@ -17,18 +17,18 @@ export default class Dispatcher {
     private recorder: RecordController,
     player: PlayBaseController
   ) {
-    // Required so that there is not circular references
-    player.Subscribe(this.dispatchAction);
+    // Required so that there are no circular references
+    player.Subscribe(this.dispatchAction.bind(this));
   }
 
   public dispatchEvent(event: IEvent, origin: EventOrigin): void {
-    // console.log('EVENT: ' + EventType[event.eventType]);
     const action: IAction = {
       id: this.getIdForEvent(event),
       time: this.timer.getTime(),
       target: Targets.DRAW,
       options: undefined,
     };
+    console.log('EVENT: ' + EventType[event.eventType], action.id);
     switch (event.eventType) {
       case EventType.POINTER_MOVE:
         action.target = this.state.panState ? Targets.PAN : Targets.DRAW;
@@ -103,7 +103,7 @@ export default class Dispatcher {
   }
 
   public commitAction(action: IAction): void {
-    console.log('Action: ' + Targets[action.target]);
+    console.log('ACTION: ' + Targets[action.target]);
     this.board.execute(action);
   }
 

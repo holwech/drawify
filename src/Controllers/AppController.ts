@@ -5,11 +5,11 @@ import { EventListenerController } from './EventListenerController';
 import { IUserAction, UserActionType, AppStates, SVG } from '../Interfaces/AppInterfaces';
 import AppState from '../State/AppState';
 import { Targets, IAction } from '../Interfaces/ActionInterfaces';
-import { injectable } from 'tsyringe';
+import { singleton } from 'tsyringe';
 import Dispatcher from './Dispatcher';
-import Timer from '../timer/Timer';
+import Timer from '../Timer/Timer';
 
-@injectable()
+@singleton()
 export class AppController {
   private svg!: SVG;
 
@@ -26,7 +26,6 @@ export class AppController {
   }
 
   public init(svgID: string) {
-    console.log(svgID);
     this.svg = (document.getElementById(svgID) as any) as SVG;
     if (!this.svg.getScreenCTM()) {
       throw new Error('getScreenCTM is not defined');
@@ -44,6 +43,7 @@ export class AppController {
     this.board.init(this.svg);
     this.eventListeners.init(this.svg);
     this.eventListeners.addEventListeners();
+    this.player.SubscribeUserAction(this.dispatchUserAction.bind(this));
 
     const initialState: IAction[] = [{ target: Targets.VIEW_BOX, options: viewBox }];
     initialState.forEach(event => {
@@ -52,7 +52,7 @@ export class AppController {
   }
 
   public dispatchUserAction(action: IUserAction): void {
-    console.log('ACTION: ' + action.action);
+    console.log('USER ACTION: ' + action.action);
     switch (action.action) {
       case UserActionType.START:
         if (this.timer.atStart()) {

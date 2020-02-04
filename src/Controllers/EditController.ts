@@ -1,3 +1,6 @@
+import { singleton } from "tsyringe";
+
+@singleton()
 export default class EditController {
   private svg!: HTMLElement & SVGElement & SVGSVGElement;
 

@@ -1,5 +1,7 @@
 import { IAction, Targets } from '../Interfaces/ActionInterfaces';
+import { singleton } from 'tsyringe';
 
+@singleton()
 export class RecordController {
   private log: IAction[] = [];
   private buffer: IAction[] = [];

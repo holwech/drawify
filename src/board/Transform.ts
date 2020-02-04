@@ -1,5 +1,7 @@
 import { IViewBox } from '../Interfaces/BoardInterfaces';
+import { singleton } from 'tsyringe';
 
+@singleton()
 export class Transform {
   private isPointerDown = false;
   private pointerOrigin: DOMPoint = new DOMPoint();

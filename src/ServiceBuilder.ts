@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { container } from 'tsyringe';
 import Service from './Controllers/Service';
 import AppState from './State/AppState';
-import Timer from './timer/Timer';
+import Timer from './Timer/Timer';
 
 export default class ServiceBuilder {
   public build(appState?: AppState, timer?: Timer) {

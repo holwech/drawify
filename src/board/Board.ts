@@ -1,3 +1,6 @@
+import { singleton } from "tsyringe";
+
+@singleton()
 export class Board {
   private svg!: HTMLElement & SVGElement & SVGSVGElement;
 

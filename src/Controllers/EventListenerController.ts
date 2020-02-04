@@ -1,9 +1,9 @@
 import { EventType, SVG } from '../Interfaces/AppInterfaces';
-import { injectable } from 'tsyringe';
+import { singleton } from 'tsyringe';
 import Dispatcher from './Dispatcher';
 import { EventOrigin } from '../Interfaces/BoardInterfaces';
 
-@injectable()
+@singleton()
 export class EventListenerController {
   // Event functions
   private isClick = true;
