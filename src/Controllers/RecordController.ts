@@ -36,7 +36,7 @@ export class RecordController {
 
   private flushActionType(action: IAction): void {
     if (action.time! > this.log[this.log.length - 1].time!) {
-      this.log.filter(el => el.target !== Targets.END);
+      this.log = this.log.filter(el => el.target !== Targets.END);
     }
   }
 }
