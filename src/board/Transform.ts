@@ -1,12 +1,14 @@
-import { IViewBox } from '../utils/boardInterfaces';
+import { IViewBox } from '../Interfaces/BoardInterfaces';
+import { singleton } from 'tsyringe';
 
+@singleton()
 export class Transform {
-  private svg: SVGElement & SVGElement & SVGSVGElement;
   private isPointerDown = false;
-  private pointerOrigin: DOMPoint = new DOMPoint();
+  private pointerOrigin?: DOMPoint;
+  private svg!: HTMLElement & SVGElement & SVGSVGElement;
 
-  constructor(svgElement: SVGElement & SVGElement & SVGSVGElement) {
-    this.svg = svgElement;
+  public init(svg: HTMLElement & SVGElement & SVGSVGElement) {
+    this.svg = svg;
   }
 
   public zoom(point: DOMPoint, viewBox: IViewBox, scale: number): void {
@@ -31,8 +33,8 @@ export class Transform {
     if (!this.isPointerDown) {
       return;
     }
-    viewBox.x = viewBox.x - (point.x - this.pointerOrigin.x);
-    viewBox.y = viewBox.y - (point.y - this.pointerOrigin.y);
+    viewBox.x = viewBox.x - (point.x - this.pointerOrigin!.x);
+    viewBox.y = viewBox.y - (point.y - this.pointerOrigin!.y);
     const viewBoxString = `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`;
     this.svg.setAttribute('viewBox', viewBoxString);
   }

@@ -1,4 +1,5 @@
-import { TimerStates } from './timerInterfaces';
+import { TimerStates } from './TimerInterfaces';
+import { singleton } from 'tsyringe';
 
 interface ITimeMonitor {
   minutes: string;
@@ -7,6 +8,7 @@ interface ITimeMonitor {
   lengthSeconds: string;
 }
 
+@singleton()
 export default class Timer {
   public timeMonitor: ITimeMonitor = {
     minutes: '00',

@@ -1,5 +1,6 @@
-import Timer from '../timer/Timer';
-import { TimerStates } from '../timer/timerInterfaces';
+import 'reflect-metadata';
+import Timer from '../Timer/Timer';
+import { TimerStates } from '../Timer/TimerInterfaces';
 
 describe('Core functions', () => {
   it('should return state', () => {
