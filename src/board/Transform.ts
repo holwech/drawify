@@ -1,14 +1,15 @@
 import { IViewBox } from '../Interfaces/BoardInterfaces';
 import { singleton } from 'tsyringe';
+import { SVG } from '../Interfaces/AppInterfaces';
 
 @singleton()
 export class Transform {
   private isPointerDown = false;
   private pointerOrigin?: DOMPoint;
-  private svg!: HTMLElement & SVGElement & SVGSVGElement;
+  private svg!: SVG;
 
-  public init(svg: HTMLElement & SVGElement & SVGSVGElement) {
-    this.svg = svg;
+  constructor(svgElement: HTMLElement) {
+    this.svg = svgElement as any as SVG
   }
 
   public zoom(point: DOMPoint, viewBox: IViewBox, scale: number): void {

@@ -40,14 +40,8 @@ export class BoardController {
   private elementBuffer: any[] = [];
   private svg!: SVG;
 
-  constructor(private board: Board, private transform: Transform) {
-
-  }
-
-  public init(svg: SVG) {
-    this.svg = svg;
-    this.board.init(svg);
-    this.transform.init(svg);
+  constructor(private board: Board, private transform: Transform, svgElement: HTMLElement) {
+    this.svg = svgElement as any as SVG
   }
 
   public execute(action: IAction): void {

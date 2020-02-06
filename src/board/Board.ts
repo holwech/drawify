@@ -1,11 +1,12 @@
 import { singleton } from "tsyringe";
+import { SVG } from "../Interfaces/AppInterfaces";
 
 @singleton()
 export class Board {
-  private svg!: HTMLElement & SVGElement & SVGSVGElement;
+  private svg!: SVG;
 
-  public init(svg: HTMLElement & SVGElement & SVGSVGElement) {
-    this.svg = svg;
+  constructor(svgElement: HTMLElement) {
+    this.svg = svgElement as any as SVG;
   }
 
   public clear(): void {

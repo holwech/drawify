@@ -12,8 +12,7 @@ export default class Service {
     private dispatcher: Dispatcher,
   ) {}
 
-  public init(svgID: string, strokeProps: IStrokePropOptions[]) {
-    this.app.init(svgID);
+  public init(strokeProps: IStrokePropOptions[]) {
     strokeProps.forEach(strokeProp => {
       this.dispatcher.dispatchAction({ target: Targets.STROKE_PROP, options: strokeProp });
     });

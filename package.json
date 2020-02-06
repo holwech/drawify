@@ -17,7 +17,7 @@
     "tslint": "^5.15.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-webpack-plugin": "^2.0.4",
-    "typescript": "^3.4.2"
+    "typescript": "^3.7.5"
   },
   "scripts": {
     "build": "tsc",

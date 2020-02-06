@@ -11,7 +11,6 @@ import Timer from '../Timer/Timer';
 
 @singleton()
 export class AppController {
-  private svg!: SVG;
 
   constructor(
     private board: BoardController,
@@ -20,16 +19,9 @@ export class AppController {
     private eventListeners: EventListenerController,
     private state: AppState,
     private dispatcher: Dispatcher,
-    private timer: Timer
+    private timer: Timer,
+    private svg: HTMLElement
   ) {
-
-  }
-
-  public init(svgID: string) {
-    this.svg = (document.getElementById(svgID) as any) as SVG;
-    if (!this.svg.getScreenCTM()) {
-      throw new Error('getScreenCTM is not defined');
-    }
     let viewBox = { x: 0, y: 0, width: 1200, height: 800 };
     const viewboxElem = this.svg.getAttributeNS(null, 'viewBox');
     if (viewboxElem !== null) {
@@ -40,8 +32,6 @@ export class AppController {
     }
 
     // These are missing timestamps?
-    this.board.init(this.svg);
-    this.eventListeners.init(this.svg);
     this.eventListeners.addEventListeners();
     this.player.SubscribeUserAction(this.dispatchUserAction.bind(this));
 

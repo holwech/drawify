@@ -195,12 +195,9 @@ export default class Editor extends Vue {
     }
   }
 
-  private created(): void {
-    this.controller = new ServiceBuilder().build(this.state, this.timer);
-  }
-
   private mounted(): void {
-    this.controller!.init('svg', [
+    this.controller = new ServiceBuilder().build(document.getElementById('svg')!, this.state, this.timer);
+    this.controller!.init([
       { targetAttr: StrokeAttributes.COLOR, value: this.color.value },
       { targetAttr: StrokeAttributes.WIDTH, value: this.width.value },
       {

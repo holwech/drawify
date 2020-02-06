@@ -13,17 +13,13 @@ export class EventListenerController {
   private fnOnPointerUp: (e: MouseEvent) => void;
   private svg!: SVG;
 
-  constructor(private dispatcher: Dispatcher) {
+  constructor(private dispatcher: Dispatcher, svgElement: HTMLElement) {
     this.fnOnWheel = this.onWheel;
     this.fnOnPointerDown = this.onPointerDown;
     this.fnOnPointerMove = this.onPointerMove;
     this.fnOnPointerUp = this.onPointerUp;
+    this.svg = svgElement as any as SVG
   }
-
-  public init(svg: SVG) {
-    this.svg = svg;
-  }
-
 
   public addEventListeners(): void {
     this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
