@@ -4,7 +4,7 @@ import { singleton } from 'tsyringe';
 @singleton()
 export class Transform {
   private isPointerDown = false;
-  private pointerOrigin: DOMPoint = new DOMPoint();
+  private pointerOrigin?: DOMPoint;
   private svg!: HTMLElement & SVGElement & SVGSVGElement;
 
   public init(svg: HTMLElement & SVGElement & SVGSVGElement) {
@@ -33,8 +33,8 @@ export class Transform {
     if (!this.isPointerDown) {
       return;
     }
-    viewBox.x = viewBox.x - (point.x - this.pointerOrigin.x);
-    viewBox.y = viewBox.y - (point.y - this.pointerOrigin.y);
+    viewBox.x = viewBox.x - (point.x - this.pointerOrigin!.x);
+    viewBox.y = viewBox.y - (point.y - this.pointerOrigin!.y);
     const viewBoxString = `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`;
     this.svg.setAttribute('viewBox', viewBoxString);
   }

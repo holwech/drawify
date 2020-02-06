@@ -18,7 +18,7 @@ export default class Dispatcher {
     player: PlayBaseController
   ) {
     // Required so that there are no circular references
-    player.Subscribe(this.dispatchAction.bind(this));
+    player.Subscribe(this.commitAction.bind(this));
   }
 
   public dispatchEvent(event: IEvent, origin: EventOrigin): void {

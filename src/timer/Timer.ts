@@ -1,4 +1,4 @@
-import { TimerStates } from './timerInterfaces';
+import { TimerStates } from './TimerInterfaces';
 import { singleton } from 'tsyringe';
 
 interface ITimeMonitor {

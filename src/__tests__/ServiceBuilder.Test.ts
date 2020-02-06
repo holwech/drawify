@@ -2,6 +2,7 @@ import ServiceBuilder from '../ServiceBuilder';
 
 describe('Core functions', () => {
   it('should return state', () => {
-    let instance = new ServiceBuilder().build();
+    let service = new ServiceBuilder();
+    let instance = service.build();
   });
 });

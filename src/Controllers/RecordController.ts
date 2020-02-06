@@ -13,8 +13,8 @@ export class RecordController {
       this.buffer.forEach(el => {
         this.log.push(el);
       });
-      this.log = this.log.sort((before: IAction, after: IAction) => {
-        return Number(before.time! > after.time!);
+      this.log.sort((before: IAction, after: IAction) => {
+        return before.time! - after.time!;
       });
       this.flushActionType(action);
       this.log.push(action);
