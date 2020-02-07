@@ -7,20 +7,11 @@ import { singleton } from 'tsyringe';
 
 @singleton()
 export class PlayBaseController {
-  private commitAction!: (action: IAction) => void;
-  private dispatchUserAction!: (action: IUserAction) => void;
+  public commitAction!: (action: IAction) => void;
+  public dispatchUserAction!: (action: IUserAction) => void;
 
   constructor(private timer: Timer, private state: PlayState) {
     this.state.log = [];
-  }
-
-  public Subscribe(callback: (action: IAction) => void) {
-    this.commitAction = callback;
-    console.log(this.commitAction);
-  }
-
-  public SubscribeUserAction(callback: (action: IUserAction) => void) {
-    this.dispatchUserAction = callback;
   }
 
   public setEventLog(log: IAction[]): void {

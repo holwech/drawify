@@ -6,7 +6,6 @@ import { BoardController } from './BoardController';
 import Timer from '../Timer/Timer';
 import { IAction, Targets, PointerActionType, IZoomOptions, IStateOptions } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
-import { PlayBaseController } from './PlayBaseController';
 
 @singleton()
 export default class Dispatcher {
@@ -15,11 +14,7 @@ export default class Dispatcher {
     private timer: Timer,
     private board: BoardController,
     private recorder: RecordController,
-    player: PlayBaseController
-  ) {
-    // Required so that there are no circular references
-    player.Subscribe(this.commitAction.bind(this));
-  }
+  ) { }
 
   public dispatchEvent(event: IEvent, origin: EventOrigin): void {
     const action: IAction = {
@@ -28,7 +23,7 @@ export default class Dispatcher {
       target: Targets.DRAW,
       options: undefined,
     };
-    console.log('EVENT: ' + EventType[event.eventType], action.id);
+    //console.log('EVENT: ' + EventType[event.eventType], action.id);
     switch (event.eventType) {
       case EventType.POINTER_MOVE:
         action.target = this.state.panState ? Targets.PAN : Targets.DRAW;
@@ -36,7 +31,6 @@ export default class Dispatcher {
           type: PointerActionType.MOVE,
           event: event.e!,
         };
-        this.commitAction(action);
         break;
       case EventType.POINTER_DOWN:
         action.target = this.state.panState ? Targets.PAN : Targets.DRAW;
@@ -44,7 +38,6 @@ export default class Dispatcher {
           type: PointerActionType.START,
           event: event.e!,
         };
-        this.commitAction(action);
         break;
       case EventType.POINTER_UP:
         action.target = this.state.panState ? Targets.PAN : Targets.DRAW;
@@ -52,14 +45,12 @@ export default class Dispatcher {
           type: PointerActionType.STOP,
           event: event.e!,
         };
-        this.commitAction(action);
         break;
       case EventType.ONWHEEL:
         action.target = Targets.ZOOM;
         action.options = {
           event: event.e!,
         } as IZoomOptions;
-        this.commitAction(action);
         break;
       case EventType.CLICK:
         action.target = Targets.CLICK;
@@ -71,15 +62,14 @@ export default class Dispatcher {
           this.recorder.filterLogById(action.id!);
           console.log('filtered')
         }
-        this.commitAction(action);
         break;
       default:
         console.warn(
           'Event type ' + EventType[event.eventType] + ' does not have a case in get Action in Event Controller',
         );
     }
+    this.commitAction(action);
     this.recorder.record(action);
-    // this.playBoard.commitAction(this.getAction(event));
   }
 
   public dispatchAction(action: IAction): void {
@@ -106,18 +96,6 @@ export default class Dispatcher {
     console.log('ACTION: ' + Targets[action.target]);
     this.board.execute(action);
   }
-
-  // private prepareUserEvent(event: IEvent): void {
-  //   event.time = this.timer.getTime();
-  //   event.id = this.getId(event);
-  //   switch (event.eventType) {
-  //     case EventType.CLICK:
-  //       event.isEdit = true;
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
 
   private getIdForEvent(event: IEvent): number {
     if (event.eventType !== EventType.POINTER_MOVE && event.eventType !== EventType.POINTER_UP) {

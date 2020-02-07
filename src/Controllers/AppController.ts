@@ -33,7 +33,8 @@ export class AppController {
 
     // These are missing timestamps?
     this.eventListeners.addEventListeners();
-    this.player.SubscribeUserAction(this.dispatchUserAction.bind(this));
+    this.player.commitAction = this.dispatcher.commitAction.bind(this.dispatcher);
+    this.player.dispatchUserAction = this.dispatchUserAction.bind(this);
 
     const initialState: IAction[] = [{ target: Targets.VIEW_BOX, options: viewBox }];
     initialState.forEach(event => {
