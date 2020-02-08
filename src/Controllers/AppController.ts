@@ -52,10 +52,12 @@ export class AppController {
         break;
       case UserActionType.PAUSE:
         this.timer.pause();
+        this.player.pause();
         this.state.state = AppStates.PAUSE;
         break;
       case UserActionType.STOP:
         this.timer.pause();
+        this.player.pause();
         this.state.state = AppStates.PAUSE;
         if (this.timer.atEnd()) {
           this.dispatcher.dispatchAction({ target: Targets.END });

@@ -8,6 +8,8 @@ import Dispatcher from './Dispatcher';
 
 @singleton()
 export class PlayBaseController {
+  private continuePlaying: boolean = false;
+
   public dispatchUserAction!: (action: IUserAction) => void;
 
   constructor(private timer: Timer, private state: PlayState, private dispatcher: Dispatcher) {
@@ -23,10 +25,16 @@ export class PlayBaseController {
   }
   
   public play(): void {
+    this.continuePlaying = true;
     this.playEvents();
   }
 
+  public pause(): void {
+    this.continuePlaying = false;
+  }
+
   public restart(): void {
+    this.continuePlaying = false;
     console.log(this.dispatcher.commitAction);
     this.dispatcher.commitAction({ target: Targets.CLEAR });
     this.state.currIdx = 0;
@@ -44,11 +52,13 @@ export class PlayBaseController {
   }
 
   public playFromIndex(index: number): void {
+    this.continuePlaying = true;
     this.state.currIdx = index;
     this.playEvents();
   }
 
   public playFromTime(time: number): void {
+    this.continuePlaying = true;
     const log = this.state.log;
     if (log.length === 0) {
       return;
@@ -60,7 +70,7 @@ export class PlayBaseController {
         break;
       }
     }
-    console.log('index is ' + this.state.currIdx + ' of ' + log.length);
+    //console.log('index is ' + this.state.currIdx + ' of ' + log.length);
     this.playEvents();
   }
 
@@ -72,20 +82,11 @@ export class PlayBaseController {
   protected playEvents(): void {
     if (this.state.currIdx < this.state.log.length) {
       setTimeout(() => {
-        this.playNext();
-        this.playEvents();
+        if (this.continuePlaying) {
+          this.playNext();
+          this.playEvents();
+        }
       }, this.state.log[this.state.currIdx].time! - this.timer.getTime());
     }
-  }
-
-  protected reversePlayEvents(): void {
-    console.log('playing reverse');
-    setTimeout(() => {
-      if (this.state.state === PlayStates.REVERSE) {
-        this.dispatcher.commitAction(this.state.log[this.state.currIdx]);
-        this.state.currIdx--;
-        this.reversePlayEvents();
-      }
-    }, this.timer.getTime() - this.state.log[this.state.currIdx].time!);
   }
 }
