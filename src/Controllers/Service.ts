@@ -4,6 +4,7 @@ import { UserActionType } from '../Interfaces/AppInterfaces';
 import { IStrokePropOptions, Targets, IStateOptions } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
 import Dispatcher from './Dispatcher';
+import { ModifierTarget } from '../Domain/Modifier';
 
 @singleton()
 export default class Service {
@@ -47,10 +48,7 @@ export default class Service {
   }
 
   public stateToggle(flag: boolean): void {
-    this.dispatcher.dispatchAction({
-      target: Targets.BOARD_STATE,
-      options: { flag } as IStateOptions,
-    });
+    this.dispatcher.dispatchModifier({ target: flag ? ModifierTarget.PAN_ON : ModifierTarget.PAN_OFF });
   }
 
   public setStrokeProperties(strokeProps: IStrokePropOptions): void {

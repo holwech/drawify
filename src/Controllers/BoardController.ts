@@ -15,6 +15,7 @@ import {
 } from '../Interfaces/ActionInterfaces';
 import { SVG } from '../Interfaces/appInterfaces';
 import { singleton } from 'tsyringe';
+import Dispatcher from './Dispatcher';
 
 const SCALE_FACTOR = 0.05;
 
@@ -40,8 +41,9 @@ export class BoardController {
   private elementBuffer: any[] = [];
   private svg!: SVG;
 
-  constructor(private board: Board, private transform: Transform, svgElement: HTMLElement) {
+  constructor(dispatcher: Dispatcher, private board: Board, private transform: Transform, svgElement: HTMLElement) {
     this.svg = svgElement as any as SVG
+    dispatcher.onAction(this.execute.bind(this));
   }
 
   public execute(action: IAction): void {
@@ -57,6 +59,9 @@ export class BoardController {
         break;
       case Targets.CLICK:
         this.click(action.options as IClickOptions);
+        break;
+      case Targets.PREDRAW:
+        this.predraw();
         break;
       case Targets.STROKE_PROP:
         this.setStrokeProperties(action.options as IStrokePropOptions);

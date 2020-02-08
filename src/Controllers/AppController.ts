@@ -1,13 +1,13 @@
-import { BoardController } from './BoardController';
 import { PlayBaseController } from './PlayBaseController';
 import { RecordController } from './RecordController';
 import { EventListenerController } from './EventListenerController';
-import { IUserAction, UserActionType, AppStates, SVG } from '../Interfaces/AppInterfaces';
+import { IUserAction, UserActionType, AppStates } from '../Interfaces/AppInterfaces';
 import AppState from '../State/AppState';
 import { Targets, IAction } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
 import Dispatcher from './Dispatcher';
 import Timer from '../Timer/Timer';
+import { BoardController } from './BoardController';
 
 @singleton()
 export class AppController {
@@ -32,8 +32,8 @@ export class AppController {
     }
 
     // These are missing timestamps?
+    this.dispatcher.onAction(this.actionHandler.bind(this));
     this.eventListeners.addEventListeners();
-    this.player.commitAction = this.dispatcher.commitAction.bind(this.dispatcher);
     this.player.dispatchUserAction = this.dispatchUserAction.bind(this);
 
     const initialState: IAction[] = [{ target: Targets.VIEW_BOX, options: viewBox }];
@@ -46,32 +46,41 @@ export class AppController {
     console.log('USER ACTION: ' + action.action);
     switch (action.action) {
       case UserActionType.START:
-        if (this.timer.atStart()) {
-          this.player.playFromTime(0);
-        }
         this.timer.start();
+        this.player.play();
         this.state.state = AppStates.START;
         break;
       case UserActionType.PAUSE:
         this.timer.pause();
         this.state.state = AppStates.PAUSE;
+        break;
+      case UserActionType.STOP:
+        this.timer.pause();
+        this.state.state = AppStates.PAUSE;
         if (this.timer.atEnd()) {
           this.dispatcher.dispatchAction({ target: Targets.END });
         }
+        this.player.setEventLog(this.recorder.getEventLog());
         break;
       case UserActionType.REVERSE:
         this.timer.reverse();
         this.state.state = AppStates.REVERSE;
         break;
       case UserActionType.RESTART:
-        this.timer.pause();
-        if (this.timer.atEnd()) {
-          this.dispatcher.dispatchAction({ target: Targets.END });
-        }
-        this.player.setEventLog(this.recorder.getEventLog());
+        this.dispatchUserAction({ action: UserActionType.STOP })
         this.timer.restart();
         this.player.restart();
-        // this.action.dispatchAction({ target: Targets.RESET }, false);
+        this.player.predraw();
+        break;
+      default:
+        break;
+    }
+  }
+
+  public actionHandler(action: IAction): void {
+    switch (action.target) {
+      case Targets.END:
+        this.dispatchUserAction({ action: UserActionType.PAUSE });
         break;
       default:
         break;

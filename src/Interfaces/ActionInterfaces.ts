@@ -15,7 +15,6 @@ export enum Targets {
   PAN,
   ZOOM,
   CLICK,
-  BOARD_STATE,
   STROKE_PROP,
   BOARD_PROP,
   CLEAR,

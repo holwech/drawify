@@ -12,6 +12,7 @@ export enum UserActionType {
   RECORD_OFF = 'RECORD_OFF',
   START = 'START',
   PAUSE = 'PAUSE',
+  STOP = 'STOP',
   REVERSE = 'REVERSE',
   RESET = 'RESET',
   RESTART = 'RESTART',

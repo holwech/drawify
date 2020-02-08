@@ -2,19 +2,23 @@ import DispatcherState from '../State/DispatcherState';
 import { RecordController } from './RecordController';
 import { EventOrigin } from '../Interfaces/BoardInterfaces';
 import { EventType, IEvent } from '../Interfaces/AppInterfaces';
-import { BoardController } from './BoardController';
 import Timer from '../Timer/Timer';
-import { IAction, Targets, PointerActionType, IZoomOptions, IStateOptions } from '../Interfaces/ActionInterfaces';
+import { IAction, Targets, PointerActionType, IZoomOptions } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
+import { IModifier, ModifierTarget } from '../Domain/Modifier';
 
 @singleton()
 export default class Dispatcher {
+  private actionListeners: { (action: IAction): void }[] = [];
   constructor(
     private state: DispatcherState,
     private timer: Timer,
-    private board: BoardController,
     private recorder: RecordController,
   ) { }
+
+  public onAction(actionListener: (action: IAction) => void): void {
+    this.actionListeners.push(actionListener);
+  }
 
   public dispatchEvent(event: IEvent, origin: EventOrigin): void {
     const action: IAction = {
@@ -72,29 +76,32 @@ export default class Dispatcher {
     this.recorder.record(action);
   }
 
-  public dispatchAction(action: IAction): void {
-    switch (action.target) {
-      case Targets.BOARD_STATE:
-        this.state.panState = (action.options as IStateOptions).flag!;
+  public dispatchModifier(modifier: IModifier) {
+    switch (modifier.target) {
+      case ModifierTarget.PAN_ON:
+        this.state.panState = true;
         break;
-      case Targets.PREDRAW:
-        this.board.predraw();
+      case ModifierTarget.PAN_OFF:
+        this.state.panState = false;
         break;
       default:
-        if (action.target === Targets.END) {
-          this.state.panState = false;
-        }
-        action.id = this.getId();
-        action.time = this.timer.getTime();
-        this.recorder.record(action);
-        this.commitAction(action);
         break;
     }
   }
 
+  public dispatchAction(action: IAction): void {
+    if (action.target === Targets.END) {
+      this.state.panState = false;
+    }
+    action.id = this.getId();
+    action.time = this.timer.getTime();
+    this.recorder.record(action);
+    this.commitAction(action);
+  }
+
   public commitAction(action: IAction): void {
     console.log('ACTION: ' + Targets[action.target]);
-    this.board.execute(action);
+    this.actionListeners.forEach((listener) => listener(action));
   }
 
   private getIdForEvent(event: IEvent): number {
