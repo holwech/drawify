@@ -1,4 +1,4 @@
-name: CI
+name: Node.js CI
 
 on: [push]
 
@@ -9,9 +9,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Install packages
-      run: npm install
-    - name: Test
-      run: npm test
-    - name: Lint
-      run: npm lint
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: npm install
+    - run: npm run build --if-present
+    - run: npm test
