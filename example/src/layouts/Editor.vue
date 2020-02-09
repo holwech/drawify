@@ -109,13 +109,13 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import HelpDialog from '../components/HelpDialog.vue';
 import SettingsDialog from '../components/SettingsDialog.vue';
-import ServiceBuilder from 'draw-ts/lib/ServiceBuilder';
-import { StrokeAttributes } from 'draw-ts/lib/Interfaces/ActionInterfaces';
-import { AppStates } from 'draw-ts/lib/Interfaces/AppInterfaces';
+import ServiceBuilder from 'drawify/lib/ServiceBuilder';
+import { StrokeAttributes } from 'drawify/lib/Interfaces/ActionInterfaces';
+import { AppStates } from 'drawify/lib/Interfaces/AppInterfaces';
 import Toolbar from '../layouts/Toolbar.vue';
-import Service from 'draw-ts/lib/Controllers/Service';
-import AppState from 'draw-ts/lib/State/AppState';
-import Timer from 'draw-ts/lib/Timer/Timer';
+import Service from 'drawify/lib/Controllers/Service';
+import AppState from 'drawify/lib/State/AppState';
+import Timer from 'drawify/lib/Timer/Timer';
 
 @Component({
   components: {
