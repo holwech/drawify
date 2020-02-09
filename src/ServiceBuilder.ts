@@ -10,12 +10,12 @@ export default class ServiceBuilder {
     if (!(svgElement as SVG).getScreenCTM()) {
       throw new Error('getScreenCTM is not defined');
     }
-    container.register<HTMLElement>(HTMLElement, { useValue: svgElement })
+    container.register<HTMLElement>(HTMLElement, { useValue: svgElement });
     if (appState != undefined) {
-      container.register<AppState>(AppState, { useValue: appState});
+      container.register<AppState>(AppState, { useValue: appState });
     }
     if (timer != undefined) {
-      container.register<Timer>(Timer, { useValue: timer});
+      container.register<Timer>(Timer, { useValue: timer });
     }
     return container.resolve<Service>(Service);
   }

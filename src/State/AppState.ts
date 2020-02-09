@@ -9,6 +9,6 @@ export default class AppState {
 
   constructor(
     public playState: PlayState = new PlayState(),
-    public dispatcherState: DispatcherState = new DispatcherState()
+    public dispatcherState: DispatcherState = new DispatcherState(),
   ) {}
 }

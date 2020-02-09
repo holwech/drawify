@@ -31,7 +31,7 @@ export class RecordController {
   }
 
   public filterLogById(id: number): void {
-    this.log.filter((el) => el.id !== id);
+    this.log.filter(el => el.id !== id);
   }
 
   private flushActionType(action: IAction): void {

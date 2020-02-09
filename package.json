@@ -1,6 +1,6 @@
 {
   "name": "drawify",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A drawing board with recording functionality",
   "main": "lib/ServiceBuilder.js",
   "dependencies": {

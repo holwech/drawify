@@ -1,2 +1,1 @@
-export let createAction = (event: Event) => {
-}
+export let createAction = (event: Event) => {};

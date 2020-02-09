@@ -1,4 +1,4 @@
-# Draw-ts example
+# drawify example
 ## How to run
 1. Run `npm install`
 2. Run `npm run serve` and go to `localhost:8080` to view the application
@@ -8,4 +8,4 @@
 `npm pack`
 
 - Install local package
-`npm install --save "../draw-ts-*.tgz"` (replace * with package version)
+`npm install --save "../drawify-*.tgz"` (replace * with package version)

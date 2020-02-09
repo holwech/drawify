@@ -14,7 +14,7 @@ export default class DispatcherState {
     fill: undefined,
   };
   public scale: number = 1;
-  public scaledStrokeWidth: number = this.strokeProps["stroke-width"];
+  public scaledStrokeWidth: number = this.strokeProps['stroke-width'];
 
   constructor() {}
 }
