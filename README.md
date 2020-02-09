@@ -1,4 +1,4 @@
-# draw
+# Drawify
 
 A stateful drawing tool with zero dependencies.
 
