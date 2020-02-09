@@ -8,10 +8,7 @@ import { ModifierTarget } from '../Domain/Modifier';
 
 @singleton()
 export default class Service {
-  constructor(
-    private app: AppController,
-    private dispatcher: Dispatcher,
-  ) {}
+  constructor(private app: AppController, private dispatcher: Dispatcher) {}
 
   public init(strokeProps: IStrokePropOptions[]) {
     strokeProps.forEach(strokeProp => {

@@ -18,7 +18,7 @@ export class EventListenerController {
     this.fnOnPointerDown = this.onPointerDown;
     this.fnOnPointerMove = this.onPointerMove;
     this.fnOnPointerUp = this.onPointerUp;
-    this.svg = svgElement as any as SVG
+    this.svg = (svgElement as any) as SVG;
   }
 
   public addEventListeners(): void {

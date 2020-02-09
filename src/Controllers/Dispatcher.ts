@@ -10,11 +10,7 @@ import { IModifier, ModifierTarget } from '../Domain/Modifier';
 @singleton()
 export default class Dispatcher {
   private actionListeners: { (action: IAction): void }[] = [];
-  constructor(
-    private state: DispatcherState,
-    private timer: Timer,
-    private recorder: RecordController,
-  ) { }
+  constructor(private state: DispatcherState, private timer: Timer, private recorder: RecordController) {}
 
   public onAction(actionListener: (action: IAction) => void): void {
     this.actionListeners.push(actionListener);
@@ -64,7 +60,7 @@ export default class Dispatcher {
         };
         if (this.timer.atEnd()) {
           this.recorder.filterLogById(action.id!);
-          console.log('filtered')
+          console.log('filtered');
         }
         break;
       default:
@@ -101,7 +97,7 @@ export default class Dispatcher {
 
   public commitAction(action: IAction): void {
     console.log('ACTION: ' + Targets[action.target]);
-    this.actionListeners.forEach((listener) => listener(action));
+    this.actionListeners.forEach(listener => listener(action));
   }
 
   private getIdForEvent(event: IEvent): number {

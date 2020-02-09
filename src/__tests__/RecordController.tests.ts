@@ -1,7 +1,6 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 import { RecordController } from '../Controllers/RecordController';
 import { Targets } from '../Interfaces/ActionInterfaces';
-
 
 describe('Recording actions', () => {
   it('should return state', () => {
@@ -12,7 +11,7 @@ describe('Recording actions', () => {
       { id: 3, time: 3, target: Targets.DRAW },
       { id: 4, time: 4, target: Targets.END },
     ];
-    action.forEach((action) => record.record(action));
+    action.forEach(action => record.record(action));
     expect(record.getEventLog().length).toBe(4);
   });
 
@@ -25,7 +24,7 @@ describe('Recording actions', () => {
       { id: 4, time: 4, target: Targets.DRAW },
       { id: 5, time: 5, target: Targets.END },
     ];
-    action.forEach((action) => record.record(action));
+    action.forEach(action => record.record(action));
     expect(record.getEventLog().length).toBe(4);
   });
 
@@ -37,7 +36,7 @@ describe('Recording actions', () => {
       { id: 2, time: 2, target: Targets.DRAW },
       { id: 4, time: 4, target: Targets.END },
     ];
-    action.forEach((action) => record.record(action));
+    action.forEach(action => record.record(action));
     expect(record.getEventLog()[2].id).toBe(3);
   });
 });

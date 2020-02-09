@@ -1,4 +1,4 @@
-import { IStrokeProps, ElementType } from "../Interfaces/BoardInterfaces";
+import { IStrokeProps, ElementType } from '../Interfaces/BoardInterfaces';
 
 export class SVGDraw {
   private path: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -6,7 +6,7 @@ export class SVGDraw {
   private strPath!: string;
   private buffer: DOMPoint[] = [];
   private id: string;
-  private strokeProps: IStrokeProps
+  private strokeProps: IStrokeProps;
 
   constructor(id: number, strokeProps: IStrokeProps, private scale: number) {
     this.id = String(id);

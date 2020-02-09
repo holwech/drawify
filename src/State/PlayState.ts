@@ -7,6 +7,5 @@ export default class PlayState {
   public log: IAction[] = [];
   public currIdx = 0;
   public state = PlayStates.PAUSE;
-  constructor(
-  ) {}
+  constructor() {}
 }

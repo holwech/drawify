@@ -21,7 +21,7 @@ export class AppController {
     private state: AppState,
     private dispatcher: Dispatcher,
     private timer: Timer,
-    private svg: HTMLElement
+    private svg: HTMLElement,
   ) {
     this.dispatcher.onAction(this.actionHandler.bind(this));
     this.eventListeners.addEventListeners();
@@ -56,7 +56,7 @@ export class AppController {
         this.state.state = AppStates.REVERSE;
         break;
       case UserActionType.RESTART:
-        this.dispatchUserAction({ action: UserActionType.STOP })
+        this.dispatchUserAction({ action: UserActionType.STOP });
         this.timer.restart();
         this.player.restart();
         this.player.predraw();

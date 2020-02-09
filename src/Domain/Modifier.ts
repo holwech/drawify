@@ -1,7 +1,8 @@
 export interface IModifier {
-  target: ModifierTarget
+  target: ModifierTarget;
 }
 
 export enum ModifierTarget {
-  PAN_ON, PAN_OFF
+  PAN_ON,
+  PAN_OFF,
 }

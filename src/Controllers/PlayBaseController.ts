@@ -23,7 +23,7 @@ export class PlayBaseController {
   public deleteEventLog(): void {
     this.state.log = [];
   }
-  
+
   public play(): void {
     this.continuePlaying = true;
     this.playEvents();

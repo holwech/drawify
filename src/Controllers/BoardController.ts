@@ -41,9 +41,12 @@ export class BoardController {
   private svg!: SVG;
 
   constructor(dispatcher: Dispatcher, private board: Board, private transform: Transform, svgElement: HTMLElement) {
-    this.svg = svgElement as any as SVG
+    this.svg = (svgElement as any) as SVG;
     dispatcher.onAction(this.execute.bind(this));
-    this.svg.setAttribute('viewBox', `${this.viewBoxInit.x} ${this.viewBoxInit.y} ${this.viewBoxInit.width} ${this.viewBoxInit.height}`)
+    this.svg.setAttribute(
+      'viewBox',
+      `${this.viewBoxInit.x} ${this.viewBoxInit.y} ${this.viewBoxInit.width} ${this.viewBoxInit.height}`,
+    );
     this.svg.setAttribute('perserveAspectRatio', 'xMinYMin meet');
   }
 
@@ -79,7 +82,7 @@ export class BoardController {
   }
 
   public predraw(): void {
-    this.elementBuffer.forEach((el) => {
+    this.elementBuffer.forEach(el => {
       this.svg.appendChild(el);
     });
     this.elementBuffer = [];
@@ -156,7 +159,7 @@ export class BoardController {
 
   private setStrokeProperties(strokeProps: IStrokePropOptions): void {
     this.strokeProps[strokeProps.targetAttr as string] = strokeProps.value;
-    this.drawers.forEach((x) => x.setStrokeProps(this.strokeProps));
+    this.drawers.forEach(x => x.setStrokeProps(this.strokeProps));
   }
 
   private setViexBox(viexBox: IViewBox): void {

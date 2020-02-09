@@ -9,7 +9,7 @@ export class Transform {
   private svg!: SVG;
 
   constructor(svgElement: HTMLElement) {
-    this.svg = svgElement as any as SVG
+    this.svg = (svgElement as any) as SVG;
   }
 
   public zoom(point: DOMPoint, viewBox: IViewBox, modifier: number): void {
