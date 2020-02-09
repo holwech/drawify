@@ -1,6 +1,6 @@
 # Drawify
 
-A stateful drawing tool with zero dependencies.
+A stateful drawing tool with almost no dependencies.
 
 See [example](https://github.com/holwech/draw-frontend) for how to use this library.
 
