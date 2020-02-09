@@ -1,9 +1,8 @@
 {
-  "name": "draw-ts",
-  "version": "0.0.9",
-  "description": "Stateful drawing tool with zero dependencies",
-  "main": "lib/InterfaceController.js",
-  "types": "lib/InterfaceController.d.ts",
+  "name": "drawify",
+  "version": "0.0.1",
+  "description": "A drawing board with recording functionality",
+  "main": "lib/ServiceBuilder.js",
   "dependencies": {
     "tsyringe": "^4.0.1"
   },
