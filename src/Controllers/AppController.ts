@@ -11,6 +11,7 @@ import { BoardController } from './BoardController';
 
 @singleton()
 export class AppController {
+  private viewBoxInit = { x: 0, y: 0, width: 1200, height: 800 };
 
   constructor(
     private board: BoardController,
@@ -22,24 +23,10 @@ export class AppController {
     private timer: Timer,
     private svg: HTMLElement
   ) {
-    let viewBox = { x: 0, y: 0, width: 1200, height: 800 };
-    const viewboxElem = this.svg.getAttributeNS(null, 'viewBox');
-    if (viewboxElem !== null) {
-      const arr = viewboxElem.split(' ').map(Number);
-      viewBox = { x: arr[0], y: arr[1], width: arr[2], height: arr[3] };
-    } else {
-      throw new Error('The SVG element requires the view box attribute to be set.');
-    }
-
-    // These are missing timestamps?
     this.dispatcher.onAction(this.actionHandler.bind(this));
     this.eventListeners.addEventListeners();
     this.player.dispatchUserAction = this.dispatchUserAction.bind(this);
-
-    const initialState: IAction[] = [{ target: Targets.VIEW_BOX, options: viewBox }];
-    initialState.forEach(event => {
-      this.dispatcher.dispatchAction(event);
-    });
+    this.dispatcher.dispatchAction({ target: Targets.VIEW_BOX, options: this.viewBoxInit });
   }
 
   public dispatchUserAction(action: IUserAction): void {

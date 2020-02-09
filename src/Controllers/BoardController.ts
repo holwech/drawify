@@ -23,7 +23,6 @@ const SCALE_FACTOR = 0.05;
 export class BoardController {
   // State properties
   private scale = 1;
-  private state = BoardState.DRAW;
   private strokeProps: IStrokeProps = {
     stroke: 'green',
     'stroke-width': 50,
@@ -37,13 +36,15 @@ export class BoardController {
     height: 800,
   };
   private viewBox: IViewBox = this.viewBoxInit;
-  private drawers: any = {};
-  private elementBuffer: any[] = [];
+  private drawers: SVGDraw[] = [];
+  private elementBuffer: SVGPathElement[] = [];
   private svg!: SVG;
 
   constructor(dispatcher: Dispatcher, private board: Board, private transform: Transform, svgElement: HTMLElement) {
     this.svg = svgElement as any as SVG
     dispatcher.onAction(this.execute.bind(this));
+    this.svg.setAttribute('viewBox', `${this.viewBoxInit.x} ${this.viewBoxInit.y} ${this.viewBoxInit.width} ${this.viewBoxInit.height}`)
+    this.svg.setAttribute('perserveAspectRatio', 'xMinYMin meet');
   }
 
   public execute(action: IAction): void {
@@ -104,10 +105,9 @@ export class BoardController {
     const e = options.event;
     e.preventDefault();
     const modifier = e.deltaY > 0 ? 1 + SCALE_FACTOR : 1 - SCALE_FACTOR;
-    this.scale *= modifier;
-    this.strokeProps['stroke-width'] = this.strokeProps['stroke-width'] * modifier;
     const point = this.getPointerPosition(e);
     this.transform.zoom(point, this.viewBox, modifier);
+    this.scale = this.viewBox.width / this.viewBoxInit.width;
   }
 
   private draw(action: IAction, options: IDrawOptions): void {
@@ -119,8 +119,8 @@ export class BoardController {
         this.drawers[action.id!].onPointerMove(point, this.strokeProps['buffer-size']);
         break;
       case PointerActionType.START:
-        this.drawers[action.id!] = new SVGDraw(this.svg, action.id!);
-        const path = this.drawers[action.id!].onPointerDown(point, this.strokeProps);
+        this.drawers[action.id!] = new SVGDraw(action.id!, this.strokeProps, this.scale);
+        const path = this.drawers[action.id!].onPointerDown(point);
         this.svg.appendChild(path);
         if (action.time === 0) {
           this.elementBuffer.push(path);
@@ -156,10 +156,12 @@ export class BoardController {
 
   private setStrokeProperties(strokeProps: IStrokePropOptions): void {
     this.strokeProps[strokeProps.targetAttr as string] = strokeProps.value;
+    this.drawers.forEach((x) => x.setStrokeProps(this.strokeProps));
   }
 
   private setViexBox(viexBox: IViewBox): void {
     this.viewBox = viexBox;
+    this.scale = this.viewBox.width / this.viewBoxInit.width;
   }
 
   private getPointerPosition(e: MouseEvent | WheelEvent): DOMPoint {

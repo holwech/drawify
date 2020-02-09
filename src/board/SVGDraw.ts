@@ -6,26 +6,32 @@ export class SVGDraw {
   private strPath!: string;
   private buffer: DOMPoint[] = [];
   private id: string;
+  private strokeProps: IStrokeProps
 
-  constructor(private svg: HTMLElement & SVGElement & SVGSVGElement, id: number) {
+  constructor(id: number, strokeProps: IStrokeProps, private scale: number) {
     this.id = String(id);
+    this.strokeProps = strokeProps;
   }
 
-  public onPointerDown(point: DOMPoint, style: IStrokeProps): SVGPathElement {
+  public setStrokeProps(strokeProps: IStrokeProps) {
+    this.strokeProps = strokeProps;
+  }
+
+  public onPointerDown(point: DOMPoint): SVGPathElement {
     this.pathStarted = true;
     this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     this.path.setAttribute('fill', 'none');
-    this.path.setAttribute('stroke', style['stroke']);
-    this.path.setAttribute('stroke-width', String(style['stroke-width']));
+    this.path.setAttribute('stroke', this.strokeProps['stroke']);
+    this.path.setAttribute('stroke-width', String(this.strokeProps['stroke-width'] * this.scale));
     this.path.setAttribute('id', this.id);
     this.path.setAttribute('class', 'svgElement ' + ElementType.PATH);
-    if (style.fill) {
-      this.path.setAttribute('fill', style['fill']);
+    if (this.strokeProps.fill) {
+      this.path.setAttribute('fill', this.strokeProps['fill']);
     }
     // Keeps stroke width constant, regardless of zoom
     // this.path.setAttribute('vector-effect', 'non-scaling-stroke');
     this.buffer = [];
-    this.appendToBuffer(point, style['buffer-size']);
+    this.appendToBuffer(point, this.strokeProps['buffer-size']);
     this.strPath = 'M' + point.x + ' ' + point.y;
     this.path.setAttribute('d', this.strPath);
     // this.svg.appendChild(this.path);

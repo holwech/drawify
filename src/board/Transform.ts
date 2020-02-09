@@ -12,11 +12,11 @@ export class Transform {
     this.svg = svgElement as any as SVG
   }
 
-  public zoom(point: DOMPoint, viewBox: IViewBox, scale: number): void {
-    viewBox.x = point.x + (viewBox.x - point.x) * scale;
-    viewBox.y = point.y + (viewBox.y - point.y) * scale;
-    viewBox.width = viewBox.width * scale;
-    viewBox.height = viewBox.height * scale;
+  public zoom(point: DOMPoint, viewBox: IViewBox, modifier: number): void {
+    viewBox.x = point.x + (viewBox.x - point.x) * modifier;
+    viewBox.y = point.y + (viewBox.y - point.y) * modifier;
+    viewBox.width = viewBox.width * modifier;
+    viewBox.height = viewBox.height * modifier;
     const viewBoxString = `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`;
     this.svg.setAttribute('viewBox', viewBoxString);
   }
