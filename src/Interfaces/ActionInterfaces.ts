@@ -32,21 +32,28 @@ export enum StrokeAttributes {
 
 export interface IDrawOptions {
   type: PointerActionType;
-  event: MouseEvent;
+  event: IPointerEvent;
 }
 
 export interface IPanOptions {
   type: PointerActionType;
-  event: MouseEvent;
+  event: IPointerEvent;
 }
 
 export interface IClickOptions {
   type: ElementClickACtionType;
-  event: MouseEvent;
+  event: IPointerEvent;
 }
 
 export interface IZoomOptions {
-  event: WheelEvent;
+  event: IPointerEvent;
+}
+
+export interface IPointerEvent {
+  id: string;
+  deltaY: number;
+  clientX: number;
+  clientY: number;
 }
 
 export interface IStrokePropOptions {

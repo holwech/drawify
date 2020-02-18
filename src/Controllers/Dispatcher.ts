@@ -3,7 +3,7 @@ import { RecordController } from './RecordController';
 import { EventOrigin } from '../Interfaces/BoardInterfaces';
 import { EventType, IEvent } from '../Interfaces/AppInterfaces';
 import Timer from '../Timer/Timer';
-import { IAction, Targets, PointerActionType, IZoomOptions } from '../Interfaces/ActionInterfaces';
+import { IAction, Targets, PointerActionType, IZoomOptions, IPointerEvent } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
 import { IModifier, ModifierTarget } from '../Domain/Modifier';
 
@@ -29,34 +29,34 @@ export default class Dispatcher {
         action.target = this.state.panState ? Targets.PAN : Targets.DRAW;
         action.options = {
           type: PointerActionType.MOVE,
-          event: event.e!,
+          event: this.eventToPointerEvent(event.e!),
         };
         break;
       case EventType.POINTER_DOWN:
         action.target = this.state.panState ? Targets.PAN : Targets.DRAW;
         action.options = {
           type: PointerActionType.START,
-          event: event.e!,
+          event: this.eventToPointerEvent(event.e!),
         };
         break;
       case EventType.POINTER_UP:
         action.target = this.state.panState ? Targets.PAN : Targets.DRAW;
         action.options = {
           type: PointerActionType.STOP,
-          event: event.e!,
+          event: this.eventToPointerEvent(event.e!),
         };
         break;
       case EventType.ONWHEEL:
         action.target = Targets.ZOOM;
         action.options = {
-          event: event.e!,
+          event: this.eventToPointerEvent(event.e!),
         } as IZoomOptions;
         break;
       case EventType.CLICK:
         action.target = Targets.CLICK;
         action.options = {
           type: this.state.clickTarget,
-          event: event.e!,
+          event: this.eventToPointerEvent(event.e!),
         };
         if (this.timer.atEnd()) {
           this.recorder.filterLogById(action.id!);
@@ -98,6 +98,15 @@ export default class Dispatcher {
   public commitAction(action: IAction): void {
     console.log('ACTION: ' + Targets[action.target]);
     this.actionListeners.forEach(listener => listener(action));
+  }
+
+  private eventToPointerEvent(event: MouseEvent | WheelEvent): IPointerEvent {
+    return {
+      id: (event.target as Element).id,
+      deltaY: (event as WheelEvent).deltaY,
+      clientX: event.clientX,
+      clientY: event.clientY,
+    }
   }
 
   private getIdForEvent(event: IEvent): number {

@@ -32,10 +32,12 @@ export class EventListenerController {
   }
 
   private onWheel = (e: WheelEvent) => {
+    e.preventDefault();
     this.dispatcher.dispatchEvent({ eventType: EventType.ONWHEEL, e }, EventOrigin.USER);
   };
 
   private onPointerDown = (e: MouseEvent) => {
+    e.preventDefault();
     this.isClick = true;
     this.svg.removeEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
     this.svg.addEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
@@ -44,6 +46,7 @@ export class EventListenerController {
   };
 
   private onPointerUp = (e: MouseEvent) => {
+    e.preventDefault();
     if (this.isClick) {
       this.dispatcher.dispatchEvent({ eventType: EventType.CLICK, e }, EventOrigin.USER);
     } else {
@@ -57,6 +60,7 @@ export class EventListenerController {
   };
 
   private onPointerMove = (e: MouseEvent) => {
+    e.preventDefault();
     if (this.isClick) {
       this.dispatcher.dispatchEvent({ eventType: EventType.POINTER_DOWN, e }, EventOrigin.USER);
       this.isClick = false;

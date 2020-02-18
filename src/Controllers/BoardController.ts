@@ -12,6 +12,7 @@ import {
   IZoomOptions,
   IClickOptions,
   ElementClickACtionType,
+  IPointerEvent,
 } from '../Interfaces/ActionInterfaces';
 import { SVG } from '../Interfaces/appInterfaces';
 import { singleton } from 'tsyringe';
@@ -89,12 +90,10 @@ export class BoardController {
   }
 
   private click(options: IClickOptions): void {
-    const e = options.event! as MouseEvent;
-    e.preventDefault();
+    const e = options.event;
     switch (options.type) {
       case ElementClickACtionType.REMOVE:
-        const ids = (e.target as Element).id;
-        const id = Number(ids);
+        const id = Number(e.id);
         if (id) {
           this.board.removeElement(id);
         }
@@ -106,7 +105,6 @@ export class BoardController {
 
   private zoom(options: IZoomOptions): void {
     const e = options.event;
-    e.preventDefault();
     const modifier = e.deltaY > 0 ? 1 + SCALE_FACTOR : 1 - SCALE_FACTOR;
     const point = this.getPointerPosition(e);
     this.transform.zoom(point, this.viewBox, modifier);
@@ -115,7 +113,6 @@ export class BoardController {
 
   private draw(action: IAction, options: IDrawOptions): void {
     const e = options.event;
-    e.preventDefault();
     const point = this.getPointerPosition(e);
     switch (options.type) {
       case PointerActionType.MOVE:
@@ -140,7 +137,6 @@ export class BoardController {
 
   private pan(options: IPanOptions): void {
     const e = options.event;
-    e.preventDefault();
     const point = this.getPointerPosition(e);
     switch (options.type) {
       case PointerActionType.MOVE:
@@ -167,7 +163,7 @@ export class BoardController {
     this.scale = this.viewBox.width / this.viewBoxInit.width;
   }
 
-  private getPointerPosition(e: MouseEvent | WheelEvent): DOMPoint {
+  private getPointerPosition(e: IPointerEvent): DOMPoint {
     const svgPoint = this.svg.createSVGPoint();
     svgPoint.x = e.clientX;
     svgPoint.y = e.clientY;
