@@ -106,7 +106,7 @@ export default class Dispatcher {
       deltaY: (event as WheelEvent).deltaY,
       clientX: event.clientX,
       clientY: event.clientY,
-    }
+    };
   }
 
   private getIdForEvent(event: IEvent): number {

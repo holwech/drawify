@@ -14,16 +14,16 @@ export default class ServiceBuilder {
     container.register<HTMLElement>(HTMLElement, { useValue: svgElement });
     if (timer != undefined) {
       container.register<Timer>(Timer, { useValue: timer });
-      container.registerInstance
+      container.registerInstance;
     }
     if (appState != undefined) {
       container.register<AppState>(AppState, { useValue: appState });
     }
     return container.resolve<Service>(Service);
   }
-  
+
   private clearContainerInstances(container: DependencyContainer): void {
-    const registry = (container as any)._registry
+    const registry = (container as any)._registry;
 
     for (const [token, registrations] of registry.entries()) {
       registry.setAll(
@@ -31,10 +31,10 @@ export default class ServiceBuilder {
         (registrations as any[])
           // Clear instances
           .map(registration => {
-            registration.instance = undefined
-            return registration
+            registration.instance = undefined;
+            return registration;
           }),
-      )
+      );
     }
   }
 
