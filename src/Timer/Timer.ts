@@ -40,6 +40,8 @@ export default class Timer {
         } else {
           return time;
         }
+      default:
+        return 0;
     }
   }
 

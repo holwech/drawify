@@ -14,7 +14,7 @@ import {
   ElementClickACtionType,
   IPointerEvent,
 } from '../Interfaces/ActionInterfaces';
-import { SVG } from '../Interfaces/appInterfaces';
+import { SVG } from '../Interfaces/AppInterfaces';
 import { singleton } from 'tsyringe';
 import Dispatcher from './Dispatcher';
 
