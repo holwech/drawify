@@ -13,6 +13,7 @@
               timer.timeMonitor.lengthSeconds
           }}
         </v-btn>
+        <v-btn depressed tile text @click="console.log(controller.export())">Export</v-btn>
         <v-btn depressed tile text @click="controller.restart()">
           <v-icon>replay</v-icon>
         </v-btn>

@@ -41,10 +41,6 @@ export class AppController {
         this.timer.pause();
         this.player.pause();
         this.state.state = AppStates.PAUSE;
-        // Temp fix
-        if (this.timer.atEnd()) {
-          this.dispatcher.dispatchAction({ target: Targets.END });
-        }
         this.player.setEventLog(this.recorder.getEventLog());
         break;
       case UserActionType.STOP:
@@ -74,9 +70,7 @@ export class AppController {
   public actionHandler(action: IAction): void {
     switch (action.target) {
       case Targets.END:
-        if (this.state.state != AppStates.PAUSE) {
-          this.dispatchUserAction({ action: UserActionType.PAUSE });
-        }
+        this.dispatchUserAction({ action: UserActionType.PAUSE });
         break;
       default:
         break;

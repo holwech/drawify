@@ -1,14 +1,15 @@
 import { AppController } from './AppController';
 import { IViewBox } from '../Interfaces/BoardInterfaces';
 import { UserActionType } from '../Interfaces/AppInterfaces';
-import { IStrokePropOptions, Targets, IStateOptions } from '../Interfaces/ActionInterfaces';
+import { IStrokePropOptions, Targets, IStateOptions, IAction } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
 import Dispatcher from './Dispatcher';
 import { ModifierTarget } from '../Domain/Modifier';
+import { RecordController } from './RecordController';
 
 @singleton()
 export default class Service {
-  constructor(private app: AppController, private dispatcher: Dispatcher) {}
+  constructor(private app: AppController, private dispatcher: Dispatcher, private recorder: RecordController) {}
 
   public init(strokeProps: IStrokePropOptions[]) {
     strokeProps.forEach(strokeProp => {
@@ -54,5 +55,10 @@ export default class Service {
 
   public setViewBox(viewBox: IViewBox): void {
     this.dispatcher.dispatchAction({ target: Targets.VIEW_BOX, options: viewBox });
+  }
+
+  public export(): IAction[] {
+    this.app.dispatchUserAction({ action: UserActionType.STOP });
+    return this.recorder.getEventLog();
   }
 }
