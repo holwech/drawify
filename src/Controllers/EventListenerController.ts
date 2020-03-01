@@ -22,12 +22,12 @@ export class EventListenerController {
   }
 
   public addEventListeners(): void {
-    this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
+    this.svg.addEventListener('pointerdown', this.fnOnPointerDown); // Pressing the mouse
     this.svg.addEventListener('wheel', this.fnOnWheel);
   }
 
   public removeEventListeners(): void {
-    this.svg.removeEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
+    this.svg.removeEventListener('pointerdown', this.fnOnPointerDown); // Pressing the mouse
     this.svg.removeEventListener('wheel', this.fnOnWheel);
   }
 
@@ -39,10 +39,10 @@ export class EventListenerController {
   private onPointerDown = (e: MouseEvent) => {
     e.preventDefault();
     this.isClick = true;
-    this.svg.removeEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
-    this.svg.addEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
-    this.svg.addEventListener('mouseleave', this.fnOnPointerUp); // Releasing the mouse
-    this.svg.addEventListener('mousemove', this.fnOnPointerMove);
+    this.svg.removeEventListener('pointerdown', this.fnOnPointerDown); // Pressing the mouse
+    this.svg.addEventListener('pointerup', this.fnOnPointerUp); // Releasing the mouse
+    this.svg.addEventListener('pointerleave', this.fnOnPointerUp); // Releasing the mouse
+    this.svg.addEventListener('pointermove', this.fnOnPointerMove);
   };
 
   private onPointerUp = (e: MouseEvent) => {
@@ -53,10 +53,10 @@ export class EventListenerController {
       this.dispatcher.dispatchEvent({ eventType: EventType.POINTER_UP, e }, EventOrigin.USER);
     }
     this.isClick = false;
-    this.svg.removeEventListener('mouseup', this.fnOnPointerUp); // Releasing the mouse
-    this.svg.removeEventListener('mouseleave', this.fnOnPointerUp); // Releasing the mouse
-    this.svg.removeEventListener('mousemove', this.fnOnPointerMove);
-    this.svg.addEventListener('mousedown', this.fnOnPointerDown); // Pressing the mouse
+    this.svg.removeEventListener('pointerup', this.fnOnPointerUp); // Releasing the mouse
+    this.svg.removeEventListener('pointerleave', this.fnOnPointerUp); // Releasing the mouse
+    this.svg.removeEventListener('pointermove', this.fnOnPointerMove);
+    this.svg.addEventListener('pointerdown', this.fnOnPointerDown); // Pressing the mouse
   };
 
   private onPointerMove = (e: MouseEvent) => {
