@@ -10,7 +10,7 @@ import { IModifier, ModifierTarget } from '../Domain/Modifier';
 @singleton()
 export default class Dispatcher {
   private actionListeners: { (action: IAction): void }[] = [];
-  constructor(private state: DispatcherState, private timer: Timer, private recorder: RecordController) {}
+  constructor(private state: DispatcherState, private timer: Timer, private recorder: RecordController) { }
 
   public onAction(actionListener: (action: IAction) => void): void {
     this.actionListeners.push(actionListener);
@@ -23,7 +23,7 @@ export default class Dispatcher {
       target: Targets.DRAW,
       options: undefined,
     };
-    //console.log('EVENT: ' + EventType[event.eventType], action.id);
+
     switch (event.eventType) {
       case EventType.POINTER_MOVE:
         action.target = this.state.panState ? Targets.PAN : Targets.DRAW;
@@ -62,6 +62,12 @@ export default class Dispatcher {
           this.recorder.filterLogById(action.id!);
           console.log('filtered');
         }
+      case EventType.SET_STROKE_PROPS:
+        action.target = Targets.STROKE_PROP;
+        console.log('baluba');
+        action.options = {
+          event: this.eventToPointerEvent(event.e!),
+        };
         break;
       default:
         console.warn(

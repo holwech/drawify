@@ -1,6 +1,6 @@
 import { SVGDraw } from '../Board/SVGDraw';
 import { Transform } from '../Board/Transform';
-import { IStrokeProps, IViewBox, BoardState } from '../Interfaces/BoardInterfaces';
+import { IStrokeProps, IViewBox } from '../Interfaces/BoardInterfaces';
 import { Board } from '../Board/Board';
 import {
   IAction,
@@ -11,7 +11,7 @@ import {
   IPanOptions,
   IZoomOptions,
   IClickOptions,
-  ElementClickACtionType,
+  ElementClickActionType,
   IPointerEvent,
 } from '../Interfaces/ActionInterfaces';
 import { SVG } from '../Interfaces/AppInterfaces';
@@ -92,7 +92,7 @@ export class BoardController {
   private click(options: IClickOptions): void {
     const e = options.event;
     switch (options.type) {
-      case ElementClickACtionType.REMOVE:
+      case ElementClickActionType.REMOVE:
         const id = Number(e.id);
         if (id) {
           this.board.removeElement(id);
@@ -116,6 +116,7 @@ export class BoardController {
     const point = this.getPointerPosition(e);
     switch (options.type) {
       case PointerActionType.MOVE:
+
         this.drawers[action.id!].onPointerMove(point, this.strokeProps['buffer-size']);
         break;
       case PointerActionType.START:

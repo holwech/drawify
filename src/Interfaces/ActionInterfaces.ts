@@ -6,7 +6,7 @@ export enum PointerActionType {
   MOVE,
 }
 
-export enum ElementClickACtionType {
+export enum ElementClickActionType {
   REMOVE,
 }
 
@@ -41,7 +41,7 @@ export interface IPanOptions {
 }
 
 export interface IClickOptions {
-  type: ElementClickACtionType;
+  type: ElementClickActionType;
   event: IPointerEvent;
 }
 
