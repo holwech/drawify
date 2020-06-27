@@ -1,6 +1,5 @@
-import { ElementClickActionType } from '../Interfaces/ActionInterfaces';
+import { ElementClickActionType, IStrokeProps } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
-import { IStrokeProps } from '../Interfaces/BoardInterfaces';
 
 @singleton()
 export default class DispatcherState {

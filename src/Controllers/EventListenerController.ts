@@ -2,7 +2,7 @@ import { EventType, SVG } from '../Interfaces/AppInterfaces';
 import { IStrokePropOptions } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
 import Dispatcher from './Dispatcher';
-import { EventOrigin, IStrokeProps } from '../Interfaces/BoardInterfaces';
+import { EventOrigin } from '../Interfaces/BoardInterfaces';
 
 @singleton()
 export class EventListenerController {
@@ -67,9 +67,5 @@ export class EventListenerController {
       this.isClick = false;
     }
     this.dispatcher.dispatchEvent({ eventType: EventType.POINTER_MOVE, e }, EventOrigin.USER);
-  };
-
-  private onStrokePropertiesChange = (strokeProps: IStrokePropOptions) => {
-    this.dispatcher.dispatchEvent({ eventType: EventType.SET_STROKE_PROPS, strokeProps }, EventOrigin.USER);
   };
 }

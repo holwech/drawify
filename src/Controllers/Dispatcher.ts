@@ -3,14 +3,25 @@ import { RecordController } from './RecordController';
 import { EventOrigin } from '../Interfaces/BoardInterfaces';
 import { EventType, IEvent } from '../Interfaces/AppInterfaces';
 import Timer from '../Timer/Timer';
-import { IAction, Targets, PointerActionType, IZoomOptions, IPointerEvent } from '../Interfaces/ActionInterfaces';
+import { IAction, Targets, PointerActionType, IZoomOptions, IPointerEvent, IStrokeProps } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
 import { IModifier, ModifierTarget } from '../Domain/Modifier';
 
 @singleton()
 export default class Dispatcher {
   private actionListeners: { (action: IAction): void }[] = [];
-  constructor(private state: DispatcherState, private timer: Timer, private recorder: RecordController) { }
+
+  private strokeProps: IStrokeProps = {
+    stroke: 'green',
+    'stroke-width': 50,
+    'buffer-size': 20,
+    fill: undefined,
+  };
+
+  constructor(private state: DispatcherState, private timer: Timer, private recorder: RecordController) {
+    console.log('initializing strokeProps ' + JSON.stringify(state.strokeProps));
+    this.strokeProps = state.strokeProps;
+  }
 
   public onAction(actionListener: (action: IAction) => void): void {
     this.actionListeners.push(actionListener);
@@ -21,7 +32,7 @@ export default class Dispatcher {
       id: this.getIdForEvent(event),
       time: this.timer.getTime(),
       target: Targets.DRAW,
-      options: undefined,
+      options: undefined
     };
 
     switch (event.eventType) {
@@ -30,14 +41,18 @@ export default class Dispatcher {
         action.options = {
           type: PointerActionType.MOVE,
           event: this.eventToPointerEvent(event.e!),
+          strokeProps: this.strokeProps,
         };
+        console.log('Dispatching pointermove with strokeProps: ' + JSON.stringify(this.strokeProps))
         break;
       case EventType.POINTER_DOWN:
         action.target = this.state.panState ? Targets.PAN : Targets.DRAW;
         action.options = {
           type: PointerActionType.START,
           event: this.eventToPointerEvent(event.e!),
+          strokeProps: this.strokeProps,
         };
+        console.log('Dispatching pointerdown with strokeProps: ' + JSON.stringify(this.strokeProps))
         break;
       case EventType.POINTER_UP:
         action.target = this.state.panState ? Targets.PAN : Targets.DRAW;
@@ -62,12 +77,6 @@ export default class Dispatcher {
           this.recorder.filterLogById(action.id!);
           console.log('filtered');
         }
-      case EventType.SET_STROKE_PROPS:
-        action.target = Targets.STROKE_PROP;
-        console.log('baluba');
-        action.options = {
-          event: this.eventToPointerEvent(event.e!),
-        };
         break;
       default:
         console.warn(
@@ -86,9 +95,13 @@ export default class Dispatcher {
       case ModifierTarget.PAN_OFF:
         this.state.panState = false;
         break;
+      case ModifierTarget.SET_STROKE_PROPS:
+        this.strokeProps = modifier?.options!;
+        break;
       default:
         break;
     }
+    console.log('handling modifier: ' + JSON.stringify(modifier));
   }
 
   public dispatchAction(action: IAction): void {
