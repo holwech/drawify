@@ -10,17 +10,10 @@ import { IModifier, ModifierTarget } from '../Domain/Modifier';
 @singleton()
 export default class Dispatcher {
   private actionListeners: { (action: IAction): void }[] = [];
-
-  private strokeProps: IStrokeProps = {
-    stroke: 'green',
-    'stroke-width': 50,
-    'buffer-size': 20,
-    fill: undefined,
-  };
+  private dispatcherState: DispatcherState;
 
   constructor(private state: DispatcherState, private timer: Timer, private recorder: RecordController) {
-    console.log('initializing strokeProps ' + JSON.stringify(state.strokeProps));
-    this.strokeProps = state.strokeProps;
+    this.dispatcherState = state;
   }
 
   public onAction(actionListener: (action: IAction) => void): void {
@@ -41,18 +34,16 @@ export default class Dispatcher {
         action.options = {
           type: PointerActionType.MOVE,
           event: this.eventToPointerEvent(event.e!),
-          strokeProps: this.strokeProps,
+          strokeProps: this.dispatcherState.strokeProps,
         };
-        console.log('Dispatching pointermove with strokeProps: ' + JSON.stringify(this.strokeProps))
         break;
       case EventType.POINTER_DOWN:
         action.target = this.state.panState ? Targets.PAN : Targets.DRAW;
         action.options = {
           type: PointerActionType.START,
           event: this.eventToPointerEvent(event.e!),
-          strokeProps: this.strokeProps,
+          strokeProps: this.dispatcherState.strokeProps,
         };
-        console.log('Dispatching pointerdown with strokeProps: ' + JSON.stringify(this.strokeProps))
         break;
       case EventType.POINTER_UP:
         action.target = this.state.panState ? Targets.PAN : Targets.DRAW;
@@ -96,12 +87,11 @@ export default class Dispatcher {
         this.state.panState = false;
         break;
       case ModifierTarget.SET_STROKE_PROPS:
-        this.strokeProps = modifier?.options!;
+        this.dispatcherState.strokeProps = { ...modifier?.options! }
         break;
       default:
         break;
     }
-    console.log('handling modifier: ' + JSON.stringify(modifier));
   }
 
   public dispatchAction(action: IAction): void {

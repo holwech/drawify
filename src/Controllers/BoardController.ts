@@ -45,9 +45,6 @@ export class BoardController {
   }
 
   public execute(action: IAction): void {
-    // TODO remove
-    console.log('This action should be self-contained')
-    console.log(JSON.stringify(action));
     switch (action.target) {
       case Targets.DRAW:
         this.draw(action, action.options as IDrawOptions);

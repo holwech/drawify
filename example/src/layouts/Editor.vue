@@ -197,18 +197,7 @@ export default class Editor extends Vue {
 
   private mounted(): void {
     this.controller = new ServiceBuilder().build(document.getElementById('svg')!, this.state, this.timer);
-
-    console.log('initialStrokeProps: ' + JSON.stringify(this.strokeProps));
     this.controller!.setStrokeProperties(this.strokeProps);
-    // this.controller!.init([
-    //   { targetAttr: StrokeAttributes.COLOR, value: this.color.value },
-    //   { targetAttr: StrokeAttributes.WIDTH, value: this.width.value },
-    //   {
-    //     targetAttr: StrokeAttributes.BUFFER_SIZE,
-    //     value: this.smoothness.value,
-    //   },
-    //   { targetAttr: StrokeAttributes.FILL, value: undefined },
-    // ]);
     window.addEventListener('keydown', this.panOn);
     window.addEventListener('keyup', this.panOff);
     window.addEventListener('keydown', this.playToggle);
@@ -220,6 +209,7 @@ export default class Editor extends Vue {
 
   private setStrokeProperties(attr: StrokeAttributes): void {
     let value;
+
     let currentStrokeProps = this.strokeProps;
     switch (attr) {
       case StrokeAttributes.COLOR:
