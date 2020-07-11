@@ -28,6 +28,8 @@ export default class Dispatcher {
       options: undefined
     };
 
+    console.log('Mouseevent: ' + JSON.stringify(event));
+
     switch (event.eventType) {
       case EventType.POINTER_MOVE:
         action.target = this.state.panState ? Targets.PAN : Targets.DRAW;
@@ -110,6 +112,8 @@ export default class Dispatcher {
   }
 
   private eventToPointerEvent(event: MouseEvent | WheelEvent): IPointerEvent {
+    console.log('event received: ' + JSON.stringify(event));
+    console.log('target id: ' + JSON.stringify((event.target as Element)));
     return {
       id: (event.target as Element).id,
       deltaY: (event as WheelEvent).deltaY,
