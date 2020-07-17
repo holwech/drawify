@@ -24,7 +24,7 @@ export class BoardController {
   // State properties
   private scale = 1;
   private viewBoxInit = {
-    x: 0, 
+    x: 0,
     y: 0,
     width: 1200,
     height: 800,
@@ -150,6 +150,7 @@ export class BoardController {
   }
 
   private getPointerPosition(e: IPointerEvent): DOMPoint {
+    console.log('svg: ' + JSON.stringify(this.svg))
     const svgPoint = this.svg.createSVGPoint();
     svgPoint.x = e.clientX;
     svgPoint.y = e.clientY;
