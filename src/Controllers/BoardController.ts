@@ -24,7 +24,7 @@ export class BoardController {
   // State properties
   private scale = 1;
   private viewBoxInit = {
-    x: 0,
+    x: 0, 
     y: 0,
     width: 1200,
     height: 800,

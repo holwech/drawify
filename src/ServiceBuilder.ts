@@ -19,6 +19,7 @@ export default class ServiceBuilder {
     if (appState != undefined) {
       container.register<AppState>(AppState, { useValue: appState });
     }
+    console.log('Resolving Service deps')
     return container.resolve<Service>(Service);
   }
 
