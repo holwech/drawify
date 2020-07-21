@@ -231,7 +231,6 @@ export default class Editor extends Vue {
       default:
         break;
     }
-    console.log('Attempting to set strokeProps to: ' + JSON.stringify(this.strokeProps));
     this.controller!.setStrokeProperties(this.strokeProps);
   }
 

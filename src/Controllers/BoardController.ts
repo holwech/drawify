@@ -150,7 +150,6 @@ export class BoardController {
   }
 
   private getPointerPosition(e: IPointerEvent): DOMPoint {
-    console.log('svg: ' + JSON.stringify(this.svg))
     const svgPoint = this.svg.createSVGPoint();
     svgPoint.x = e.clientX;
     svgPoint.y = e.clientY;

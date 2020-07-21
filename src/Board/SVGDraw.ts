@@ -29,6 +29,7 @@ export class SVGDraw {
     if (this.strokeProps.fill) {
       this.path.setAttribute('fill', this.strokeProps['fill']);
     }
+
     // Keeps stroke width constant, regardless of zoom
     // this.path.setAttribute('vector-effect', 'non-scaling-stroke');
     this.buffer = [];

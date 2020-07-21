@@ -7,6 +7,7 @@ import { SVG } from './Interfaces/AppInterfaces';
 
 export default class ServiceBuilder {
   public build(svgElement: HTMLElement, appState?: AppState, timer?: Timer) {
+
     if (!(svgElement as SVG).getScreenCTM()) {
       throw new Error('getScreenCTM is not defined');
     }
