@@ -106,11 +106,13 @@ export default class Dispatcher {
 
   public commitAction(action: IAction): void {
     console.log('ACTION: ' + Targets[action.target]);
-    console.log('Actionlisteners: ' + JSON.stringify(this.actionListeners));
     this.actionListeners.forEach(listener => listener(action));
   }
 
-  private eventToPointerEvent(event: MouseEvent | WheelEvent): IPointerEvent {
+  private eventToPointerEvent(event: MouseEvent | WheelEvent | TouchEvent): IPointerEvent {
+    if (event instanceof TouchEvent) {
+      return {} as IPointerEvent;
+    }
     return {
       id: (event.target as Element).id,
       deltaY: (event as WheelEvent).deltaY,

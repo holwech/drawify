@@ -42,7 +42,7 @@ export interface IEvent {
   isEdit?: boolean;
   time?: number;
   id?: number;
-  e?: MouseEvent | WheelEvent;
+  e?: MouseEvent | WheelEvent | TouchEvent;
   state?: boolean;
   viewBox?: IViewBox;
 }

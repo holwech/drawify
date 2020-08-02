@@ -1,9 +1,5 @@
 <template>
-  <v-app>
-    <v-main>
-      <Editor />
-    </v-main>
-  </v-app>
+  <Editor />
 </template>
 
 <script>
