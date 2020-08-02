@@ -111,7 +111,12 @@ export default class Dispatcher {
 
   private eventToPointerEvent(event: MouseEvent | WheelEvent | TouchEvent): IPointerEvent {
     if (event instanceof TouchEvent) {
-      return {} as IPointerEvent;
+      let id = event.touches[0] ? (event.touches[0]?.target as Element).id : (event.changedTouches[0]?.target as Element).id;
+      return {
+        id: id,
+        clientX: event.touches[0]?.clientX,
+        clientY: event.touches[0]?.clientY,
+      } as IPointerEvent;
     }
     return {
       id: (event.target as Element).id,
