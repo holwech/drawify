@@ -1,17 +1,16 @@
 import { SVGDraw } from '../Board/SVGDraw';
 import { Transform } from '../Board/Transform';
-import { IStrokeProps, IViewBox, BoardState } from '../Interfaces/BoardInterfaces';
+import { IViewBox } from '../Interfaces/BoardInterfaces';
 import { Board } from '../Board/Board';
 import {
   IAction,
   Targets,
   IDrawOptions,
   PointerActionType,
-  IStrokePropOptions,
   IPanOptions,
   IZoomOptions,
   IClickOptions,
-  ElementClickACtionType,
+  ElementClickActionType,
   IPointerEvent,
 } from '../Interfaces/ActionInterfaces';
 import { SVG } from '../Interfaces/AppInterfaces';
@@ -24,12 +23,6 @@ const SCALE_FACTOR = 0.05;
 export class BoardController {
   // State properties
   private scale = 1;
-  private strokeProps: IStrokeProps = {
-    stroke: 'green',
-    'stroke-width': 50,
-    'buffer-size': 20,
-    fill: undefined,
-  };
   private viewBoxInit = {
     x: 0,
     y: 0,
@@ -68,9 +61,6 @@ export class BoardController {
       case Targets.PREDRAW:
         this.predraw();
         break;
-      case Targets.STROKE_PROP:
-        this.setStrokeProperties(action.options as IStrokePropOptions);
-        break;
       case Targets.VIEW_BOX:
         this.setViexBox(action.options as IViewBox);
         break;
@@ -92,7 +82,7 @@ export class BoardController {
   private click(options: IClickOptions): void {
     const e = options.event;
     switch (options.type) {
-      case ElementClickACtionType.REMOVE:
+      case ElementClickActionType.REMOVE:
         const id = Number(e.id);
         if (id) {
           this.board.removeElement(id);
@@ -116,10 +106,10 @@ export class BoardController {
     const point = this.getPointerPosition(e);
     switch (options.type) {
       case PointerActionType.MOVE:
-        this.drawers[action.id!].onPointerMove(point, this.strokeProps['buffer-size']);
+        this.drawers[action.id!].onPointerMove(point, options.strokeProps['buffer-size']);
         break;
       case PointerActionType.START:
-        this.drawers[action.id!] = new SVGDraw(action.id!, this.strokeProps, this.scale);
+        this.drawers[action.id!] = new SVGDraw(action.id!, options.strokeProps, this.scale);
         const path = this.drawers[action.id!].onPointerDown(point);
         this.svg.appendChild(path);
         if (action.time === 0) {
@@ -153,10 +143,6 @@ export class BoardController {
     }
   }
 
-  private setStrokeProperties(strokeProps: IStrokePropOptions): void {
-    this.strokeProps[strokeProps.targetAttr as string] = strokeProps.value;
-    this.drawers.forEach(x => x.setStrokeProps(this.strokeProps));
-  }
 
   private setViexBox(viexBox: IViewBox): void {
     this.viewBox = viexBox;

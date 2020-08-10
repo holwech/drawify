@@ -5,11 +5,12 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "refreshpack": "npm pack --cwd ../ && npm install drawify && npm run serve"
   },
   "dependencies": {
     "core-js": "^3.4.4",
-    "drawify": "file:../drawify-0.0.3.tgz",
+    "drawify": "file:drawify-0.0.12.tgz",
     "material-design-icons-iconfont": "^5.0.1",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",

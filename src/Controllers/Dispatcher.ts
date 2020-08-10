@@ -3,14 +3,18 @@ import { RecordController } from './RecordController';
 import { EventOrigin } from '../Interfaces/BoardInterfaces';
 import { EventType, IEvent } from '../Interfaces/AppInterfaces';
 import Timer from '../Timer/Timer';
-import { IAction, Targets, PointerActionType, IZoomOptions, IPointerEvent } from '../Interfaces/ActionInterfaces';
+import { IAction, Targets, PointerActionType, IZoomOptions, IPointerEvent, IStrokeProps } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
 import { IModifier, ModifierTarget } from '../Domain/Modifier';
 
 @singleton()
 export default class Dispatcher {
   private actionListeners: { (action: IAction): void }[] = [];
-  constructor(private state: DispatcherState, private timer: Timer, private recorder: RecordController) {}
+  private dispatcherState: DispatcherState;
+
+  constructor(private state: DispatcherState, private timer: Timer, private recorder: RecordController) {
+    this.dispatcherState = state;
+  }
 
   public onAction(actionListener: (action: IAction) => void): void {
     this.actionListeners.push(actionListener);
@@ -21,15 +25,16 @@ export default class Dispatcher {
       id: this.getIdForEvent(event),
       time: this.timer.getTime(),
       target: Targets.DRAW,
-      options: undefined,
+      options: undefined
     };
-    //console.log('EVENT: ' + EventType[event.eventType], action.id);
+
     switch (event.eventType) {
       case EventType.POINTER_MOVE:
         action.target = this.state.panState ? Targets.PAN : Targets.DRAW;
         action.options = {
           type: PointerActionType.MOVE,
           event: this.eventToPointerEvent(event.e!),
+          strokeProps: this.dispatcherState.strokeProps,
         };
         break;
       case EventType.POINTER_DOWN:
@@ -37,6 +42,7 @@ export default class Dispatcher {
         action.options = {
           type: PointerActionType.START,
           event: this.eventToPointerEvent(event.e!),
+          strokeProps: this.dispatcherState.strokeProps,
         };
         break;
       case EventType.POINTER_UP:
@@ -80,6 +86,9 @@ export default class Dispatcher {
       case ModifierTarget.PAN_OFF:
         this.state.panState = false;
         break;
+      case ModifierTarget.SET_STROKE_PROPS:
+        this.dispatcherState.strokeProps = { ...modifier?.options! }
+        break;
       default:
         break;
     }
@@ -97,6 +106,7 @@ export default class Dispatcher {
 
   public commitAction(action: IAction): void {
     console.log('ACTION: ' + Targets[action.target]);
+    console.log('Actionlisteners: ' + JSON.stringify(this.actionListeners));
     this.actionListeners.forEach(listener => listener(action));
   }
 
