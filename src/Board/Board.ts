@@ -17,13 +17,9 @@ export class Board {
     }
   }
 
-  public test(): void {
-    console.log(this.svg);
-  }
-
-  public removeElement(id: number): void {
-    console.log('removeElement = id: ', id);
-    const element = this.svg.getElementById(String(id));
-    this.svg.removeChild(element);
+  public removeElement(element: Element): void {
+    if (element.tagName != "svg") {
+      this.svg.removeChild(element);
+    }
   }
 }

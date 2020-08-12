@@ -13,6 +13,7 @@
               timer.timeMonitor.lengthSeconds
           }}
         </v-btn>
+        <v-btn depressed tile text>Edit: {{ editMode }}</v-btn>
         <v-btn depressed tile text @click="console.log(controller.export())">Export</v-btn>
         <v-btn depressed tile text @click="controller.restart()">
           <v-icon>replay</v-icon>
@@ -24,18 +25,6 @@
         <v-btn v-else color="white" tile depressed @click="controller.start()"
           ><v-icon color="black">play_arrow</v-icon></v-btn
         >
-        <!-- <v-toolbar-items class="hidden-sm-and-down">
-          <v-select
-            item-text="text"
-            item-value="value"
-            :items="selectSmoothnessItems"
-            @input="setStrokeProperties"
-            v-model="smoothness"
-            label="Smoothness"
-            return-object
-            color='black'
-          ></v-select>
-        </v-toolbar-items> -->
         <SettingsDialog>
           <v-select
             v-model="color"
@@ -143,6 +132,7 @@ export default class Editor extends Vue {
   private width = { text: '1px', value: 1 };
   private fillColor = { text: 'Black', value: 'black' };
   private panMode: string = 'off';
+  private editMode: string = 'off';
   private selectSmoothnessItems = [
     { text: '1 - No smoothing', value: 1 },
     { text: '4 - Sharp curves', value: 4 },
@@ -179,6 +169,20 @@ export default class Editor extends Vue {
     }
   }
 
+  private editOn(e: KeyboardEvent): void {
+    if (e.keyCode === 69) {
+      this.editMode = 'on';
+      this.controller!.editToggle(true);
+    }
+  }
+
+  private editOff(e: KeyboardEvent): void {
+    if (e.keyCode === 69) {
+      this.editMode = 'off';
+      this.controller!.editToggle(false);
+    }
+  }
+
   private panOn(e: KeyboardEvent): void {
     if (e.keyCode === 17) {
       this.panMode = 'on';
@@ -206,6 +210,8 @@ export default class Editor extends Vue {
     ]);
     window.addEventListener('keydown', this.panOn);
     window.addEventListener('keyup', this.panOff);
+    window.addEventListener('keydown', this.editOn);
+    window.addEventListener('keyup', this.editOff);
     window.addEventListener('keydown', this.playToggle);
   }
 

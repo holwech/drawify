@@ -6,6 +6,7 @@ import { IStrokeProps } from '../Interfaces/BoardInterfaces';
 export default class DispatcherState {
   public idCount: number = 0;
   public panState: boolean = false;
+  public editMode: boolean = false;
   public clickTarget = ElementClickACtionType.REMOVE;
   public strokeProps: IStrokeProps = {
     stroke: 'green',

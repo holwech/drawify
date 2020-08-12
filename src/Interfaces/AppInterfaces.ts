@@ -42,10 +42,20 @@ export interface IEvent {
   isEdit?: boolean;
   time?: number;
   id?: number;
-  e?: MouseEvent | WheelEvent;
+  e?: WheelEvent | PointerEvent;
   strokeProps?: IStrokePropOptions;
   state?: boolean;
   viewBox?: IViewBox;
 }
 
 export type SVG = HTMLElement & SVGElement & SVGSVGElement;
+
+export enum EditType {
+  DELETE = 'DELETE',
+  MOVE = 'MOVE',
+}
+
+export interface IEdit {
+  editType: EditType,
+  target: number;
+}
