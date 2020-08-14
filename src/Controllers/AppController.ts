@@ -1,6 +1,7 @@
 import { PlayBaseController } from './PlayBaseController';
 import { RecordController } from './RecordController';
-import { EventListenerController } from './EventListenerController';
+import { TouchEventListenerController } from './TouchEventListenerController';
+import { MouseEventListenerController } from './MouseEventListenerController';
 import { IUserAction, UserActionType, AppStates } from '../Interfaces/AppInterfaces';
 import AppState from '../State/AppState';
 import { Targets, IAction } from '../Interfaces/ActionInterfaces';
@@ -17,14 +18,16 @@ export class AppController {
     private board: BoardController,
     private player: PlayBaseController,
     private recorder: RecordController,
-    private eventListeners: EventListenerController,
+    private touchEventListeners: TouchEventListenerController,
+    private mouseEventListeners: MouseEventListenerController,
     private state: AppState,
     private dispatcher: Dispatcher,
     private timer: Timer,
     private svg: HTMLElement,
   ) {
     this.dispatcher.onAction(this.actionHandler.bind(this));
-    this.eventListeners.addEventListeners();
+    this.touchEventListeners.addEventListeners();
+    this.mouseEventListeners.addEventListeners();
     this.player.dispatchUserAction = this.dispatchUserAction.bind(this);
     this.dispatcher.dispatchAction({
       target: Targets.VIEW_BOX, options: this.viewBoxInit

@@ -263,6 +263,13 @@ a {
   color: #42b983;
 }
 
+#loggerdiv {
+  display: inline-block;
+  height: 500px;
+  width: 100%;
+  background-color: #42b983;
+}
+
 #svg {
   border: 0px solid black;
 }

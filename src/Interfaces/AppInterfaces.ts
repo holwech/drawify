@@ -23,6 +23,7 @@ export enum EventType {
   POINTER_DOWN,
   POINTER_MOVE,
   POINTER_UP,
+  PINCH,
   CLICK,
   SET_STROKE_PROPS,
   CLEAR,
