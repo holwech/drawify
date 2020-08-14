@@ -40,7 +40,7 @@ export interface IStrokeProps {
 
 export interface IDrawOptions {
   type: PointerActionType;
-  event: IPointerEvent;
+  event: PointerEvent;
   strokeProps: IStrokeProps;
 }
 
@@ -50,7 +50,7 @@ export interface IPanOptions {
 }
 
 export interface IClickOptions {
-  type: ElementClickACtionType;
+  type: ElementClickActionType;
   event: PointerEvent;
 }
 

@@ -1,10 +1,10 @@
-import DispatcherState from '../State/DispatcherState';
 import { RecordController } from './RecordController';
 import { EventType, IEvent, IEdit, EditType } from '../Interfaces/AppInterfaces';
 import Timer from '../Timer/Timer';
-import { IAction, Targets, PointerActionType, IZoomOptions, IDrawOptions, IStrokePropOptions, IClickOptions, optionTypes } from '../Interfaces/ActionInterfaces';
+import { IAction, Targets, PointerActionType, IZoomOptions, IDrawOptions, IClickOptions, optionTypes } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
 import { IModifier, ModifierTarget } from '../Domain/Modifier';
+import DispatcherState from '../State/DispatcherState';
 
 @singleton()
 export default class Dispatcher {
@@ -34,7 +34,6 @@ export default class Dispatcher {
     switch (modifier.target) {
       case ModifierTarget.PAN_ON:
         this.state.panState = true;
-        break;
       case ModifierTarget.PAN_OFF:
         this.state.panState = false;
         break;
@@ -44,7 +43,7 @@ export default class Dispatcher {
       case ModifierTarget.EDIT_OFF:
         this.state.editMode = false;
       case ModifierTarget.SET_STROKE_PROPS:
-        this.dispatcherState.strokeProps = { ...modifier?.options! }
+        this.state.strokeProps = { ...modifier?.options! }
         break;
       default:
         break;
@@ -62,7 +61,7 @@ export default class Dispatcher {
           options: {
             type: PointerActionType.MOVE,
             event: event.e! as PointerEvent,
-            strokeProps: this.dispatcherState.strokeProps,
+            strokeProps: this.state.strokeProps,
           }
         } as IAction<IDrawOptions>
       case EventType.POINTER_DOWN:
@@ -73,7 +72,7 @@ export default class Dispatcher {
           options: {
             type: PointerActionType.START,
             event: event.e! as PointerEvent,
-            strokeProps: this.dispatcherState.strokeProps,
+            strokeProps: this.state.strokeProps,
           }
         } as IAction<IDrawOptions>
       case EventType.POINTER_UP:

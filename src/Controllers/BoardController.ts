@@ -10,7 +10,7 @@ import {
   IPanOptions,
   IZoomOptions,
   IClickOptions,
-  ElementClickACtionType,
+  ElementClickActionType,
   optionTypes,
 } from '../Interfaces/ActionInterfaces';
 import { SVG } from '../Interfaces/AppInterfaces';
@@ -81,7 +81,7 @@ export class BoardController {
 
   private click(options: IClickOptions, id?: number): void {
     switch (options.type) {
-      case ElementClickACtionType.REMOVE:
+      case ElementClickActionType.REMOVE:
         this.board.removeElement(options.event.target as Element);
         break;
       default:

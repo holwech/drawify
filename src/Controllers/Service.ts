@@ -1,7 +1,7 @@
 import { AppController } from './AppController';
 import { IViewBox } from '../Interfaces/BoardInterfaces';
 import { UserActionType } from '../Interfaces/AppInterfaces';
-import { IStrokePropOptions, Targets, IAction, optionTypes } from '../Interfaces/ActionInterfaces';
+import { Targets, IAction, optionTypes, IStrokeProps } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
 import Dispatcher from './Dispatcher';
 import { ModifierTarget } from '../Domain/Modifier';
