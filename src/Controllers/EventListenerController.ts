@@ -1,4 +1,5 @@
 import { EventType, SVG } from '../Interfaces/AppInterfaces';
+import { IStrokePropOptions } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
 import Dispatcher from './Dispatcher';
 

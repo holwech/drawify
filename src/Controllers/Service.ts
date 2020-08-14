@@ -9,12 +9,8 @@ import { RecordController } from './RecordController';
 
 @singleton()
 export default class Service {
-  constructor(private app: AppController, private dispatcher: Dispatcher, private recorder: RecordController) {}
-
-  public init(strokeProps: IStrokePropOptions[]) {
-    strokeProps.forEach(strokeProp => {
-      this.dispatcher.dispatchAction({ target: Targets.STROKE_PROP, options: strokeProp });
-    });
+  constructor(private app: AppController, private dispatcher: Dispatcher, private recorder: RecordController) {
+    console.log('Constructing service')
   }
 
   public start(): void {
@@ -53,8 +49,8 @@ export default class Service {
     this.dispatcher.dispatchModifier({ target: flag ? ModifierTarget.PAN_ON : ModifierTarget.PAN_OFF });
   }
 
-  public setStrokeProperties(strokeProps: IStrokePropOptions): void {
-    this.dispatcher.dispatchAction({ target: Targets.STROKE_PROP, options: strokeProps });
+  public setStrokeProperties(strokeProps: IStrokeProps): void {
+    this.dispatcher.dispatchModifier({ target: ModifierTarget.SET_STROKE_PROPS, options: strokeProps });
   }
 
   public setViewBox(viewBox: IViewBox): void {

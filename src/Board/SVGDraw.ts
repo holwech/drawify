@@ -1,4 +1,5 @@
-import { IStrokeProps, ElementType } from '../Interfaces/BoardInterfaces';
+import { ElementType } from '../Interfaces/BoardInterfaces';
+import { IStrokeProps } from '../Interfaces/ActionInterfaces';
 
 export class SVGDraw {
   private path: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -28,6 +29,7 @@ export class SVGDraw {
     if (this.strokeProps.fill) {
       this.path.setAttribute('fill', this.strokeProps['fill']);
     }
+
     // Keeps stroke width constant, regardless of zoom
     // this.path.setAttribute('vector-effect', 'non-scaling-stroke');
     this.buffer = [];

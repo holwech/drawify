@@ -43,6 +43,8 @@ export default class Dispatcher {
         break;
       case ModifierTarget.EDIT_OFF:
         this.state.editMode = false;
+      case ModifierTarget.SET_STROKE_PROPS:
+        this.dispatcherState.strokeProps = { ...modifier?.options! }
         break;
       default:
         break;
@@ -60,6 +62,7 @@ export default class Dispatcher {
           options: {
             type: PointerActionType.MOVE,
             event: event.e! as PointerEvent,
+            strokeProps: this.dispatcherState.strokeProps,
           }
         } as IAction<IDrawOptions>
       case EventType.POINTER_DOWN:
@@ -70,6 +73,7 @@ export default class Dispatcher {
           options: {
             type: PointerActionType.START,
             event: event.e! as PointerEvent,
+            strokeProps: this.dispatcherState.strokeProps,
           }
         } as IAction<IDrawOptions>
       case EventType.POINTER_UP:

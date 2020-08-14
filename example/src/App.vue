@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <v-content>
+    <v-main>
       <Editor />
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
@@ -13,8 +13,8 @@ import Component from 'vue-class-component';
 
 @Component({
   components: {
-    Editor
-  }
+    Editor,
+  },
 })
 export default class App extends Vue {}
 </script>
