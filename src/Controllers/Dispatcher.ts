@@ -106,7 +106,6 @@ export default class Dispatcher {
 
   public commitAction(action: IAction): void {
     console.log('ACTION: ' + Targets[action.target]);
-    console.log('Actionlisteners: ' + JSON.stringify(this.actionListeners));
     this.actionListeners.forEach(listener => listener(action));
   }
 
