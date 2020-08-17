@@ -94,6 +94,7 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 version="1.1"
               />
+              <div id="loggerdiv"></div>
             </v-flex>
           </v-layout>
         </v-container>

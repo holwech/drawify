@@ -53,7 +53,6 @@ export default class Dispatcher {
         };
         break;
       case EventType.ONWHEEL:
-        console.log((event.e as WheelEvent).deltaY);
         action.target = Targets.ZOOM;
         action.options = {
           event: this.eventToPointerEvent(event.e!),
