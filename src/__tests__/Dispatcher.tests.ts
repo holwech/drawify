@@ -14,7 +14,7 @@ function createMouseEvent(type: EventType): IEvent {
     time: 1,
     id: 1,
     state: true,
-    e: { target: { id: 1 } } as any as MouseEvent
+    e: { target: { id: 1 } } as any as PointerEvent
   }
 }
 
@@ -48,6 +48,6 @@ beforeEach(() => {
 describe('Drawify core functionality', () => {
   it('should handle pointer down event', () => {
     const pointerDownEvent: IEvent = createMouseEvent(EventType.POINTER_DOWN);
-    dispatcher.dispatchEvent(pointerDownEvent, EventOrigin.USER);
+    dispatcher.dispatchEvent(pointerDownEvent);
   });
 });
