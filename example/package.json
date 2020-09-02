@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "core-js": "^3.4.4",
-    "drawify": "file:../drawify-0.0.12.tgz",
+    "drawify": "file:drawify-0.0.13.tgz",
     "material-design-icons-iconfont": "^5.0.1",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
