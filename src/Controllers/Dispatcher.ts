@@ -119,7 +119,7 @@ export default class Dispatcher {
     this.recorder.record(action);
     this.commitAction(action);
   }
-
+    
   public commitEdit(action: IAction<optionTypes>): void {
     console.log('EDIT: ' + Targets[action.target]);
     this.editListeners.forEach(listener => listener(action))
