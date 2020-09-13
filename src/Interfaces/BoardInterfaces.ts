@@ -11,14 +11,6 @@ export interface IPoint {
   y: number;
 }
 
-export interface IStrokeProps {
-  [key: string]: any;
-  stroke: string;
-  'stroke-width': number;
-  'buffer-size': number;
-  fill: string | undefined;
-}
-
 export interface IViewBox {
   x: number;
   y: number;

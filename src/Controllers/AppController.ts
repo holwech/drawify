@@ -26,7 +26,9 @@ export class AppController {
     this.dispatcher.onAction(this.actionHandler.bind(this));
     this.eventListeners.addEventListeners();
     this.player.dispatchUserAction = this.dispatchUserAction.bind(this);
-    this.dispatcher.dispatchAction({ target: Targets.VIEW_BOX, options: this.viewBoxInit });
+    this.dispatcher.dispatchAction({
+      target: Targets.VIEW_BOX, options: this.viewBoxInit
+    });
   }
 
   public dispatchUserAction(action: IUserAction): void {

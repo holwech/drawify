@@ -6,7 +6,7 @@ export enum PointerActionType {
   MOVE,
 }
 
-export enum ElementClickACtionType {
+export enum ElementClickActionType {
   REMOVE,
 }
 
@@ -30,9 +30,18 @@ export enum StrokeAttributes {
   FILL = 'fill',
 }
 
+export interface IStrokeProps {
+  [key: string]: any;
+  stroke: string;
+  'stroke-width': number;
+  'buffer-size': number;
+  fill: string | undefined;
+}
+
 export interface IDrawOptions {
   type: PointerActionType;
   event: IPointerEvent;
+  strokeProps: IStrokeProps;
 }
 
 export interface IPanOptions {
@@ -41,7 +50,7 @@ export interface IPanOptions {
 }
 
 export interface IClickOptions {
-  type: ElementClickACtionType;
+  type: ElementClickActionType;
   event: IPointerEvent;
 }
 
@@ -69,7 +78,6 @@ export type optionTypes =
   | IDrawOptions
   | IPanOptions
   | IZoomOptions
-  | IStrokePropOptions
   | IViewBox
   | IStateOptions
   | IClickOptions;

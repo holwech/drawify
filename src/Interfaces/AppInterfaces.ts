@@ -43,7 +43,6 @@ export interface IEvent {
   time?: number;
   id?: number;
   e?: MouseEvent | WheelEvent;
-  strokeProps?: IStrokePropOptions;
   state?: boolean;
   viewBox?: IViewBox;
 }
