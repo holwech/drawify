@@ -24,7 +24,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-    "lint": "tslint -p tsconfig.json",
+    "format-check": "prettier --check \"src/**/*.ts\" \"src/**/*.js\"",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
