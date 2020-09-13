@@ -1,8 +1,7 @@
-import { PlayStates } from '../Interfaces/PlayInterfaces';
 import PlayState from '../State/PlayState';
 import { IUserAction } from '../Interfaces/AppInterfaces';
 import Timer from '../Timer/Timer';
-import { IAction, Targets } from '../Interfaces/ActionInterfaces';
+import { IAction, Targets, optionTypes } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
 import Dispatcher from './Dispatcher';
 
@@ -16,7 +15,7 @@ export class PlayBaseController {
     this.state.log = [];
   }
 
-  public setEventLog(log: IAction[]): void {
+  public setEventLog(log: IAction<optionTypes>[]): void {
     this.state.log = log;
   }
 
@@ -35,7 +34,6 @@ export class PlayBaseController {
 
   public restart(): void {
     this.continuePlaying = false;
-    console.log(this.dispatcher.commitAction);
     this.dispatcher.commitAction({ target: Targets.CLEAR });
     this.state.currIdx = 0;
   }

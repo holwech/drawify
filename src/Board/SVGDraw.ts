@@ -48,12 +48,6 @@ export class SVGDraw {
   }
 
   public onPointerUp(): void {
-    // const els = document.getElementsByClassName('svgElement');
-    // Array.from(els).forEach((el) => {
-    //   el.addEventListener('click', () => {
-    //     console.log('click');
-    //   });
-    // });
     if (this.pathStarted) {
       this.pathStarted = false;
     }

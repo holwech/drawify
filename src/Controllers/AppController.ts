@@ -3,11 +3,12 @@ import { RecordController } from './RecordController';
 import { EventListenerController } from './EventListenerController';
 import { IUserAction, UserActionType, AppStates } from '../Interfaces/AppInterfaces';
 import AppState from '../State/AppState';
-import { Targets, IAction } from '../Interfaces/ActionInterfaces';
+import { Targets, IAction, optionTypes } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
 import Dispatcher from './Dispatcher';
 import Timer from '../Timer/Timer';
 import { BoardController } from './BoardController';
+import EditController from './EditController';
 
 @singleton()
 export class AppController {
@@ -18,6 +19,7 @@ export class AppController {
     private player: PlayBaseController,
     private recorder: RecordController,
     private eventListeners: EventListenerController,
+    private editController: EditController,
     private state: AppState,
     private dispatcher: Dispatcher,
     private timer: Timer,
@@ -69,7 +71,7 @@ export class AppController {
     }
   }
 
-  public actionHandler(action: IAction): void {
+  public actionHandler(action: IAction<optionTypes>): void {
     switch (action.target) {
       case Targets.END:
         this.dispatchUserAction({ action: UserActionType.PAUSE });

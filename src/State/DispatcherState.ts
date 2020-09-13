@@ -5,6 +5,7 @@ import { singleton } from 'tsyringe';
 export default class DispatcherState {
   public idCount: number = 0;
   public panState: boolean = false;
+  public editMode: boolean = false;
   public clickTarget = ElementClickActionType.REMOVE;
   public strokeProps: IStrokeProps = {
     stroke: 'green',

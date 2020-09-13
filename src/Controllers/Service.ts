@@ -1,7 +1,7 @@
 import { AppController } from './AppController';
 import { IViewBox } from '../Interfaces/BoardInterfaces';
 import { UserActionType } from '../Interfaces/AppInterfaces';
-import { IStrokeProps, Targets, IAction } from '../Interfaces/ActionInterfaces';
+import { Targets, IAction, optionTypes, IStrokeProps } from '../Interfaces/ActionInterfaces';
 import { singleton } from 'tsyringe';
 import Dispatcher from './Dispatcher';
 import { ModifierTarget } from '../Domain/Modifier';
@@ -40,6 +40,10 @@ export default class Service {
   public clear(): void {
     this.dispatcher.dispatchAction({ target: Targets.CLEAR });
   }
+  
+  public editToggle(flag: boolean): void {
+    this.dispatcher.dispatchModifier({ target: flag ? ModifierTarget.EDIT_ON : ModifierTarget.EDIT_OFF })
+  }
 
   public stateToggle(flag: boolean): void {
     this.dispatcher.dispatchModifier({ target: flag ? ModifierTarget.PAN_ON : ModifierTarget.PAN_OFF });
@@ -53,7 +57,7 @@ export default class Service {
     this.dispatcher.dispatchAction({ target: Targets.VIEW_BOX, options: viewBox });
   }
 
-  public export(): IAction[] {
+  public export(): IAction<optionTypes>[] {
     this.app.dispatchUserAction({ action: UserActionType.STOP });
     return this.recorder.getEventLog();
   }

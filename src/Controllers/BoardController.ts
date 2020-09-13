@@ -11,7 +11,7 @@ import {
   IZoomOptions,
   IClickOptions,
   ElementClickActionType,
-  IPointerEvent,
+  optionTypes,
 } from '../Interfaces/ActionInterfaces';
 import { SVG } from '../Interfaces/AppInterfaces';
 import { singleton } from 'tsyringe';
@@ -44,7 +44,7 @@ export class BoardController {
     this.svg.setAttribute('perserveAspectRatio', 'xMinYMin meet');
   }
 
-  public execute(action: IAction): void {
+  public execute(action: IAction<optionTypes>): void {
     switch (action.target) {
       case Targets.DRAW:
         this.draw(action, action.options as IDrawOptions);
@@ -56,7 +56,7 @@ export class BoardController {
         this.zoom(action.options as IZoomOptions);
         break;
       case Targets.CLICK:
-        this.click(action.options as IClickOptions);
+        this.click(action.options as IClickOptions, action.id);
         break;
       case Targets.PREDRAW:
         this.predraw();
@@ -79,14 +79,10 @@ export class BoardController {
     this.elementBuffer = [];
   }
 
-  private click(options: IClickOptions): void {
-    const e = options.event;
+  private click(options: IClickOptions, id?: number): void {
     switch (options.type) {
       case ElementClickActionType.REMOVE:
-        const id = Number(e.id);
-        if (id) {
-          this.board.removeElement(id);
-        }
+        this.board.removeElement(options.event.target as Element);
         break;
       default:
         break;
@@ -101,7 +97,7 @@ export class BoardController {
     this.scale = this.viewBox.width / this.viewBoxInit.width;
   }
 
-  private draw(action: IAction, options: IDrawOptions): void {
+  private draw(action: IAction<optionTypes>, options: IDrawOptions): void {
     const e = options.event;
     const point = this.getPointerPosition(e);
     switch (options.type) {
@@ -149,7 +145,7 @@ export class BoardController {
     this.scale = this.viewBox.width / this.viewBoxInit.width;
   }
 
-  private getPointerPosition(e: IPointerEvent): DOMPoint {
+  private getPointerPosition(e: PointerEvent | WheelEvent): DOMPoint {
     const svgPoint = this.svg.createSVGPoint();
     svgPoint.x = e.clientX;
     svgPoint.y = e.clientY;

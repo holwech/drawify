@@ -40,29 +40,22 @@ export interface IStrokeProps {
 
 export interface IDrawOptions {
   type: PointerActionType;
-  event: IPointerEvent;
+  event: PointerEvent;
   strokeProps: IStrokeProps;
 }
 
 export interface IPanOptions {
   type: PointerActionType;
-  event: IPointerEvent;
+  event: PointerEvent;
 }
 
 export interface IClickOptions {
   type: ElementClickActionType;
-  event: IPointerEvent;
+  event: PointerEvent;
 }
 
 export interface IZoomOptions {
-  event: IPointerEvent;
-}
-
-export interface IPointerEvent {
-  id: string;
-  deltaY: number;
-  clientX: number;
-  clientY: number;
+  event: WheelEvent;
 }
 
 export interface IStrokePropOptions {
@@ -82,9 +75,9 @@ export type optionTypes =
   | IStateOptions
   | IClickOptions;
 
-export interface IAction {
+export interface IAction<T extends optionTypes> {
   id?: number;
   time?: number;
   target: Targets;
-  options?: optionTypes;
+  options?: T;
 }
