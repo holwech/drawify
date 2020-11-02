@@ -1,23 +1,18 @@
 <template>
-  <v-app-bar color="grey darken-3" dark fixed app :collapse="collapseToolbar">
-    <v-layout v-if="!collapseToolbar">
+  <v-app-bar color="grey darken-3" flat dark app fluid :collapse="collapseToolbar">
+    <v-row v-if="!collapseToolbar">
       <a href="https://github.com/holwech/draw" target="_blank">
         <v-toolbar-title class="no-link-style">
           View on GitHub
         </v-toolbar-title>
       </a>
-      <v-spacer></v-spacer>
       <v-toolbar-items>
         <slot></slot>
       </v-toolbar-items>
-    </v-layout>
-    <v-icon
-      v-if="showCollapseButton"
-      @click="collapseToolbar = !collapseToolbar"
-      >{{
-        collapseToolbar ? 'keyboard_arrow_right' : 'keyboard_arrow_left'
-      }}</v-icon
-    >
+    </v-row>
+    <v-icon v-if="showCollapseButton" @click="collapseToolbar = !collapseToolbar">{{
+      collapseToolbar ? 'keyboard_arrow_right' : 'keyboard_arrow_left'
+    }}</v-icon>
   </v-app-bar>
 </template>
 

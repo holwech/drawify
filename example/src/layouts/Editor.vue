@@ -4,13 +4,13 @@
       <Toolbar :show-collapse-button="true">
         <v-btn text>
           {{
-          timer.timeMonitor.minutes +
-          ':' +
-          timer.timeMonitor.seconds +
-          ' / ' +
-          timer.timeMonitor.lengthMinutes +
-          ':' +
-          timer.timeMonitor.lengthSeconds
+            timer.timeMonitor.minutes +
+              ':' +
+              timer.timeMonitor.seconds +
+              ' / ' +
+              timer.timeMonitor.lengthMinutes +
+              ':' +
+              timer.timeMonitor.lengthSeconds
           }}
         </v-btn>
         <v-btn depressed tile text @click="console.log(controller.export())">Export</v-btn>
@@ -86,16 +86,17 @@
       </Toolbar>
       <v-main ma-0 pa-0 style="padding: 0px">
         <v-container fluid fill-height ma-0 pa-0>
-          <v-layout justify-center align-center row wrap>
-            <v-flex text-xs-center>
+          <v-row class="no-gutters flex-wrap flex-column fill-height">
+            <v-col cols="auto" class="grow">
               <svg
                 id="svg"
+                style="height: 100%"
                 xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 version="1.1"
               />
-            </v-flex>
-          </v-layout>
+            </v-col>
+          </v-row>
         </v-container>
       </v-main>
     </v-app>
@@ -261,13 +262,6 @@ li {
 }
 a {
   color: #42b983;
-}
-
-#loggerdiv {
-  display: inline-block;
-  height: 500px;
-  width: 100%;
-  background-color: #42b983;
 }
 
 #svg {
